@@ -2173,7 +2173,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             } catch (Exception $e) {
             }
 
-            if ($this->context->controller instanceof AdminOrdersController) {
+            if (class_exists('AdminOrdersController') && $this->context->controller instanceof AdminOrdersController) {
                 Tools::redirect($_SERVER['HTTP_REFERER']);
             }
 
