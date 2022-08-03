@@ -130,7 +130,7 @@ class PaypalOrder extends ObjectModel
      */
     public static function getOrderById($id_order)
     {
-        $query = new DBQuery();
+        $query = new DbQuery();
         $query->from('paypal_order');
         $query->where('id_order = ' . (int) $id_order);
         $rowOrder = Db::getInstance()->getRow($query);
