@@ -1,6 +1,7 @@
 includes:
 	- %currentWorkingDirectory%/vendor/prestashop/php-dev-tools/phpstan/ps-module-extension.neon
-    
+ignoreErrors:
+    - '#Class \'ModuleFrontControllerCore\' not found\.#'
 parameters:
   paths:
   # We consider that the extension file will be stored the folder test/phpstan
@@ -10,6 +11,6 @@ parameters:
       - ../../classes
       - ../../controllers
       - ../../upgrade
-    
+
   reportUnmatchedIgnoredErrors: false
   level: 1

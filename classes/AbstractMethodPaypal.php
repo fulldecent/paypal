@@ -366,7 +366,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     public function getSellerNonce()
     {
         if ($this->isSandbox()) {
-            $id = \Paypal::PAYPAL_PARTNER_ID_SANDBOX;
+            $id = \PayPal::PAYPAL_PARTNER_ID_SANDBOX;
         } else {
             $id = \PayPal::PAYPAL_PARTNER_ID_LIVE;
         }
@@ -564,10 +564,10 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return new StatusMapping();
     }
 
-    abstract function setPaymentId($paymentId);
+    abstract public function setPaymentId($paymentId);
 
     /** @return  string*/
-    abstract function getPaymentId();
+    abstract public function getPaymentId();
 
     /** @return  string*/
     abstract public function getClientId($sandbox);
