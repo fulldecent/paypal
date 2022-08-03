@@ -376,9 +376,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $this->tab = 'payments_gateways';
         $this->version = '@version@';
         $this->author = '202 ecommerce';
-        $this->display = 'view';
         $this->module_key = '336225a5988ad434b782f2d868d7bfcd';
-        $this->is_eu_compatible = 1;
         $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
         $this->controllers = ['payment', 'validation'];
         $this->bootstrap = true;
@@ -445,7 +443,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_OS_PROCESSING' => (int) Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_VALIDATION_ERROR' => (int) Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_REFUNDED_PAYPAL' => (int) Configuration::get('PS_OS_REFUND'),
-            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::ENABLE_BNPL => 1,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE => 1,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_PAYMENT_STEP_PAGE => 1,
@@ -1124,6 +1121,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         'paypalCheckedMethod' => 'paypal_plus_schortcut',
                     ]);
                     $cookie_paypal_email = $this->context->cookie->paypal_pSc_email;
+                } else {
+                    $cookie_paypal_email = '';
                 }
 
                 $this->context->smarty->assign('paypalEmail', $cookie_paypal_email);
@@ -1569,7 +1568,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $order = new Order($id_order);
         }
 
-        if (isset($amount_paid_curr) && $amount_paid_curr != 0 && $order->total_paid != $amount_paid_curr && $this->isOneOrder($order->reference)) {
+        if ($amount_paid_curr != 0 && $order->total_paid != $amount_paid_curr && $this->isOneOrder($order->reference)) {
             $order->total_paid = $amount_paid_curr;
             $order->total_paid_real = $amount_paid_curr;
             $order->total_paid_tax_incl = $amount_paid_curr;
@@ -2381,11 +2380,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function isOneOrder($order_reference)
     {
-        $query = new DBQuery();
+        $query = new DbQuery();
         $query->select('COUNT(*)');
         $query->from('orders');
         $query->where('reference = "' . pSQL($order_reference) . '"');
-        $countOrders = (int) DB::getInstance()->getValue($query);
+        $countOrders = (int) Db::getInstance()->getValue($query);
 
         return $countOrders == 1;
     }

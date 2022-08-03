@@ -29,6 +29,8 @@
  */
 class PaypalErrorModuleFrontController extends ModuleFrontController
 {
+    public $values = [];
+
     /**
      * @see ModuleFrontController::init()
      */
