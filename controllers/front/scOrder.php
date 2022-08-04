@@ -66,12 +66,6 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
             if (!empty($this->_errors)) {
                 return;
             }
-        } catch (PayPal\Exception\PPConnectionException $e) {
-            $this->_errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
-        } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $this->_errors['error_msg'] = $e->errorMessage();
-        } catch (PayPal\Exception\PPConfigurationException $e) {
-            $this->_errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
             $this->_errors['error_code'] = $e->getCode();
             $this->_errors['error_msg'] = $e->getMessage();

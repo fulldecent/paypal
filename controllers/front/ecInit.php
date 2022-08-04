@@ -58,12 +58,6 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
                 //$this->redirectUrl = $url.'&useraction=commit';
                 $this->redirectUrl = $url;
             }
-        } catch (PayPal\Exception\PPConnectionException $e) {
-            $this->_errors['error_msg'] = $this->module->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
-        } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $this->_errors['error_msg'] = $e->errorMessage();
-        } catch (PayPal\Exception\PPConfigurationException $e) {
-            $this->_errors['error_msg'] = $this->module->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
             $this->_errors['error_code'] = $e->getCode();
             $this->_errors['error_msg'] = $e->getMessage();

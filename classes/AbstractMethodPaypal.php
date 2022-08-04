@@ -348,8 +348,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
 
         $params = [
-            'partnerClientId' => $this->isSandbox() ? \Paypal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX : \Paypal::PAYPAL_PARTNER_CLIENT_ID_LIVE,
-            'partnerId' => $this->isSandbox() ? \Paypal::PAYPAL_PARTNER_ID_SANDBOX : \Paypal::PAYPAL_PARTNER_ID_LIVE,
+            'partnerClientId' => $this->isSandbox() ? \PayPal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX : \PayPal::PAYPAL_PARTNER_CLIENT_ID_LIVE,
+            'partnerId' => $this->isSandbox() ? \PayPal::PAYPAL_PARTNER_ID_SANDBOX : \PayPal::PAYPAL_PARTNER_ID_LIVE,
             'integrationType' => 'FO',
             'features' => 'PAYMENT,REFUND',
             'returnToPartnerUrl' => \Context::getContext()->link->getAdminLink('AdminPaypalGetCredentials'),
@@ -366,9 +366,9 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     public function getSellerNonce()
     {
         if ($this->isSandbox()) {
-            $id = \Paypal::PAYPAL_PARTNER_ID_SANDBOX;
+            $id = \PayPal::PAYPAL_PARTNER_ID_SANDBOX;
         } else {
-            $id = \Paypal::PAYPAL_PARTNER_ID_LIVE;
+            $id = \PayPal::PAYPAL_PARTNER_ID_LIVE;
         }
 
         $employeeMail = \Context::getContext()->employee->email;
@@ -384,7 +384,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $paypal = \Module::getInstanceByName($this->name);
 
         $params = [
-            'client-id' => $this->getClientId(),
+            'client-id' => $this->getClientId($this->isSandbox()),
             'intent' => \Tools::strtolower($this->getIntent()),
             'currency' => $paypal->getPaymentCurrencyIso(),
             'locale' => str_replace('-', '_', \Context::getContext()->language->locale),
@@ -563,6 +563,11 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     {
         return new StatusMapping();
     }
+
+    abstract public function setPaymentId($paymentId);
+
+    /** @return  string*/
+    abstract public function getPaymentId();
 
     /** @return  string*/
     abstract public function getClientId($sandbox);

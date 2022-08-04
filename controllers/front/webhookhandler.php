@@ -180,4 +180,18 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     protected function displayMaintenancePage()
     {
     }
+
+    protected function initPaypalOrder($requestData)
+    {
+        $event = new WebhookEvent();
+        $event->fromArray($requestData);
+
+        if (false == empty($event->getResource()->supplementary_data->related_ids->order_id)) {
+            $paymentId = $event->getResource()->supplementary_data->related_ids->order_id;
+
+            return $this->servicePaypalOrder->getPaypalOrderByPaymentId($paymentId);
+        }
+
+        return new PaypalOrder();
+    }
 }
