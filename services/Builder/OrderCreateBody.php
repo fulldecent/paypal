@@ -134,11 +134,6 @@ class OrderCreateBody implements BuilderInterface
         }
 
         $this->useTax = (int) Configuration::get('PS_TAX') == 1;
-        $customer = new Customer($this->context->cart->id_customer);
-
-        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
-            $this->useTax = (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC) && $this->useTax;
-        }
 
         return $this->useTax;
     }
