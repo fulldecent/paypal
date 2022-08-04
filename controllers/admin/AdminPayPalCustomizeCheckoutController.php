@@ -81,6 +81,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_os_canceled',
             'paypal_os_accepted',
             'paypal_os_capture_canceled',
+            'paypal_os_waiting_validation',
             WebHookConf::ENABLE,
             ShortcutConfiguration::CUSTOMIZE_STYLE,
             ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
@@ -628,6 +629,20 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 'name' => 'paypal_os_capture_canceled',
                 'hint' => $this->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For canceling the authorized payment you have to change the order status to "canceled" (or to a custom status with the same meaning). Here you can choose an order status for canceling the order and voiding the transaction in Authorize mode.'),
                 'desc' => $this->l('Default status : Canceled'),
+                'options' => [
+                    'query' => $orderStatuses,
+                    'id' => 'id',
+                    'name' => 'name',
+                ],
+            ];
+        }
+
+        if ($this->getWebhookOption()->isEnable() && Configuration::get('PAYPAL_API_INTENT') == 'sale') {
+            $inputs[] = [
+                'type' => 'select',
+                'label' => $this->l('Payment captured and waiting for validation by webhook'),
+                'name' => 'paypal_os_waiting_validation',
+                'desc' => $this->l('Default status : Waiting for PayPal payment'),
                 'options' => [
                     'query' => $orderStatuses,
                     'id' => 'id',

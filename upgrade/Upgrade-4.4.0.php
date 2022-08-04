@@ -61,7 +61,7 @@ function upgrade_module_4_4_0($module)
         ) ENGINE = ' . _MYSQL_ENGINE_;
 
     foreach ($sql as $q) {
-        if (!DB::getInstance()->execute($q)) {
+        if (!Db::getInstance()->execute($q)) {
             return false;
         }
     }

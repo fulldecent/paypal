@@ -25,7 +25,7 @@
  */
 require_once _PS_MODULE_DIR_ . 'paypal/controllers/admin/AdminPaypalProcessLogger.php';
 
-class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
+class AdminPayPalLogsController extends AdminPaypalProcessLoggerController
 {
     public function init()
     {

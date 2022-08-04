@@ -27,31 +27,14 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PaypalPPBTlib\Install\ModuleInstaller;
-
 /**
  * @param $module PayPal
  *
  * @return bool
  */
-function upgrade_module_5_5_0($module)
+function upgrade_module_5_7_1($module)
 {
-    try {
-        $installer = new ModuleInstaller($module);
-        $installer->installObjectModels();
-        Configuration::updateGlobalValue(PayPal::NEED_INSTALL_MODELS, 0);
-    } catch (Exception $e) {
-        Configuration::updateGlobalValue(PayPal::NEED_INSTALL_MODELS, 1);
-    }
-
-    $count = Db::getInstance()->getValue('SELECT count(*) 
-	    FROM INFORMATION_SCHEMA.COLUMNS
-		WHERE `TABLE_NAME` = "' . _DB_PREFIX_ . 'paypal_order"
-		AND `TABLE_SCHEMA` = "' . _DB_NAME_ . '"
-		AND `COLUMN_NAME` = "intent"');
-    if ($count == 0) {
-        Db::getInstance()->Execute('ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD COLUMN `intent` VARCHAR(250)');
-    }
+    $module->resetHooks();
 
     return true;
 }
