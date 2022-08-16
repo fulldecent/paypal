@@ -130,7 +130,7 @@ class WebhookEventHandler
         $paypalWebhook->date_completed = date(PaypalWebhook::DATE_FORMAT);
         $paypalWebhook->save();
 
-        if ($psOrderStatus == $this->getStatusMapping()->getAcceptedStatus() && empty($paypalOrder->id_transaction)) {
+        if ($psOrderStatus == $this->getStatusMapping()->getAcceptedStatus()) {
             $this->servicePaypalOrder->setTransactionId($paypalOrder, $event->getResource()->id);
         }
 

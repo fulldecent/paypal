@@ -29,7 +29,6 @@ namespace PaypalAddons\services\Builder;
 use Configuration;
 use Context;
 use Customer;
-use Group;
 use Module;
 use Paypal;
 use PaypalAddons\classes\AbstractMethodPaypal;
