@@ -64,12 +64,29 @@ class WebhookEventHandler
             return true;
         }
 
+        ProcessLoggerHandler::openLogger();
         $msg = 'Webhook event : ' . $this->jsonEncode([
                 'event_type' => $event->getEventType(),
                 'webhook_id' => $event->getId(),
                 'data' => $event->toArray(),
             ]);
         $msg = Tools::substr($msg, 0, 999);
+
+        if ($event->resource->status != 'COMPLETED') {
+            ProcessLoggerHandler::logInfo(
+                $msg,
+                empty($event->getResource()->id) ? '' : $event->getResource()->id,
+                null,
+                null,
+                null,
+                'PayPal',
+                (int) Configuration::get('PAYPAL_SANDBOX')
+            );
+            ProcessLoggerHandler::closeLogger();
+
+            return true;
+        }
+
         $paypalOrder = $this->initPaypalOrder($event);
 
         if (Validate::isLoadedObject($paypalOrder) == false) {
@@ -78,7 +95,6 @@ class WebhookEventHandler
 
         $orders = $this->servicePaypalOrder->getPsOrders($paypalOrder);
 
-        ProcessLoggerHandler::openLogger();
         foreach ($orders as $order) {
             //If there are several shops, then PayPal sends webhook event to each shop. The module should
             //handle the event once.
