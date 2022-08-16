@@ -73,7 +73,7 @@ class PaypalLib
             fwrite($handle, 'Host : '.print_r($host, true)."\r\n");
             fwrite($handle, 'Request : '.print_r($request, true)."\r\n");
             fwrite($handle, 'Result : '.print_r($result, true)."\r\n");
-            fwrite($handle, 'Logs : '.print_r($this->_logs, true."\r\n"));
+            fwrite($handle, 'Logs : '.print_r($this->_logs, true)."\r\n");
             fclose($handle);
         }
 

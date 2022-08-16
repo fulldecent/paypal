@@ -461,6 +461,10 @@ var PaypalNavTabs = function(options) {
 
 var InstallmentSetting = {
     init: function() {
+        if (!document.querySelector('[paypal-installment-settings]')) {
+            return;
+        }
+
         this.checkConfigurations();
         this.initBanner();
         document.querySelectorAll('form#pp_config_installment input').forEach((elem) => {
