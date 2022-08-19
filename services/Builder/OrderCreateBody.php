@@ -455,7 +455,7 @@ class OrderCreateBody implements BuilderInterface
             }
         }
 
-        return $handling;
+        return $this->method->formatPrice($handling);
     }
 
     /**
