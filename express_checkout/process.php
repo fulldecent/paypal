@@ -67,6 +67,8 @@ class PaypalExpressCheckout extends Paypal
 
     public $product_list = array();
 
+    public $secure_key;
+
     /* Used to know if user can validated his payment after shipping / address selection */
     public $ready = false;
 
@@ -98,6 +100,16 @@ class PaypalExpressCheckout extends Paypal
             foreach ($this->cookie_key as $key) {
                 $this->{$key} = $paypal[$key];
             }
+        }
+
+        // #36268 - Get PayerId and Token from request if given and not set from cookies
+        // Prevent random payment errors when customers get back from PayPal payment to shop
+        if (Tools::getValue('token') !== false) {
+            $this->token = Tools::getValue('token');
+        } 
+        
+        if (Tools::getValue('PayerID') !== false) {
+            $this->payer_id = Tools::getValue('PayerID');
         }
 
         $this->currency = new Currency((int) $this->context->cart->id_currency);

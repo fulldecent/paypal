@@ -214,7 +214,7 @@ if ($request_type && $ppec->type) {
         // Display Error and die with this method
         $ppec->displayPayPalAPIError($ppec->l('Error during the preparation of the Express Checkout payment'), $ppec->logs);
     }
-} elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $payer_id)) {
+} elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id == $payer_id)) {
     //If a token exist with payer_id, then we are back from the PayPal API
     /* Get payment infos from paypal */
     $ppec->getExpressCheckout();
