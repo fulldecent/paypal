@@ -158,7 +158,7 @@ class WebhookEventHandler
     {
         $query = (new DbQuery())
             ->from(PaypalWebhook::$definition['table'])
-            ->where('id_webhook = \'' . $event->getId() . '\'')
+            ->where('id_webhook = \'' . pSQL($event->getId()) . '\'')
             ->select(PaypalWebhook::$definition['primary']);
 
         try {
