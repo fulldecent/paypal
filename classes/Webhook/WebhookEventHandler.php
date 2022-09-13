@@ -64,6 +64,7 @@ class WebhookEventHandler
             return true;
         }
 
+        $this->init();
         ProcessLoggerHandler::openLogger();
         $msg = 'Webhook event : ' . $this->jsonEncode([
                 'event_type' => $event->getEventType(),
@@ -369,4 +370,22 @@ class WebhookEventHandler
     {
         return Shop::isFeatureActive();
     }
+
+    protected function init()
+    {
+        if ($this->context->employee == null) {
+            $this->setEmployeeInContext();
+        }
+    }
+
+    protected function setEmployeeInContext()
+    {
+        $employees = Employee::getEmployeesByProfile(1);
+
+        if (false === empty($employees)) {
+            $employee = new Employee((int)$employees[0]);
+            $this->context->employee = $employee;
+        }
+    }
+
 }
