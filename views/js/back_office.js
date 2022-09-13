@@ -179,6 +179,7 @@ $(document).ready(function () {
                 $('#paypalplus-credentials').slideDown();
                 $('#express_checkout_shortcut').slideUp();
                 $('input[type="submit"]').removeAttr('disabled');
+                $('#credentials').removeClass('paypal-disabled');
             } else {
                 $('#paypalplus-credentials').slideUp();
                 $('#credentials').removeClass('paypal-disabled');
