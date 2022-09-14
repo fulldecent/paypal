@@ -35,6 +35,7 @@ use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\services\ActualizeTotalPaid;
 use PaypalAddons\services\PaymentTotalAmount;
+use PaypalAddons\services\PaypalContext;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
@@ -120,6 +121,7 @@ class WebhookEventHandler
         $psOrderStatus = $this->getPsOrderStatus($event);
 
         if ($psOrderStatus > 0) {
+            PaypalContext::getContext()->set('skipHandleHookActionOrderStatusUpdate', true);
             $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
         }
 
