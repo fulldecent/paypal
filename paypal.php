@@ -706,7 +706,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayPersonalInformationTop($params)
     {
-        if ($this->context->customer->isLogged()) {
+        if ($this->context->customer->isLogged() || $this->context->customer->is_guest) {
             return '';
         }
 
