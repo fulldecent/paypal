@@ -30,6 +30,7 @@ use Configuration;
 use Context;
 use Db;
 use DbQuery;
+use Employee;
 use Exception;
 use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\Constants\WebHookType;
@@ -385,9 +386,8 @@ class WebhookEventHandler
         $employees = Employee::getEmployeesByProfile(1);
 
         if (false === empty($employees)) {
-            $employee = new Employee((int)$employees[0]);
+            $employee = new Employee((int) $employees[0]);
             $this->context->employee = $employee;
         }
     }
-
 }
