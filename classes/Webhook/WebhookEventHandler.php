@@ -36,7 +36,6 @@ use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\services\ActualizeTotalPaid;
 use PaypalAddons\services\PaymentTotalAmount;
-use PaypalAddons\services\PaypalContext;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
@@ -97,6 +96,7 @@ class WebhookEventHandler
         }
 
         $orders = $this->servicePaypalOrder->getPsOrders($paypalOrder);
+        $psOrderStatus = $this->getPsOrderStatus($event);
 
         foreach ($orders as $order) {
             //If there are several shops, then PayPal sends webhook event to each shop. The module should
@@ -116,15 +116,29 @@ class WebhookEventHandler
                 'PayPal',
                 (int) Configuration::get('PAYPAL_SANDBOX')
             );
+
+            if ($psOrderStatus == 0) {
+                continue;
+            }
+
+            if ($order->current_state == $psOrderStatus) {
+                continue;
+            }
+
+            if ($event->getEventType() == WebHookType::CAPTURE_COMPLETED) {
+                if ($order->current_state != $this->getStatusMapping()->getWaitValidationStatus()) {
+                    continue;
+                }
+            }
+
+            if ($this->getStatusMapping()->getRefundStatus() == $psOrderStatus) {
+                $paypalOrder->payment_status = 'refunded';
+                $paypalOrder->save();
+            }
+
+            $order->setCurrentState($psOrderStatus);
         }
         ProcessLoggerHandler::closeLogger();
-
-        $psOrderStatus = $this->getPsOrderStatus($event);
-
-        if ($psOrderStatus > 0) {
-            PaypalContext::getContext()->set('skipHandleHookActionOrderStatusUpdate', true);
-            $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
-        }
 
         if ($this->isCaptureAuthorization($event)) {
             $capture = PaypalCapture::loadByOrderPayPalId($paypalOrder->id);
