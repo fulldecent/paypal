@@ -95,9 +95,13 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                 ProcessLoggerHandler::closeLogger();
                 header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
             }
-        } catch (\Exception $e) {
-            $message = 'Error code: ' . $e->getCode() . '.';
-            $message .= 'Short message: ' . $e->getMessage() . '.';
+        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {//for php version > 7
+        }
+
+        if (isset($exception)) {
+            $message = 'Error code: ' . $exception->getCode() . '.';
+            $message .= 'Short message: ' . $exception->getMessage() . '.';
             $paypalOrder = $this->initPaypalOrder($this->getRequestData());
 
             ProcessLoggerHandler::openLogger();

@@ -30,6 +30,7 @@ use Configuration;
 use Context;
 use Db;
 use DbQuery;
+use Employee;
 use Exception;
 use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\Constants\WebHookType;
@@ -64,12 +65,30 @@ class WebhookEventHandler
             return true;
         }
 
+        $this->init();
+        ProcessLoggerHandler::openLogger();
         $msg = 'Webhook event : ' . $this->jsonEncode([
                 'event_type' => $event->getEventType(),
                 'webhook_id' => $event->getId(),
                 'data' => $event->toArray(),
             ]);
         $msg = Tools::substr($msg, 0, 999);
+
+        if ($event->resource->status != 'COMPLETED') {
+            ProcessLoggerHandler::logInfo(
+                $msg,
+                empty($event->getResource()->id) ? '' : $event->getResource()->id,
+                null,
+                null,
+                null,
+                'PayPal',
+                (int) Configuration::get('PAYPAL_SANDBOX')
+            );
+            ProcessLoggerHandler::closeLogger();
+
+            return true;
+        }
+
         $paypalOrder = $this->initPaypalOrder($event);
 
         if (Validate::isLoadedObject($paypalOrder) == false) {
@@ -77,8 +96,8 @@ class WebhookEventHandler
         }
 
         $orders = $this->servicePaypalOrder->getPsOrders($paypalOrder);
+        $psOrderStatus = $this->getPsOrderStatus($event);
 
-        ProcessLoggerHandler::openLogger();
         foreach ($orders as $order) {
             //If there are several shops, then PayPal sends webhook event to each shop. The module should
             //handle the event once.
@@ -97,14 +116,29 @@ class WebhookEventHandler
                 'PayPal',
                 (int) Configuration::get('PAYPAL_SANDBOX')
             );
+
+            if ($psOrderStatus == 0) {
+                continue;
+            }
+
+            if ($order->current_state == $psOrderStatus) {
+                continue;
+            }
+
+            if ($event->getEventType() == WebHookType::CAPTURE_COMPLETED) {
+                if ($order->current_state != $this->getStatusMapping()->getWaitValidationStatus()) {
+                    continue;
+                }
+            }
+
+            if ($this->getStatusMapping()->getRefundStatus() == $psOrderStatus) {
+                $paypalOrder->payment_status = 'refunded';
+                $paypalOrder->save();
+            }
+
+            $order->setCurrentState($psOrderStatus);
         }
         ProcessLoggerHandler::closeLogger();
-
-        $psOrderStatus = $this->getPsOrderStatus($event);
-
-        if ($psOrderStatus > 0) {
-            $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
-        }
 
         if ($this->isCaptureAuthorization($event)) {
             $capture = PaypalCapture::loadByOrderPayPalId($paypalOrder->id);
@@ -130,7 +164,7 @@ class WebhookEventHandler
         $paypalWebhook->date_completed = date(PaypalWebhook::DATE_FORMAT);
         $paypalWebhook->save();
 
-        if ($psOrderStatus == $this->getStatusMapping()->getAcceptedStatus() && empty($paypalOrder->id_transaction)) {
+        if ($psOrderStatus == $this->getStatusMapping()->getAcceptedStatus()) {
             $this->servicePaypalOrder->setTransactionId($paypalOrder, $event->getResource()->id);
         }
 
@@ -141,7 +175,7 @@ class WebhookEventHandler
     {
         $query = (new DbQuery())
             ->from(PaypalWebhook::$definition['table'])
-            ->where('id_webhook = \'' . $event->getId() . '\'')
+            ->where('id_webhook = \'' . pSQL($event->getId()) . '\'')
             ->select(PaypalWebhook::$definition['primary']);
 
         try {
@@ -352,5 +386,22 @@ class WebhookEventHandler
     protected function isMultishop()
     {
         return Shop::isFeatureActive();
+    }
+
+    protected function init()
+    {
+        if ($this->context->employee == null) {
+            $this->setEmployeeInContext();
+        }
+    }
+
+    protected function setEmployeeInContext()
+    {
+        $employees = Employee::getEmployeesByProfile(1);
+
+        if (false === empty($employees)) {
+            $employee = new Employee((int) $employees[0]);
+            $this->context->employee = $employee;
+        }
     }
 }
