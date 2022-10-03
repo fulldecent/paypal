@@ -62,6 +62,7 @@ use PaypalAddons\classes\Widget\DummyWidget;
 use PaypalAddons\classes\Widget\InstallmentWidget;
 use PaypalAddons\classes\Widget\ShortcutWidget;
 use PaypalAddons\services\PaymentRefundAmount;
+use PaypalAddons\services\PaypalContext;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
@@ -706,7 +707,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayPersonalInformationTop($params)
     {
-        if ($this->context->customer->isLogged()) {
+        if ($this->context->customer->isLogged() || $this->context->customer->is_guest) {
             return '';
         }
 
@@ -1953,16 +1954,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookActionOrderStatusUpdate(&$params)
     {
+        if (PaypalContext::getContext()->get('skipHandleHookActionOrderStatusUpdate', false)) {
+            return true;
+        }
         /** @var $orderPayPal PaypalOrder */
         $orderPayPal = PaypalOrder::loadByOrderId($params['id_order']);
         $isRequestSent = false;
 
         if (!Validate::isLoadedObject($orderPayPal) || $orderPayPal->method == 'BT') {
             return false;
-        }
-
-        if ($this->context->controller instanceof PaypalWebhookhandlerModuleFrontController) {
-            return true;
         }
 
         $method = AbstractMethodPaypal::load($orderPayPal->method);
