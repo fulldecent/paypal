@@ -3101,11 +3101,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         /** @var $paypalOrder PaypalOrder */
         $paypalOrder = PaypalOrder::loadByOrderId($params['order']->id);
-
-        if ($paypalOrder->payment_tool != 'PAY_UPON_INVOICE') {
-            return;
-        }
-
         $method = AbstractMethodPaypal::load($this->paypal_method);
         $response = $method->addOrderTrackingInfo($paypalOrder);
 

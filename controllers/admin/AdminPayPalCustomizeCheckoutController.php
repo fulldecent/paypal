@@ -126,12 +126,10 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
         $this->initForm();
         $this->context->smarty->assign('formBehavior', $this->renderForm());
-
-        if ($this->method == 'PPP' && $this->initPuiFunctionality()->isAvailable(false)) {
-            $this->clearFieldsForm();
-            $this->initTrackingParametersForm();
-            $this->context->smarty->assign('formTrackingParameters', $this->renderForm());
-        }
+        //Setting form for tracking info
+        $this->clearFieldsForm();
+        $this->initTrackingParametersForm();
+        $this->context->smarty->assign('formTrackingParameters', $this->renderForm());
 
         $this->clearFieldsForm();
         $this->initAdvancedForm();
