@@ -255,5 +255,5 @@ if (Tools::getValue('receiver_email') == Configuration::get('PAYPAL_BUSINESS_ACC
     }
 } elseif (Tools::isSubmit('custom') && (int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) {
     $custom = Tools::jsonDecode(Tools::getValue('custom'), true);
-    Db::getInstance()->insert('paypal_hss_email_error', array('id_cart' => $custom['id_cart'], 'email' => Tools::getValue('receiver_email')));
+    Db::getInstance()->insert('paypal_hss_email_error', array('id_cart' => (int) $custom['id_cart'], 'email' => pSQL(Tools::getValue('receiver_email', ''))));
 }

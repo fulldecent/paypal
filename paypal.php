@@ -1926,7 +1926,7 @@ class PayPal extends PaymentModule
                 }
 
                 $new_hss_email = Tools::getValue('api_business_account');
-                Db::getInstance()->delete('paypal_hss_email_error', 'email = "'.$new_hss_email.'"');
+                Db::getInstance()->delete('paypal_hss_email_error', 'email = "'. pSQL($new_hss_email) .'"');
 
                 Configuration::updateValue('PAYPAL_BUSINESS', (int) Tools::getValue('business'));
                 Configuration::updateValue('PAYPAL_PAYMENT_METHOD', (int) Tools::getValue('paypal_payment_method'));
