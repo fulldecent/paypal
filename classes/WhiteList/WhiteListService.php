@@ -41,4 +41,32 @@ class WhiteListService
         Configuration::updateValue(WhiteList::ENABLED, (int) $isEnabled);
         return $this;
     }
+
+    public function getListIP()
+    {
+        $list = Configuration::get(WhiteList::LIST_IP);
+
+        if (empty($list)) {
+            return [];
+        }
+
+        try {
+            return json_decode($list, true);
+        } catch (\Exception $e) {
+            return [];
+        } catch (\Throwable $e) {
+            return [];
+        }
+
+    }
+
+    public function setListIP($list)
+    {
+        if (false == is_array($list)) {
+            return $this;
+        }
+
+        Configuration::updateValue(WhiteList::LIST_IP, json_encode($list));
+        return $this;
+    }
 }

@@ -33,6 +33,7 @@ use PaypalAddons\classes\Constants\TrackingParameters as TrackingParametersMap;
 use PaypalAddons\classes\Constants\WhiteList;
 use PaypalAddons\classes\WhiteList\WhiteListService;
 use PaypalAddons\services\TrackingParameters;
+use Symfony\Component\HttpFoundation\Request;
 use Tools;
 
 class WhiteListForm implements FormInterface
@@ -73,6 +74,12 @@ class WhiteListForm implements FormInterface
                         'label' => $this->module->l('Disabled', $this->className),
                     ],
                 ],
+            ],
+            [
+                'type' => 'html',
+                'html_content' => $this->getListHTML(),
+                'name' => '',
+                'label' => $this->module->l('List of IPs', $this->className),
             ],
         ];
 
@@ -116,6 +123,9 @@ class WhiteListForm implements FormInterface
 
         $service = $this->initWhiteListService();
         $service->setEnabled((int) Tools::getValue(WhiteList::ENABLED));
+        $service->setListIP(
+            explode(';', Tools::getValue(WhiteList::LIST_IP, ''))
+        );
 
         return true;
     }
@@ -123,5 +133,17 @@ class WhiteListForm implements FormInterface
     protected function initWhiteListService()
     {
         return new WhiteListService();
+    }
+
+    protected function getListHTML()
+    {
+        $request = Request::createFromGlobals();
+        Context::getContext()->smarty->assign([
+                WhiteList::LIST_IP => implode(';', $this->initWhiteListService()->getListIP()),
+                'paypal_current_ip' => $request->getClientIp()
+        ]);
+        return Context::getContext()
+            ->smarty
+            ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/white-list.tpl');
     }
 }
