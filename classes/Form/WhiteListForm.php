@@ -26,13 +26,10 @@
 
 namespace PaypalAddons\classes\Form;
 
-use Carrier;
 use Context;
 use Module;
-use PaypalAddons\classes\Constants\TrackingParameters as TrackingParametersMap;
 use PaypalAddons\classes\Constants\WhiteList;
 use PaypalAddons\classes\WhiteList\WhiteListService;
-use PaypalAddons\services\TrackingParameters;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
 
@@ -140,8 +137,9 @@ class WhiteListForm implements FormInterface
         $request = Request::createFromGlobals();
         Context::getContext()->smarty->assign([
                 WhiteList::LIST_IP => implode(';', $this->initWhiteListService()->getListIP()),
-                'paypal_current_ip' => $request->getClientIp()
+                'paypal_current_ip' => $request->getClientIp(),
         ]);
+
         return Context::getContext()
             ->smarty
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/white-list.tpl');

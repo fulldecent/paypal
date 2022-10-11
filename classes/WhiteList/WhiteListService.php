@@ -40,6 +40,7 @@ class WhiteListService
     public function setEnabled($isEnabled)
     {
         Configuration::updateValue(WhiteList::ENABLED, (int) $isEnabled);
+
         return $this;
     }
 
@@ -58,7 +59,6 @@ class WhiteListService
         } catch (\Throwable $e) {
             return [];
         }
-
     }
 
     public function setListIP($list)
@@ -68,12 +68,14 @@ class WhiteListService
         }
 
         Configuration::updateValue(WhiteList::LIST_IP, json_encode($list));
+
         return $this;
     }
 
     public function isEligibleContext()
     {
         $request = Request::createFromGlobals();
+
         return in_array($request->getClientIp(), $this->getListIP()) || defined('_PS_ADMIN_DIR_');
     }
 }

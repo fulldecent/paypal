@@ -66,7 +66,7 @@ class MethodMB extends AbstractMethodPaypal
         'paypal_os_refunded_paypal',
     ];
 
-    /** @var WhiteListService*/
+    /** @var WhiteListService */
     protected $whiteListService;
 
     public function __construct()

@@ -78,7 +78,7 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
         'paypal_os_accepted_two',
     ];
 
-    /** @var WhiteListService*/
+    /** @var WhiteListService */
     protected $whiteListService;
 
     public function __construct()

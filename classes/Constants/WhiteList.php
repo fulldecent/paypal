@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Constants;
 
-
 class WhiteList
 {
     const ENABLED = 'PAYPAL_WHITE_LIST_ENABLED';
