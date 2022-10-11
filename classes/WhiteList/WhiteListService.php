@@ -28,6 +28,7 @@ namespace PaypalAddons\classes\WhiteList;
 
 use Configuration;
 use PaypalAddons\classes\Constants\WhiteList;
+use Symfony\Component\HttpFoundation\Request;
 
 class WhiteListService
 {
@@ -68,5 +69,11 @@ class WhiteListService
 
         Configuration::updateValue(WhiteList::LIST_IP, json_encode($list));
         return $this;
+    }
+
+    public function isEligibleContext()
+    {
+        $request = Request::createFromGlobals();
+        return in_array($request->getClientIp(), $this->getListIP()) || defined('_PS_ADMIN_DIR_');
     }
 }
