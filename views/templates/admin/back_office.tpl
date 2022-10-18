@@ -19,7 +19,7 @@
 *
 *  @author 2007-2022 PayPal
  *  @author 2007-2022 PrestaShop SA <contact@prestashop.com>
- *  @author 2014-2021 202 ecommerce <tech@202-ecommerce.com>
+ *  @author 2014-2022 202 ecommerce <tech@202-ecommerce.com>
 *  @copyright PayPal
 *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *
