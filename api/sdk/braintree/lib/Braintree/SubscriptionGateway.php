@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -39,7 +37,6 @@ use InvalidArgumentException;
  *
  * PHP Version 5
  *
- * @package   Braintree
  * @copyright 2015 Braintree, a division of PayPal, Inc.
  */
 class SubscriptionGateway
@@ -61,6 +58,7 @@ class SubscriptionGateway
         Util::verifyKeys(self::_createSignature(), $attributes);
         $path = $this->_config->merchantPath() . '/subscriptions';
         $response = $this->_http->post($path, ['subscription' => $attributes]);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -71,11 +69,11 @@ class SubscriptionGateway
         try {
             $path = $this->_config->merchantPath() . '/subscriptions/' . $id;
             $response = $this->_http->get($path);
+
             return Subscription::factory($response['subscription']);
         } catch (Exception\NotFound $e) {
             throw new Exception\NotFound('subscription with id ' . $id . ' not found');
         }
-
     }
 
     public function search($query)
@@ -85,13 +83,12 @@ class SubscriptionGateway
             $criteria[$term->name] = $term->toparam();
         }
 
-
         $path = $this->_config->merchantPath() . '/subscriptions/advanced_search_ids';
         $response = $this->_http->post($path, ['search' => $criteria]);
         $pager = [
             'object' => $this,
             'method' => 'fetch',
-            'methodArgs' => [$query]
+            'methodArgs' => [$query],
             ];
 
         return new ResourceCollection($response, $pager);
@@ -103,7 +100,7 @@ class SubscriptionGateway
         foreach ($query as $term) {
             $criteria[$term->name] = $term->toparam();
         }
-        $criteria["ids"] = SubscriptionSearch::ids()->in($ids)->toparam();
+        $criteria['ids'] = SubscriptionSearch::ids()->in($ids)->toparam();
         $path = $this->_config->merchantPath() . '/subscriptions/advanced_search';
         $response = $this->_http->post($path, ['search' => $criteria]);
 
@@ -118,19 +115,21 @@ class SubscriptionGateway
         Util::verifyKeys(self::_updateSignature(), $attributes);
         $path = $this->_config->merchantPath() . '/subscriptions/' . $subscriptionId;
         $response = $this->_http->put($path, ['subscription' => $attributes]);
+
         return $this->_verifyGatewayResponse($response);
     }
 
     public function retryCharge($subscriptionId, $amount = null)
     {
         $transaction_params = ['type' => Transaction::SALE,
-            'subscriptionId' => $subscriptionId];
+            'subscriptionId' => $subscriptionId, ];
         if (isset($amount)) {
             $transaction_params['amount'] = $amount;
         }
 
         $path = $this->_config->merchantPath() . '/transactions';
         $response = $this->_http->post($path, ['transaction' => $transaction_params]);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -138,6 +137,7 @@ class SubscriptionGateway
     {
         $path = $this->_config->merchantPath() . '/subscriptions/' . $subscriptionId . '/cancel';
         $response = $this->_http->put($path);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -188,31 +188,28 @@ class SubscriptionGateway
                     ['add' => ['amount', 'inheritedFromId', 'neverExpires', 'numberOfBillingCycles', 'quantity']],
                     ['update' => ['amount', 'existingId', 'neverExpires', 'numberOfBillingCycles', 'quantity']],
                     ['remove' => ['_anyKey_']],
-                ]
+                ],
             ],
             [
                 'discounts' => [
                     ['add' => ['amount', 'inheritedFromId', 'neverExpires', 'numberOfBillingCycles', 'quantity']],
                     ['update' => ['amount', 'existingId', 'neverExpires', 'numberOfBillingCycles', 'quantity']],
                     ['remove' => ['_anyKey_']],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
     /**
      * @ignore
      */
-    private function _validateId($id = null) {
+    private function _validateId($id = null)
+    {
         if (empty($id)) {
-           throw new InvalidArgumentException(
-                   'expected subscription id to be set'
-                   );
+            throw new InvalidArgumentException('expected subscription id to be set');
         }
         if (!preg_match('/^[0-9A-Za-z_-]+$/', $id)) {
-            throw new InvalidArgumentException(
-                    $id . ' is an invalid subscription id.'
-                    );
+            throw new InvalidArgumentException($id . ' is an invalid subscription id.');
         }
     }
 
@@ -225,17 +222,15 @@ class SubscriptionGateway
             return new Result\Successful(
                 Subscription::factory($response['subscription'])
             );
-        } else if (isset($response['transaction'])) {
+        } elseif (isset($response['transaction'])) {
             // return a populated instance of Transaction, for subscription retryCharge
             return new Result\Successful(
                 Transaction::factory($response['transaction'])
             );
-        } else if (isset($response['apiErrorResponse'])) {
+        } elseif (isset($response['apiErrorResponse'])) {
             return new Result\Error($response['apiErrorResponse']);
         } else {
-            throw new Exception\Unexpected(
-            "Expected subscription, transaction, or apiErrorResponse"
-            );
+            throw new Exception\Unexpected('Expected subscription, transaction, or apiErrorResponse');
         }
     }
 }

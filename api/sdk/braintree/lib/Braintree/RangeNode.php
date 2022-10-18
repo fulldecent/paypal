@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -39,24 +37,27 @@ class RangeNode
     public function greaterThanOrEqualTo($value)
     {
         $this->searchTerms['min'] = $value;
+
         return $this;
     }
 
     public function lessThanOrEqualTo($value)
     {
         $this->searchTerms['max'] = $value;
+
         return $this;
     }
 
     public function is($value)
     {
         $this->searchTerms['is'] = $value;
+
         return $this;
     }
 
     public function between($min, $max)
     {
-		return $this->greaterThanOrEqualTo($min)->lessThanOrEqualTo($max);
+        return $this->greaterThanOrEqualTo($min)->lessThanOrEqualTo($max);
     }
 
     public function toParam()

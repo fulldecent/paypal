@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,12 +22,10 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 class PayPalLogin
 {
-    private $_logs = array();
+    private $_logs = [];
     private $enable_log = false;
 
     private $paypal_connect = null;
@@ -67,9 +64,9 @@ class PayPalLogin
     {
         // return 'http://requestb.in/1jlaizq1';
         if (method_exists(Context::getContext()->shop, 'getBaseUrl')) {
-            return Context::getContext()->shop->getBaseUrl().'modules/paypal/paypal_login/paypal_login_token.php';
+            return Context::getContext()->shop->getBaseUrl() . 'modules/paypal/paypal_login/paypal_login_token.php';
         } else {
-            return 'http://'.Configuration::get('PS_SHOP_DOMAIN').'/modules/paypal/paypal_login/paypal_login_token.php';
+            return 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/modules/paypal/paypal_login/paypal_login_token.php';
         }
     }
 
@@ -84,11 +81,11 @@ class PayPalLogin
             return $this->getRefreshToken();
         }
 
-        $params = array(
+        $params = [
             'grant_type' => 'authorization_code',
             'code' => Tools::getValue('code'),
             'redirect_url' => PayPalLogin::getReturnLink(),
-        );
+        ];
 
         $request = http_build_query($params, '', '&');
         $result = $this->paypal_connect->makeConnection($this->getIdentityAPIURL(), $this->getTokenServiceEndpoint(), $request, false, false, true);
@@ -141,10 +138,10 @@ class PayPalLogin
             return false;
         }
 
-        $params = array(
+        $params = [
             'grant_type' => 'refresh_token',
             'refresh_token' => $login->refresh_token,
-        );
+        ];
 
         $request = http_build_query($params, '', '&');
         $result = $this->paypal_connect->makeConnection($this->getIdentityAPIURL(), $this->getTokenServiceEndpoint(), $request, false, false, true);
@@ -165,6 +162,7 @@ class PayPalLogin
             $login->access_token = $result->access_token;
             $login->expires_in = (string) (time() + $result->expires_in);
             $login->save();
+
             return $login;
         }
 
@@ -174,14 +172,14 @@ class PayPalLogin
     private function getUserInformations($access_token, &$login)
     {
         unset($this->_logs);
-        $headers = array(
+        $headers = [
             // 'Content-Type:application/json',
-            'Authorization: Bearer '.$access_token,
-        );
+            'Authorization: Bearer ' . $access_token,
+        ];
 
-        $params = array(
+        $params = [
             'schema' => 'openid',
-        );
+        ];
 
         $request = http_build_query($params, '', '&');
         $result = $this->paypal_connect->makeConnection($this->getIdentityAPIURL(), $this->getUserInfoEndpoint(), $request, false, $headers, true);
@@ -222,7 +220,7 @@ class PayPalLogin
     private function setCustomer($result)
     {
         $customer = new Customer();
-        $full_name_arr = strpos($result->name, " ");
+        $full_name_arr = strpos($result->name, ' ');
         $customer->firstname = Tools::substr($result->name, 0, $full_name_arr);
         $customer->lastname = Tools::substr($result->name, $full_name_arr);
         if (version_compare(_PS_VERSION_, '1.5.3.1', '>')) {
@@ -254,13 +252,13 @@ class PayPalLogin
 
     public function getAuthorizationUrl()
     {
-        $query = array(
+        $query = [
             'flowEntry' => 'static',
             'clientId' => Configuration::get('PAYPAL_LOGIN_CLIENT_ID'),
             'response_type' => 'code',
             'redirect_uri' => self::getReturnLink(),
-            'scope' => 'openid profile email address'
-        );
+            'scope' => 'openid profile email address',
+        ];
 
         if (Configuration::get('PAYPAL_SANDBOX')) {
             $url = 'https://sandbox.paypal.com/connect?';

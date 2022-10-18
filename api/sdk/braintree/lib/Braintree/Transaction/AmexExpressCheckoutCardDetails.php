@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,38 +22,34 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
 
 use Braintree\Instance;
+
 /**
  * Amex Express Checkout card details from a transaction
  *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 
 /**
  * creates an instance of AmexExpressCheckoutCardDetails
  *
- *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $cardType
- * @property-read string $bin
- * @property-read string $cardMemberExpiryDate
- * @property-read string $cardMemberNumber
- * @property-read string $cardType
- * @property-read string $sourceDescription
- * @property-read string $token
- * @property-read string $imageUrl
- * @property-read string $expirationMonth
- * @property-read string $expirationYear
+ * @property string $cardType
+ * @property string $bin
+ * @property string $cardMemberExpiryDate
+ * @property string $cardMemberNumber
+ * @property string $cardType
+ * @property string $sourceDescription
+ * @property string $token
+ * @property string $imageUrl
+ * @property string $expirationMonth
+ * @property string $expirationYear
+ *
  * @uses Instance inherits methods
  */
 class AmexExpressCheckoutCardDetails extends Instance

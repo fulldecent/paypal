@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,32 +22,29 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 class PaypalPlusPui extends ObjectModel
 {
-
     public $id_paypal_plus_pui;
     public $id_order;
     public $pui_informations;
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'paypal_plus_pui',
         'primary' => 'id_paypal_plus_pui',
-        'fields' => array(
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'pui_informations' => array('type' => self::TYPE_STRING),
-        ),
-    );
-
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'pui_informations' => ['type' => self::TYPE_STRING],
+        ],
+    ];
 
     public static function getByIdOrder($id_order)
     {
         $sql = new DbQuery();
         $sql->select('*');
         $sql->from('paypal_plus_pui');
-        $sql->where('id_order = '.(int)$id_order);
+        $sql->where('id_order = ' . (int) $id_order);
+
         return Db::getInstance()->getRow($sql);
     }
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -39,7 +36,7 @@ class PayPalInstall
     {
         /* Set database */
         if (!Db::getInstance()->Execute('
-        CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_order` (
+        CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_order` (
             `id_order` int(10) unsigned NOT NULL,
             `id_transaction` varchar(255) NOT NULL,
             `id_invoice` varchar(255) DEFAULT NULL,
@@ -51,23 +48,23 @@ class PayPalInstall
             `payment_method` int(2) unsigned NOT NULL,
             `payment_status` varchar(255) DEFAULT NULL,
             PRIMARY KEY (`id_order`)
-        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8')) {
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8')) {
             return false;
         }
 
         /* Set database */
         if (!Db::getInstance()->Execute('
-        CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_customer` (
+        CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_customer` (
             `id_paypal_customer` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `id_customer` int(10) unsigned NOT NULL,
             `paypal_email` varchar(255) NOT NULL,
             PRIMARY KEY (`id_paypal_customer`)
-        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1')) {
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1')) {
             return false;
         }
 
         if (!Db::getInstance()->Execute('
-            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_login_user`  (
+            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_login_user`  (
                 `id_paypal_login_user` INT(11) AUTO_INCREMENT,
                 `id_customer` INT(11) NOT NULL,
                 `token_type` VARCHAR(255) NOT NULL,
@@ -81,12 +78,12 @@ class PayPalInstall
                 `zoneinfo` VARCHAR(255) NOT NULL,
                 `age_range` VARCHAR(255) NOT NULL,
                 PRIMARY KEY (`id_paypal_login_user`)
-            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8')) {
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8')) {
             return false;
         }
 
         if (!Db::getInstance()->Execute('
-            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_capture` (
+            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_capture` (
                   `id_paypal_capture` int(11) NOT NULL AUTO_INCREMENT,
                   `id_order` int(11) NOT NULL,
                   `capture_amount` float NOT NULL,
@@ -94,12 +91,12 @@ class PayPalInstall
                   `date_add` datetime NOT NULL,
                   `date_upd` datetime NOT NULL,
                   PRIMARY KEY (`id_paypal_capture`)
-                ) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;')) {
+                ) ENGINE=' . _MYSQL_ENGINE_ . '  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;')) {
             return false;
         }
 
         if (!Db::getInstance()->Execute('
-            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_braintree` (
+            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_braintree` (
                 `id_paypal_braintree` int(11) NOT NULL AUTO_INCREMENT,
                 `id_cart` int(11) NOT NULL,
                 `nonce_payment_token` varchar(255) NOT NULL,
@@ -108,28 +105,28 @@ class PayPalInstall
                 `datas` varchar(255) NULL,
                 `id_order` int(11) NULL,
                 PRIMARY KEY (`id_paypal_braintree`)
-                ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;')) {
+                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;')) {
             return false;
         }
 
         if (!Db::getInstance()->Execute('
-            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_plus_pui` (
+            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_plus_pui` (
                 `id_paypal_plus_pui` int(11) NOT NULL AUTO_INCREMENT,
                 `id_order` int(11) NOT NULL,
                 `pui_informations` text NOT NULL,
                 PRIMARY KEY (`id_paypal_plus_pui`)
-                ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
         ')) {
             return false;
         }
 
         if (!Db::getInstance()->Execute('
-            CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_hss_email_error` (
+            CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_hss_email_error` (
                 `id_paypal_hss_email_error` int(11) NOT NULL AUTO_INCREMENT,
                 `id_cart` int(11) NOT NULL,
                 `email` varchar(255) NOT NULL,
                 PRIMARY KEY (`id_paypal_hss_email_error`)
-                ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
         ')) {
             return false;
         }
@@ -221,7 +218,7 @@ class PayPalInstall
     {
         if (!Configuration::get('PAYPAL_OS_AUTHORIZATION')) {
             $order_state = new OrderState();
-            $order_state->name = array();
+            $order_state->name = [];
 
             foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($language['iso_code']) == 'fr') {
@@ -239,8 +236,8 @@ class PayPalInstall
             $order_state->invoice = true;
 
             if ($order_state->add()) {
-                $source = dirname(__FILE__).'/../../img/os/'.Configuration::get('PS_OS_PAYPAL').'.gif';
-                $destination = dirname(__FILE__).'/../../img/os/'.(int) $order_state->id.'.gif';
+                $source = dirname(__FILE__) . '/../../img/os/' . Configuration::get('PS_OS_PAYPAL') . '.gif';
+                $destination = dirname(__FILE__) . '/../../img/os/' . (int) $order_state->id . '.gif';
                 copy($source, $destination);
             }
             Configuration::updateValue('PAYPAL_OS_AUTHORIZATION', (int) $order_state->id);
@@ -250,8 +247,7 @@ class PayPalInstall
 
         if (!Configuration::get('PAYPAL_BT_OS_AUTHORIZATION', false)) {
             $order_state_auth = new OrderState();
-            $order_state_auth->name = array();
-
+            $order_state_auth->name = [];
 
             foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($language['iso_code']) == 'fr') {
@@ -267,18 +263,16 @@ class PayPalInstall
             $order_state_auth->logable = true;
             $order_state_auth->invoice = true;
             if ($order_state_auth->add()) {
-                $source = _PS_MODULE_DIR_.'paypal/views/img/logos/os_braintree.png';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state_auth->id.'.gif';
+                $source = _PS_MODULE_DIR_ . 'paypal/views/img/logos/os_braintree.png';
+                $destination = _PS_ROOT_DIR_ . '/img/os/' . (int) $order_state_auth->id . '.gif';
                 copy($source, $destination);
             }
             Configuration::updateValue('PAYPAL_BT_OS_AUTHORIZATION', (int) $order_state_auth->id);
         }
 
-
         if (!Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING', false)) {
             $order_state_wait = new OrderState();
-            $order_state_wait->name = array();
-
+            $order_state_wait->name = [];
 
             foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($language['iso_code']) == 'fr') {
@@ -294,17 +288,17 @@ class PayPalInstall
             $order_state_wait->logable = true;
             $order_state_wait->invoice = false;
             if ($order_state_wait->add()) {
-                $source = _PS_MODULE_DIR_.'paypal/views/img/logos/os_braintree.png';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state_wait->id.'.gif';
+                $source = _PS_MODULE_DIR_ . 'paypal/views/img/logos/os_braintree.png';
+                $destination = _PS_ROOT_DIR_ . '/img/os/' . (int) $order_state_wait->id . '.gif';
                 copy($source, $destination);
             }
             Configuration::updateValue('PAYPAL_BRAINTREE_OS_AWAITING', (int) $order_state_wait->id);
         }
 
-        /** Paypal HSS  */
+        /* Paypal HSS  */
         if (!Configuration::get('PAYPAL_OS_AWAITING_HSS')) {
             $order_state = new OrderState();
-            $order_state->name = array();
+            $order_state->name = [];
 
             foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($language['iso_code']) == 'fr') {
@@ -322,8 +316,8 @@ class PayPalInstall
             $order_state->invoice = false;
 
             if ($order_state->add()) {
-                $source = dirname(__FILE__).'/../../img/os/'.Configuration::get('PS_OS_PAYPAL').'.gif';
-                $destination = dirname(__FILE__).'/../../img/os/'.(int) $order_state->id.'.gif';
+                $source = dirname(__FILE__) . '/../../img/os/' . Configuration::get('PS_OS_PAYPAL') . '.gif';
+                $destination = dirname(__FILE__) . '/../../img/os/' . (int) $order_state->id . '.gif';
                 copy($source, $destination);
             }
             Configuration::updateValue('PAYPAL_OS_AWAITING_HSS', (int) $order_state->id);

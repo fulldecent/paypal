@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -33,6 +31,7 @@ class CreditCardVerification extends Result\CreditCardVerification
     public static function factory($attributes)
     {
         $instance = new self($attributes);
+
         return $instance;
     }
 
@@ -41,6 +40,7 @@ class CreditCardVerification extends Result\CreditCardVerification
     public static function create($attributes)
     {
         Util::verifyKeys(self::createSignature(), $attributes);
+
         return Configuration::gateway()->creditCardVerification()->create($attributes);
     }
 
@@ -58,13 +58,12 @@ class CreditCardVerification extends Result\CreditCardVerification
     {
         return [
                 ['options' => ['amount', 'merchantAccountId']],
-                ['creditCard' =>
-                    [
+                ['creditCard' => [
                         'cardholderName', 'cvv', 'number',
                         'expirationDate', 'expirationMonth', 'expirationYear',
-                        ['billingAddress' => CreditCardGateway::billingAddressSignature()]
-                    ]
-                ]];
+                        ['billingAddress' => CreditCardGateway::billingAddressSignature()],
+                    ],
+                ], ];
     }
 }
 class_alias('Braintree\CreditCardVerification', 'Braintree_CreditCardVerification');

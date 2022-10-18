@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Result;
@@ -37,25 +35,21 @@ use Braintree\Util;
  * This object is returned as part of an Error Result; it provides
  * access to the credit card verification data from the gateway
  *
- *
- * @package    Braintree
- * @subpackage Result
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $avsErrorResponseCode
- * @property-read string $avsPostalCodeResponseCode
- * @property-read string $avsStreetAddressResponseCode
- * @property-read string $cvvResponseCode
- * @property-read string $status
- *
+ * @property string $avsErrorResponseCode
+ * @property string $avsPostalCodeResponseCode
+ * @property string $avsStreetAddressResponseCode
+ * @property string $cvvResponseCode
+ * @property string $status
  */
 class CreditCardVerification
 {
     // Status
-    const FAILED                   = 'failed';
-    const GATEWAY_REJECTED         = 'gateway_rejected';
-    const PROCESSOR_DECLINED       = 'processor_declined';
-    const VERIFIED                 = 'verified';
+    const FAILED = 'failed';
+    const GATEWAY_REJECTED = 'gateway_rejected';
+    const PROCESSOR_DECLINED = 'processor_declined';
+    const VERIFIED = 'verified';
 
     private $_attributes;
     private $_avsErrorResponseCode;
@@ -68,27 +62,28 @@ class CreditCardVerification
     /**
      * @ignore
      */
-    public function  __construct($attributes)
+    public function __construct($attributes)
     {
         $this->_initializeFromArray($attributes);
     }
 
     /**
      * initializes instance properties from the keys/values of an array
+     *
      * @ignore
-     * @access protected
+     *
      * @param <type> $aAttribs array of properties to set - single level
+     *
      * @return void
      */
     private function _initializeFromArray($attributes)
     {
-        if(isset($attributes['riskData']))
-        {
+        if (isset($attributes['riskData'])) {
             $attributes['riskData'] = RiskData::factory($attributes['riskData']);
         }
 
         $this->_attributes = $attributes;
-        foreach($attributes AS $name => $value) {
+        foreach ($attributes as $name => $value) {
             $varName = "_$name";
             $this->$varName = $value;
         }
@@ -97,17 +92,19 @@ class CreditCardVerification
     /**
      * @ignore
      */
-    public function  __get($name)
+    public function __get($name)
     {
         $varName = "_$name";
+
         return isset($this->$varName) ? $this->$varName : null;
     }
 
     /**
      * returns a string representation of the customer
+     *
      * @return string
      */
-    public function  __toString()
+    public function __toString()
     {
         return __CLASS__ . '[' .
                 Util::attributesToString($this->_attributes) . ']';
@@ -119,7 +116,7 @@ class CreditCardVerification
             CreditCardVerification::FAILED,
             CreditCardVerification::GATEWAY_REJECTED,
             CreditCardVerification::PROCESSOR_DECLINED,
-            CreditCardVerification::VERIFIED
+            CreditCardVerification::VERIFIED,
         ];
     }
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -37,24 +35,24 @@ namespace Braintree;
  * For more detailed information on CreditCards, see {@link http://www.braintreepayments.com/gateway/credit-card-api http://www.braintreepaymentsolutions.com/gateway/credit-card-api}<br />
  * For more detailed information on CreditCard verifications, see {@link http://www.braintreepayments.com/gateway/credit-card-verification-api http://www.braintreepaymentsolutions.com/gateway/credit-card-verification-api}
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $billingAddress
- * @property-read string $bin
- * @property-read string $cardType
- * @property-read string $cardholderName
- * @property-read string $createdAt
- * @property-read string $customerId
- * @property-read string $expirationDate
- * @property-read string $expirationMonth
- * @property-read string $expirationYear
- * @property-read string $imageUrl
- * @property-read string $last4
- * @property-read string $maskedNumber
- * @property-read string $token
- * @property-read string $updatedAt
+ * @property string $billingAddress
+ * @property string $bin
+ * @property string $cardType
+ * @property string $cardholderName
+ * @property string $createdAt
+ * @property string $customerId
+ * @property string $expirationDate
+ * @property string $expirationMonth
+ * @property string $expirationYear
+ * @property string $imageUrl
+ * @property string $last4
+ * @property string $maskedNumber
+ * @property string $token
+ * @property string $updatedAt
  */
 class CreditCard extends Base
 {
@@ -74,8 +72,8 @@ class CreditCard extends Base
     const UNKNOWN = 'Unknown';
 
     // Credit card origination location
-	const INTERNATIONAL = "international";
-	const US            = "us";
+    const INTERNATIONAL = 'international';
+    const US = 'us';
 
     const PREPAID_YES = 'Yes';
     const PREPAID_NO = 'No';
@@ -101,14 +99,15 @@ class CreditCard extends Base
     const COMMERCIAL_NO = 'No';
     const COMMERCIAL_UNKNOWN = 'Unknown';
 
-    const COUNTRY_OF_ISSUANCE_UNKNOWN = "Unknown";
-    const ISSUING_BANK_UNKNOWN = "Unknown";
+    const COUNTRY_OF_ISSUANCE_UNKNOWN = 'Unknown';
+    const ISSUING_BANK_UNKNOWN = 'Unknown';
 
     /* instance methods */
+
     /**
      * returns false if default is null or false
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault()
     {
@@ -118,7 +117,7 @@ class CreditCard extends Base
     /**
      * checks whether the card is expired based on the current date
      *
-     * @return boolean
+     * @return bool
      */
     public function isExpired()
     {
@@ -128,7 +127,7 @@ class CreditCard extends Base
     /**
      * checks whether the card is associated with venmo sdk
      *
-     * @return boolean
+     * @return bool
      */
     public function isVenmoSdk()
     {
@@ -138,8 +137,8 @@ class CreditCard extends Base
     /**
      * sets instance properties from an array of values
      *
-     * @access protected
      * @param array $creditCardAttribs array of creditcard data
+     *
      * @return void
      */
     protected function _initialize($creditCardAttribs)
@@ -154,7 +153,7 @@ class CreditCard extends Base
 
         $subscriptionArray = [];
         if (isset($creditCardAttribs['subscriptions'])) {
-            foreach ($creditCardAttribs['subscriptions'] AS $subscription) {
+            foreach ($creditCardAttribs['subscriptions'] as $subscription) {
                 $subscriptionArray[] = Subscription::factory($subscription);
             }
         }
@@ -164,7 +163,7 @@ class CreditCard extends Base
         $this->_set('expirationDate', $this->expirationMonth . '/' . $this->expirationYear);
         $this->_set('maskedNumber', $this->bin . '******' . $this->last4);
 
-        if(isset($creditCardAttribs['verifications']) && count($creditCardAttribs['verifications']) > 0) {
+        if (isset($creditCardAttribs['verifications']) && count($creditCardAttribs['verifications']) > 0) {
             $verifications = $creditCardAttribs['verifications'];
             usort($verifications, [$this, '_compareCreatedAtOnVerifications']);
 
@@ -182,7 +181,8 @@ class CreditCard extends Base
      * or is a CreditCard with a different id
      *
      * @param object $otherCreditCard customer to compare against
-     * @return boolean
+     *
+     * @return bool
      */
     public function isEqual($otherCreditCard)
     {
@@ -192,12 +192,13 @@ class CreditCard extends Base
     /**
      * create a printable representation of the object as:
      * ClassName[property=value, property=value]
+     *
      * @return string
      */
-    public function  __toString()
+    public function __toString()
     {
         return __CLASS__ . '[' .
-                Util::attributesToString($this->_attributes) .']';
+                Util::attributesToString($this->_attributes) . ']';
     }
 
     /**
@@ -205,22 +206,23 @@ class CreditCard extends Base
      *  to the requesting method, with populated properties
      *
      * @ignore
+     *
      * @return CreditCard
      */
     public static function factory($attributes)
     {
         $defaultAttributes = [
             'bin' => '',
-            'expirationMonth'    => '',
-            'expirationYear'    => '',
-            'last4'  => '',
+            'expirationMonth' => '',
+            'expirationYear' => '',
+            'last4' => '',
         ];
 
         $instance = new self();
         $instance->_initialize(array_merge($defaultAttributes, $attributes));
+
         return $instance;
     }
-
 
     // static methods redirecting to gateway
 
@@ -335,7 +337,7 @@ class CreditCard extends Base
             CreditCard::SOLO,
             CreditCard::SWITCH_TYPE,
             CreditCard::VISA,
-            CreditCard::UNKNOWN
+            CreditCard::UNKNOWN,
         ];
     }
 }

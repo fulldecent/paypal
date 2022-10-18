@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -36,7 +33,7 @@ function upgrade_module_3_9($object, $install = false)
 
     if ((!$paypal_version) || (empty($paypal_version)) || ($paypal_version < $object->version)) {
         if (!Db::getInstance()->Execute('
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_capture` (
+		CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_capture` (
 			  `id_paypal_capture` int(11) NOT NULL AUTO_INCREMENT,
 			  `id_order` int(11) NOT NULL,
 			  `capture_amount` float NOT NULL,
@@ -44,7 +41,7 @@ function upgrade_module_3_9($object, $install = false)
 			  `date_add` datetime NOT NULL,
 			  `date_upd` datetime NOT NULL,
 			  PRIMARY KEY (`id_paypal_capture`)
-			) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;')) {
+			) ENGINE=' . _MYSQL_ENGINE_ . '  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;')) {
             return false;
         }
 

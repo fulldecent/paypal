@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
@@ -34,19 +32,17 @@ use Braintree\Instance;
  * CreditCard details from a transaction
  * creates an instance of CreditCardDetails
  *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $bin
- * @property-read string $cardType
- * @property-read string $expirationDate
- * @property-read string $expirationMonth
- * @property-read string $expirationYear
- * @property-read string $issuerLocation
- * @property-read string $last4
- * @property-read string $maskedNumber
- * @property-read string $token
+ * @property string $bin
+ * @property string $cardType
+ * @property string $expirationDate
+ * @property string $expirationMonth
+ * @property string $expirationYear
+ * @property string $issuerLocation
+ * @property string $last4
+ * @property string $maskedNumber
+ * @property string $token
  */
 class CreditCardDetails extends Instance
 {
@@ -60,7 +56,6 @@ class CreditCardDetails extends Instance
         parent::__construct($attributes);
         $this->_attributes['expirationDate'] = $this->expirationMonth . '/' . $this->expirationYear;
         $this->_attributes['maskedNumber'] = $this->bin . '******' . $this->last4;
-
     }
 }
 class_alias('Braintree\Transaction\CreditCardDetails', 'Braintree_Transaction_CreditCardDetails');

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 require_once _PS_MODULE_DIR_ . 'paypal/api/paypal_lib.php';
 
 class ExpressCheckout
@@ -46,7 +43,7 @@ class ExpressCheckout
 
     const NOT_CONFIGURED = 2;
 
-    /** @var PayPal*/
+    /** @var PayPal */
     protected $module;
 
     public function __construct()
@@ -56,11 +53,13 @@ class ExpressCheckout
 
     /**
      * @param string $apiUser
+     *
      * @return self
      */
     public function setApiUser($apiUser)
     {
         Configuration::updateValue(self::API_USER, pSQL($apiUser));
+
         return $this;
     }
 
@@ -69,16 +68,18 @@ class ExpressCheckout
      */
     public function getApiUser()
     {
-        return (string)Configuration::get(self::API_USER);
+        return (string) Configuration::get(self::API_USER);
     }
 
     /**
      * @param string $apiPassword
+     *
      * @return self
      */
     public function setApiPassword($apiPassword)
     {
         Configuration::updateValue(self::API_PASSWORD, pSQL($apiPassword));
+
         return $this;
     }
 
@@ -87,16 +88,18 @@ class ExpressCheckout
      */
     public function getApiPassword()
     {
-        return (string)Configuration::get(self::API_PASSWORD);
+        return (string) Configuration::get(self::API_PASSWORD);
     }
 
     /**
      * @param string $apiSignature
+     *
      * @return self
      */
     public function setApiSignature($apiSignature)
     {
         Configuration::updateValue(self::API_SIGNATURE, pSQL($apiSignature));
+
         return $this;
     }
 
@@ -105,7 +108,7 @@ class ExpressCheckout
      */
     public function getApiSignature()
     {
-        return (string)Configuration::get(self::API_SIGNATURE);
+        return (string) Configuration::get(self::API_SIGNATURE);
     }
 
     /**
@@ -149,7 +152,7 @@ class ExpressCheckout
         $response = $paypalApi->makeCall($this->module->getAPIURL(), $this->module->getAPIScript(), 'GetPalDetails', []);
 
         if (isset($response['ACK']) && $response['ACK'] == 'Success') {
-            return (string)$response['PAL'];
+            return (string) $response['PAL'];
         }
 
         return '';
@@ -180,11 +183,13 @@ class ExpressCheckout
 
     /**
      * @param string $merchantId
+     *
      * @return self
      */
     public function setApiMerchantId($merchantId)
     {
         Configuration::updateValue(self::API_MERCHANT_ID, pSQL($merchantId));
+
         return $this;
     }
 
@@ -193,6 +198,6 @@ class ExpressCheckout
      */
     public function getApiMerchantId()
     {
-        return (string)Configuration::get(self::API_MERCHANT_ID);
+        return (string) Configuration::get(self::API_MERCHANT_ID);
     }
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -31,13 +29,11 @@ namespace Braintree;
 /**
  * Creates an instance of AccountUpdaterDailyReport
  *
- *
- * @package    Braintree
  * @copyright  2016 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $reportUrl
- * @property-read date   $reportDate
- * @property-read date   $receivedDate
+ * @property string $reportUrl
+ * @property date   $reportDate
+ * @property date   $receivedDate
  */
 final class AccountUpdaterDailyReport extends Base
 {
@@ -52,21 +48,23 @@ final class AccountUpdaterDailyReport extends Base
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
     }
 
-    public function  __toString()
+    public function __toString()
     {
         $display = [
-            'reportDate', 'reportUrl'
+            'reportDate', 'reportUrl',
             ];
 
         $displayAttributes = [];
-        foreach ($display AS $attrib) {
+        foreach ($display as $attrib) {
             $displayAttributes[$attrib] = $this->$attrib;
         }
+
         return __CLASS__ . '[' .
-                Util::attributesToString($displayAttributes) .']';
+                Util::attributesToString($displayAttributes) . ']';
     }
 }
 class_alias('Braintree\AccountUpdaterDailyReport', 'Braintree_AccountUpdaterDailyReport');

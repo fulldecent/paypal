@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,22 +22,19 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once dirname(__FILE__).'/../../../config/config.inc.php';
-include_once _PS_ROOT_DIR_.'/init.php';
-
+include_once dirname(__FILE__) . '/../../../config/config.inc.php';
+include_once _PS_ROOT_DIR_ . '/init.php';
 
 if ($id_cart = Tools::getValue('id_cart')) {
     $id_order = Db::getInstance()->getValue('
 		SELECT id_order
-		FROM `'._DB_PREFIX_.'paypal_order`
-		WHERE `id_order` = '.(int) Order::getOrderByCartId((int) $id_cart));
+		FROM `' . _DB_PREFIX_ . 'paypal_order`
+		WHERE `id_order` = ' . (int) Order::getOrderByCartId((int) $id_cart));
 
     if ($id_order !== false) {
         echo (int) $id_order;
     }
 }
 
-die();
+exit();

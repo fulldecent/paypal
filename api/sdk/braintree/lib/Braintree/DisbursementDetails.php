@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -32,20 +30,19 @@ namespace Braintree;
  * Disbursement details from a transaction
  * Creates an instance of DisbursementDetails as returned from a transaction
  *
- *
- * @package    Braintree
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $settlementAmount
- * @property-read string $settlementCurrencyIsoCode
- * @property-read string $settlementCurrencyExchangeRate
- * @property-read string $fundsHeld
- * @property-read string $success
- * @property-read string $disbursementDate
+ * @property string $settlementAmount
+ * @property string $settlementCurrencyIsoCode
+ * @property string $settlementCurrencyExchangeRate
+ * @property string $fundsHeld
+ * @property string $success
+ * @property string $disbursementDate
  */
 class DisbursementDetails extends Instance
 {
-    public function isValid() {
+    public function isValid()
+    {
         return !is_null($this->disbursementDate);
     }
 }

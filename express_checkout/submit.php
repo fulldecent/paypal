@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,14 +22,12 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once dirname(__FILE__).'/../../../config/config.inc.php';
-include_once _PS_ROOT_DIR_.'/init.php';
+include_once dirname(__FILE__) . '/../../../config/config.inc.php';
+include_once _PS_ROOT_DIR_ . '/init.php';
 
 if (version_compare(_PS_VERSION_, '1.5', '<')) {
-    require_once _PS_ROOT_DIR_.'/controllers/OrderConfirmationController.php';
+    require_once _PS_ROOT_DIR_ . '/controllers/OrderConfirmationController.php';
 }
 
 /**
@@ -65,11 +62,11 @@ class PayPalExpressCheckoutSubmit extends OrderConfirmationControllerCore
 
         if (!$order || !$order_state || (isset($order_state_message) && ($order_state_message == 'payment_error'))) {
             $this->context->smarty->assign(
-                array(
-                    'logs' => array($this->paypal->l('An error occurred while processing payment.')),
+                [
+                    'logs' => [$this->paypal->l('An error occurred while processing payment.')],
                     'order' => $paypal_order,
                     'price' => $price,
-                )
+                ]
             );
 
             if (isset($order_state_message) && $order_state_message) {
@@ -79,16 +76,16 @@ class PayPalExpressCheckoutSubmit extends OrderConfirmationControllerCore
             $template = 'error.tpl';
         } else {
             $this->context->smarty->assign(
-                array(
+                [
                     'order' => $paypal_order,
                     'price' => $price,
-                )
+                ]
             );
 
             if (version_compare(_PS_VERSION_, '1.5', '>')) {
-                $this->context->smarty->assign(array(
+                $this->context->smarty->assign([
                     'reference_order' => Order::getUniqReferenceOf($paypal_order['id_order']),
-                ));
+                ]);
             }
 
             $template = 'order-confirmation.tpl';

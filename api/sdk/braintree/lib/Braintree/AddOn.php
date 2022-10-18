@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -31,17 +29,17 @@ namespace Braintree;
 class AddOn extends Modification
 {
     /**
-     *
      * @param array $attributes
+     *
      * @return AddOn
      */
     public static function factory($attributes)
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
     }
-
 
     /**
      * static methods redirecting to gateway

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -31,8 +29,8 @@ namespace Braintree;
 /**
  * Braintree UnknownPaymentMethod module
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 
@@ -41,23 +39,21 @@ namespace Braintree;
  *
  * <b>== More information ==</b>
  *
- *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $token
- * @property-read string $imageUrl
+ * @property string $token
+ * @property string $imageUrl
  */
 class UnknownPaymentMethod extends Base
 {
-
-
     /**
      *  factory method: returns an instance of UnknownPaymentMethod
      *  to the requesting method, with populated properties
      *
      * @ignore
+     *
      * @return UnknownPaymentMethod
      */
     public static function factory($attributes)
@@ -65,6 +61,7 @@ class UnknownPaymentMethod extends Base
         $instance = new self();
         $values = array_values($attributes);
         $instance->_initialize(array_shift($values));
+
         return $instance;
     }
 
@@ -73,7 +70,7 @@ class UnknownPaymentMethod extends Base
     /**
      * returns false if default is null or false
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault()
     {
@@ -83,8 +80,8 @@ class UnknownPaymentMethod extends Base
     /**
      * sets instance properties from an array of values
      *
-     * @access protected
      * @param array $unknownPaymentMethodAttribs array of unknownPaymentMethod data
+     *
      * @return void
      */
     protected function _initialize($unknownPaymentMethodAttribs)
@@ -93,6 +90,5 @@ class UnknownPaymentMethod extends Base
         $this->imageUrl = 'https://assets.braintreegateway.com/payment_method_logo/unknown.png';
         $this->_attributes = $unknownPaymentMethodAttribs;
     }
-
 }
 class_alias('Braintree\UnknownPaymentMethod', 'Braintree_UnknownPaymentMethod');

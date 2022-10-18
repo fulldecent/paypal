@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -36,11 +33,11 @@ function upgrade_module_2_8($object, $install = false)
         $result = true;
 
         /* Check PayPal API */
-        if (file_exists(_PS_MODULE_DIR_.'paypalapi/paypalapi.php')) {
-            $confs = Configuration::getMultiple(array('PAYPAL_HEADER', 'PAYPAL_SANDBOX', 'PAYPAL_API_USER', 'PAYPAL_API_PASSWORD',
-                'PAYPAL_API_SIGNATURE', 'PAYPAL_EXPRESS_CHECKOUT'));
+        if (file_exists(_PS_MODULE_DIR_ . 'paypalapi/paypalapi.php')) {
+            $confs = Configuration::getMultiple(['PAYPAL_HEADER', 'PAYPAL_SANDBOX', 'PAYPAL_API_USER', 'PAYPAL_API_PASSWORD',
+                'PAYPAL_API_SIGNATURE', 'PAYPAL_EXPRESS_CHECKOUT', ]);
 
-            include_once _PS_MODULE_DIR_.'paypalapi/paypalapi.php';
+            include_once _PS_MODULE_DIR_ . 'paypalapi/paypalapi.php';
             $paypalapi = new PayPalAPI();
 
             if ($paypalapi->active) {
@@ -61,16 +58,16 @@ function upgrade_module_2_8($object, $install = false)
 
         /* Create Table */
         if (!Db::getInstance()->Execute('
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_order` (
+		CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_order` (
 		`id_order` int(10) unsigned NOT null auto_increment,
 		`id_transaction` varchar(255) NOT null,
 		PRIMARY KEY (`id_order`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8')) {
+		) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8')) {
             $result = false;
         }
 
         if (!Db::getInstance()->Execute('
-		ALTER TABLE `'._DB_PREFIX_.'paypal_order` ADD `payment_method` INT NOT null,
+		ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD `payment_method` INT NOT null,
 		ADD `payment_status` VARCHAR(255) NOT null,
 		ADD `capture` INT NOT null')) {
             $result = false;
@@ -83,7 +80,7 @@ function upgrade_module_2_8($object, $install = false)
         /* Create OrderState */
         if (!Configuration::get('PAYPAL_OS_AUTHORIZATION')) {
             $order_state = new OrderState();
-            $order_state->name = array();
+            $order_state->name = [];
 
             foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($language['iso_code']) == 'fr') {
@@ -101,7 +98,7 @@ function upgrade_module_2_8($object, $install = false)
             $order_state->invoice = true;
 
             if ($order_state->add()) {
-                copy(_PS_ROOT_DIR_.'/img/os/'.Configuration::get('PS_OS_PAYPAL').'.gif', _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif');
+                copy(_PS_ROOT_DIR_ . '/img/os/' . Configuration::get('PS_OS_PAYPAL') . '.gif', _PS_ROOT_DIR_ . '/img/os/' . (int) $order_state->id . '.gif');
             }
 
             Configuration::updateValue('PAYPAL_OS_AUTHORIZATION', (int) $order_state->id);
@@ -125,5 +122,6 @@ function upgrade_module_2_8($object, $install = false)
     }
 
     $object->upgrade_detail['2.8'][] = 'PayPalAPI upgrade error !';
+
     return false;
 }

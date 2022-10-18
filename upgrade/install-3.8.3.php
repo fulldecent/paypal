@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -35,24 +32,24 @@ function upgrade_module_3_8_3($object, $install = false)
     $paypal_version = Configuration::get('PAYPAL_VERSION');
 
     if ((!$paypal_version) || (empty($paypal_version)) || ($paypal_version < $object->version)) {
-        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `'._DB_PREFIX_.'paypal_order` LIKE \'id_invoice\'') == false) {
-            Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'paypal_order` ADD `id_invoice` varchar(255) DEFAULT NULL');
+        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'paypal_order` LIKE \'id_invoice\'') == false) {
+            Db::getInstance()->Execute('ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD `id_invoice` varchar(255) DEFAULT NULL');
         }
 
-        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `'._DB_PREFIX_.'paypal_order` LIKE \'currency\'') == false) {
-            Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'paypal_order` ADD `currency` varchar(10) DEFAULT NULL');
+        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'paypal_order` LIKE \'currency\'') == false) {
+            Db::getInstance()->Execute('ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD `currency` varchar(10) DEFAULT NULL');
         }
 
-        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `'._DB_PREFIX_.'paypal_order` LIKE \'total_paid\'') == false) {
-            Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'paypal_order` ADD `total_paid` varchar(50) DEFAULT NULL');
+        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'paypal_order` LIKE \'total_paid\'') == false) {
+            Db::getInstance()->Execute('ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD `total_paid` varchar(50) DEFAULT NULL');
         }
 
-        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `'._DB_PREFIX_.'paypal_order` LIKE \'shipping\'') == false) {
-            Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'paypal_order` ADD `shipping` varchar(50) DEFAULT NULL');
+        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'paypal_order` LIKE \'shipping\'') == false) {
+            Db::getInstance()->Execute('ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD `shipping` varchar(50) DEFAULT NULL');
         }
 
-        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `'._DB_PREFIX_.'paypal_order` LIKE \'payment_date\'') == false) {
-            Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'paypal_order` ADD `payment_date` varchar(50) DEFAULT NULL');
+        if (Db::getInstance()->ExecuteS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'paypal_order` LIKE \'payment_date\'') == false) {
+            Db::getInstance()->Execute('ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD `payment_date` varchar(50) DEFAULT NULL');
         }
 
         Configuration::updateValue('PAYPAL_VERSION', '3.8.3');

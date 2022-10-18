@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
@@ -34,14 +32,13 @@ use Braintree\Instance;
  * Status details from a transaction
  * Creates an instance of StatusDetails, as part of a transaction response
  *
- * @package    Braintree
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $amount
- * @property-read string $status
- * @property-read string $timestamp
- * @property-read string $transactionSource
- * @property-read string $user
+ * @property string $amount
+ * @property string $status
+ * @property string $timestamp
+ * @property string $transactionSource
+ * @property string $user
  */
 class StatusDetails extends Instance
 {

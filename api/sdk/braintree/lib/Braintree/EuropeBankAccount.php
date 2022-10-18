@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -36,27 +34,27 @@ namespace Braintree;
  *
  * See {@link https://developers.braintreepayments.com/javascript+php}<br />
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $account-holder-name
- * @property-read string $bic
- * @property-read string $customerId
- * @property-read string $default
- * @property-read string $image-url
- * @property-read string $mandate-reference-number
- * @property-read string $masked-iban
- * @property-read string $token
+ * @property string $account-holder-name
+ * @property string $bic
+ * @property string $customerId
+ * @property string $default
+ * @property string $image-url
+ * @property string $mandate-reference-number
+ * @property string $masked-iban
+ * @property string $token
  */
 class EuropeBankAccount extends Base
 {
-
     /* instance methods */
+
     /**
      * returns false if default is null or false
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault()
     {
@@ -68,6 +66,7 @@ class EuropeBankAccount extends Base
      *  to the requesting method, with populated properties
      *
      * @ignore
+     *
      * @return EuropeBankAccount
      */
     public static function factory($attributes)
@@ -77,14 +76,15 @@ class EuropeBankAccount extends Base
 
         $instance = new self();
         $instance->_initialize(array_merge($defaultAttributes, $attributes));
+
         return $instance;
     }
 
     /**
      * sets instance properties from an array of values
      *
-     * @access protected
      * @param array $europeBankAccountAttribs array of EuropeBankAccount properties
+     *
      * @return void
      */
     protected function _initialize($europeBankAccountAttribs)

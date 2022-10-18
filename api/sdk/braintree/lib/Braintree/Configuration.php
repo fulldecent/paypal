@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,20 +22,15 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
 
 /**
- *
  * Configuration registry
  *
- * @package    Braintree
- * @subpackage Utility
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
-
 class Configuration
 {
     public static $global;
@@ -55,9 +49,8 @@ class Configuration
 
     /**
      * Braintree API version to use
-     * @access public
      */
-     const API_VERSION =  4;
+    const API_VERSION = 4;
 
     public function __construct($attribs = [])
     {
@@ -93,7 +86,6 @@ class Configuration
 
     /**
      * resets configuration to default
-     * @access public
      */
     public static function reset()
     {
@@ -105,7 +97,7 @@ class Configuration
         return new Gateway(self::$global);
     }
 
-    public static function environment($value=null)
+    public static function environment($value = null)
     {
         if (empty($value)) {
             return self::$global->getEnvironment();
@@ -114,7 +106,7 @@ class Configuration
         self::$global->setEnvironment($value);
     }
 
-    public static function merchantId($value=null)
+    public static function merchantId($value = null)
     {
         if (empty($value)) {
             return self::$global->getMerchantId();
@@ -122,7 +114,7 @@ class Configuration
         self::$global->setMerchantId($value);
     }
 
-    public static function publicKey($value=null)
+    public static function publicKey($value = null)
     {
         if (empty($value)) {
             return self::$global->getPublicKey();
@@ -130,7 +122,7 @@ class Configuration
         self::$global->setPublicKey($value);
     }
 
-    public static function privateKey($value=null)
+    public static function privateKey($value = null)
     {
         if (empty($value)) {
             return self::$global->getPrivateKey();
@@ -141,10 +133,11 @@ class Configuration
     /**
      * Sets or gets the read timeout to use for making requests.
      *
-     * @param integer $value If provided, sets the read timeout
-     * @return integer The read timeout used for connecting to Braintree
+     * @param int $value If provided, sets the read timeout
+     *
+     * @return int The read timeout used for connecting to Braintree
      */
-    public static function timeout($value=null)
+    public static function timeout($value = null)
     {
         if (empty($value)) {
             return self::$global->getTimeout();
@@ -156,6 +149,7 @@ class Configuration
      * Sets or gets the proxy host to use for connecting to Braintree
      *
      * @param string $value If provided, sets the proxy host
+     *
      * @return string The proxy host used for connecting to Braintree
      */
     public static function proxyHost($value = null)
@@ -170,6 +164,7 @@ class Configuration
      * Sets or gets the port of the proxy to use for connecting to Braintree
      *
      * @param string $value If provided, sets the port of the proxy
+     *
      * @return string The port of the proxy used for connecting to Braintree
      */
     public static function proxyPort($value = null)
@@ -185,6 +180,7 @@ class Configuration
      * can be any of the CURLOPT_PROXYTYPE options in PHP cURL.
      *
      * @param string $value If provided, sets the proxy type
+     *
      * @return string The proxy type used for connecting to Braintree
      */
     public static function proxyType($value = null)
@@ -204,6 +200,7 @@ class Configuration
     {
         $proxyHost = self::$global->getProxyHost();
         $proxyPort = self::$global->getProxyPort();
+
         return !empty($proxyHost) && !empty($proxyPort);
     }
 
@@ -217,11 +214,11 @@ class Configuration
         if (empty($this->_accessToken)) {
             if (empty($this->_merchantId)) {
                 throw new Exception\Configuration('Braintree\\Configuration::merchantId needs to be set (or accessToken needs to be passed to Braintree\\Gateway).');
-            } else if (empty($this->_environment)) {
+            } elseif (empty($this->_environment)) {
                 throw new Exception\Configuration('Braintree\\Configuration::environment needs to be set.');
-            } else if (empty($this->_publicKey)) {
+            } elseif (empty($this->_publicKey)) {
                 throw new Exception\Configuration('Braintree\\Configuration::publicKey needs to be set.');
-            } else if (empty($this->_privateKey)) {
+            } elseif (empty($this->_privateKey)) {
                 throw new Exception\Configuration('Braintree\\Configuration::privateKey needs to be set.');
             }
         }
@@ -363,11 +360,12 @@ class Configuration
     {
         return !empty($this->_clientId);
     }
+
     /**
      * returns the base braintree gateway URL based on config values
      *
-     * @access public
      * @param none
+     *
      * @return string braintree gateway URL
      */
     public function baseUrl()
@@ -378,8 +376,8 @@ class Configuration
     /**
      * sets the merchant path based on merchant ID
      *
-     * @access protected
      * @param none
+     *
      * @return string merchant path uri
      */
     public function merchantPath()
@@ -390,18 +388,17 @@ class Configuration
     /**
      * sets the physical path for the location of the CA certs
      *
-     * @access public
      * @param none
+     *
      * @return string filepath
      */
-    public function caFile($sslPath = NULL)
+    public function caFile($sslPath = null)
     {
         $sslPath = $sslPath ? $sslPath : DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .
                    'ssl' . DIRECTORY_SEPARATOR;
         $caPath = __DIR__ . $sslPath . 'api_braintreegateway_com.ca.crt';
 
-        if (!file_exists($caPath))
-        {
+        if (!file_exists($caPath)) {
             throw new Exception\SSLCaFileNotFound();
         }
 
@@ -411,8 +408,8 @@ class Configuration
     /**
      * returns the port number depending on environment
      *
-     * @access public
      * @param none
+     *
      * @return int portnumber
      */
     public function portNumber()
@@ -420,14 +417,15 @@ class Configuration
         if ($this->sslOn()) {
             return 443;
         }
-        return getenv("GATEWAY_PORT") ? getenv("GATEWAY_PORT") : 3000;
+
+        return getenv('GATEWAY_PORT') ? getenv('GATEWAY_PORT') : 3000;
     }
 
     /**
      * returns http protocol depending on environment
      *
-     * @access public
      * @param none
+     *
      * @return string http || https
      */
     public function protocol()
@@ -438,13 +436,13 @@ class Configuration
     /**
      * returns gateway server name depending on environment
      *
-     * @access public
      * @param none
+     *
      * @return string server domain name
      */
     public function serverName()
     {
-        switch($this->_environment) {
+        switch ($this->_environment) {
          case 'production':
              $serverName = 'api.braintreegateway.com';
              break;
@@ -466,7 +464,7 @@ class Configuration
 
     public function authUrl()
     {
-        switch($this->_environment) {
+        switch ($this->_environment) {
          case 'production':
              $serverName = 'https://auth.venmo.com';
              break;
@@ -490,13 +488,13 @@ class Configuration
      * returns boolean indicating SSL is on or off for this session,
      * depending on environment
      *
-     * @access public
      * @param none
-     * @return boolean
+     *
+     * @return bool
      */
     public function sslOn()
     {
-        switch($this->_environment) {
+        switch ($this->_environment) {
          case 'integration':
          case 'development':
              $ssl = false;
@@ -509,14 +507,13 @@ class Configuration
              break;
         }
 
-       return $ssl;
+        return $ssl;
     }
 
     /**
      * log message to default logger
      *
      * @param string $message
-     *
      */
     public function logMessage($message)
     {

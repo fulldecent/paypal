@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -64,16 +62,18 @@ abstract class Base
      * Accessor for instance properties stored in the private $_attributes property
      *
      * @ignore
+     *
      * @param string $name
+     *
      * @return mixed
      */
     public function __get($name)
     {
         if (array_key_exists($name, $this->_attributes)) {
             return $this->_attributes[$name];
-        }
-        else {
+        } else {
             trigger_error('Undefined property on ' . get_class($this) . ': ' . $name, E_USER_NOTICE);
+
             return null;
         }
     }
@@ -82,8 +82,10 @@ abstract class Base
      * Checks for the existance of a property stored in the private $_attributes property
      *
      * @ignore
+     *
      * @param string $name
-     * @return boolean
+     *
+     * @return bool
      */
     public function __isset($name)
     {
@@ -94,6 +96,7 @@ abstract class Base
      * Mutator for instance properties stored in the private $_attributes property
      *
      * @ignore
+     *
      * @param string $key
      * @param mixed $value
      */

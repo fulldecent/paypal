@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -36,22 +34,22 @@ namespace Braintree;
  *
  * See {@link https://developers.braintreepayments.com/javascript+php}<br />
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $cardType
- * @property-read string $createdAt
- * @property-read string $customerId
- * @property-read string $expirationDate
- * @property-read string $expirationMonth
- * @property-read string $expirationYear
- * @property-read string $imageUrl
- * @property-read string $last4
- * @property-read string $token
- * @property-read string $paymentInstrumentName
- * @property-read string $sourceDescription
- * @property-read string $updatedAt
+ * @property string $cardType
+ * @property string $createdAt
+ * @property string $customerId
+ * @property string $expirationDate
+ * @property string $expirationMonth
+ * @property string $expirationYear
+ * @property string $imageUrl
+ * @property string $last4
+ * @property string $token
+ * @property string $paymentInstrumentName
+ * @property string $sourceDescription
+ * @property string $updatedAt
  */
 class ApplePayCard extends Base
 {
@@ -61,10 +59,11 @@ class ApplePayCard extends Base
     const VISA = 'Apple Pay - Visa';
 
     /* instance methods */
+
     /**
      * returns false if default is null or false
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault()
     {
@@ -74,7 +73,7 @@ class ApplePayCard extends Base
     /**
      * checks whether the card is expired based on the current date
      *
-     * @return boolean
+     * @return bool
      */
     public function isExpired()
     {
@@ -86,26 +85,28 @@ class ApplePayCard extends Base
      *  to the requesting method, with populated properties
      *
      * @ignore
+     *
      * @return ApplePayCard
      */
     public static function factory($attributes)
     {
         $defaultAttributes = [
-            'expirationMonth'    => '',
-            'expirationYear'    => '',
-            'last4'  => '',
+            'expirationMonth' => '',
+            'expirationYear' => '',
+            'last4' => '',
         ];
 
         $instance = new self();
         $instance->_initialize(array_merge($defaultAttributes, $attributes));
+
         return $instance;
     }
 
     /**
      * sets instance properties from an array of values
      *
-     * @access protected
      * @param array $applePayCardAttribs array of Apple Pay card properties
+     *
      * @return void
      */
     protected function _initialize($applePayCardAttribs)
@@ -115,7 +116,7 @@ class ApplePayCard extends Base
 
         $subscriptionArray = [];
         if (isset($applePayCardAttribs['subscriptions'])) {
-            foreach ($applePayCardAttribs['subscriptions'] AS $subscription) {
+            foreach ($applePayCardAttribs['subscriptions'] as $subscription) {
                 $subscriptionArray[] = Subscription::factory($subscription);
             }
         }

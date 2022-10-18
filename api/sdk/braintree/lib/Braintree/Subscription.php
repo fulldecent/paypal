@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -37,7 +35,6 @@ namespace Braintree;
  *
  * PHP Version 5
  *
- * @package   Braintree
  * @copyright 2015 Braintree, a division of PayPal, Inc.
  */
 class Subscription extends Base
@@ -49,9 +46,9 @@ class Subscription extends Base
     const PENDING = 'Pending';
 
     // Subscription Sources
-    const API           = 'api';
+    const API = 'api';
     const CONTROL_PANEL = 'control_panel';
-    const RECURRING     = 'recurring';
+    const RECURRING = 'recurring';
 
     /**
      * @ignore
@@ -73,7 +70,7 @@ class Subscription extends Base
 
         $addOnArray = [];
         if (isset($attributes['addOns'])) {
-            foreach ($attributes['addOns'] AS $addOn) {
+            foreach ($attributes['addOns'] as $addOn) {
                 $addOnArray[] = AddOn::factory($addOn);
             }
         }
@@ -81,7 +78,7 @@ class Subscription extends Base
 
         $discountArray = [];
         if (isset($attributes['discounts'])) {
-            foreach ($attributes['discounts'] AS $discount) {
+            foreach ($attributes['discounts'] as $discount) {
                 $discountArray[] = Discount::factory($discount);
             }
         }
@@ -93,7 +90,7 @@ class Subscription extends Base
 
         $statusHistory = [];
         if (isset($attributes['statusHistory'])) {
-            foreach ($attributes['statusHistory'] AS $history) {
+            foreach ($attributes['statusHistory'] as $history) {
                 $statusHistory[] = new Subscription\StatusDetails($history);
             }
         }
@@ -101,7 +98,7 @@ class Subscription extends Base
 
         $transactionArray = [];
         if (isset($attributes['transactions'])) {
-            foreach ($attributes['transactions'] AS $transaction) {
+            foreach ($attributes['transactions'] as $transaction) {
                 $transactionArray[] = Transaction::factory($transaction);
             }
         }
@@ -110,23 +107,23 @@ class Subscription extends Base
 
     /**
      * returns a string representation of the customer
+     *
      * @return string
      */
-    public function  __toString()
+    public function __toString()
     {
         $excludedAttributes = ['statusHistory'];
 
         $displayAttributes = [];
-        foreach($this->_attributes as $key => $val) {
+        foreach ($this->_attributes as $key => $val) {
             if (!in_array($key, $excludedAttributes)) {
                 $displayAttributes[$key] = $val;
             }
         }
 
         return __CLASS__ . '[' .
-                Util::attributesToString($displayAttributes) .']';
+                Util::attributesToString($displayAttributes) . ']';
     }
-
 
     // static methods redirecting to gateway
 

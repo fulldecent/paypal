@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -37,22 +35,21 @@ namespace Braintree;
  * CreditCard as the billing address. It can also be used
  * as the shipping address when creating a Transaction.
  *
- * @package   Braintree
  * @copyright 2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $company
- * @property-read string $countryName
- * @property-read string $createdAt
- * @property-read string $customerId
- * @property-read string $extendedAddress
- * @property-read string $firstName
- * @property-read string $id
- * @property-read string $lastName
- * @property-read string $locality
- * @property-read string $postalCode
- * @property-read string $region
- * @property-read string $streetAddress
- * @property-read string $updatedAt
+ * @property string $company
+ * @property string $countryName
+ * @property string $createdAt
+ * @property string $customerId
+ * @property string $extendedAddress
+ * @property string $firstName
+ * @property string $id
+ * @property string $lastName
+ * @property string $locality
+ * @property string $postalCode
+ * @property string $region
+ * @property string $streetAddress
+ * @property string $updatedAt
  */
 class Address extends Base
 {
@@ -61,7 +58,8 @@ class Address extends Base
      * or is a Address with a different id
      *
      * @param object $other address to compare against
-     * @return boolean
+     *
+     * @return bool
      */
     public function isEqual($other)
     {
@@ -73,10 +71,12 @@ class Address extends Base
     /**
      * create a printable representation of the object as:
      * ClassName[property=value, property=value]
+     *
      * @ignore
+     *
      * @return string
      */
-    public function  __toString()
+    public function __toString()
     {
         return __CLASS__ . '[' .
                 Util::attributesToString($this->_attributes) . ']';
@@ -86,8 +86,9 @@ class Address extends Base
      * sets instance properties from an array of values
      *
      * @ignore
-     * @access protected
+     *
      * @param array $addressAttribs array of address data
+     *
      * @return void
      */
     protected function _initialize($addressAttribs)
@@ -99,23 +100,24 @@ class Address extends Base
     /**
      *  factory method: returns an instance of Address
      *  to the requesting method, with populated properties
+     *
      * @ignore
+     *
      * @return Address
      */
     public static function factory($attributes)
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
-
     }
-
 
     // static methods redirecting to gateway
 
     /**
-     *
      * @param array $attribs
+     *
      * @return Address
      */
     public static function create($attribs)
@@ -124,8 +126,8 @@ class Address extends Base
     }
 
     /**
-     *
      * @param array $attribs
+     *
      * @return Address
      */
     public static function createNoValidate($attribs)
@@ -134,10 +136,11 @@ class Address extends Base
     }
 
     /**
-     *
      * @param Customer|int $customerOrId
      * @param int $addressId
+     *
      * @throws InvalidArgumentException
+     *
      * @return Result\Successful
      */
     public static function delete($customerOrId = null, $addressId = null)
@@ -146,10 +149,11 @@ class Address extends Base
     }
 
     /**
-     *
      * @param Customer|int $customerOrId
      * @param int $addressId
+     *
      * @throws Exception\NotFound
+     *
      * @return Address
      */
     public static function find($customerOrId, $addressId)
@@ -158,11 +162,12 @@ class Address extends Base
     }
 
     /**
-     *
      * @param Customer|int $customerOrId
      * @param int $addressId
      * @param array $attributes
+     *
      * @throws Exception\Unexpected
+     *
      * @return Result\Successful|Result\Error
      */
     public static function update($customerOrId, $addressId, $attributes)

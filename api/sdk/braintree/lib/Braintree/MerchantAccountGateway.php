@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -45,6 +43,7 @@ final class MerchantAccountGateway
     public function create($attribs)
     {
         Util::verifyKeys(self::detectSignature($attribs), $attribs);
+
         return $this->_doCreate('/merchant_accounts/create_via_api', ['merchant_account' => $attribs]);
     }
 
@@ -53,6 +52,7 @@ final class MerchantAccountGateway
         try {
             $path = $this->_config->merchantPath() . '/merchant_accounts/' . $merchant_account_id;
             $response = $this->_http->get($path);
+
             return MerchantAccount::factory($response['merchantAccount']);
         } catch (Exception\NotFound $e) {
             throw new Exception\NotFound('merchant account with id ' . $merchant_account_id . ' not found');
@@ -62,13 +62,15 @@ final class MerchantAccountGateway
     public function update($merchant_account_id, $attributes)
     {
         Util::verifyKeys(self::updateSignature(), $attributes);
+
         return $this->_doUpdate('/merchant_accounts/' . $merchant_account_id . '/update_via_api', ['merchant_account' => $attributes]);
     }
 
     public static function detectSignature($attribs)
     {
         if (isset($attribs['applicantDetails'])) {
-            trigger_error("DEPRECATED: Passing applicantDetails to create is deprecated. Please use individual, business, and funding", E_USER_NOTICE);
+            trigger_error('DEPRECATED: Passing applicantDetails to create is deprecated. Please use individual, business, and funding', E_USER_NOTICE);
+
             return self::createDeprecatedSignature();
         } else {
             return self::createSignature();
@@ -79,6 +81,7 @@ final class MerchantAccountGateway
     {
         $signature = self::createSignature();
         unset($signature['tosAccepted']);
+
         return $signature;
     }
 
@@ -92,14 +95,14 @@ final class MerchantAccountGateway
             'phone',
             'dateOfBirth',
             'ssn',
-            ['address' => $addressSignature]
+            ['address' => $addressSignature],
         ];
 
         $businessSignature = [
             'dbaName',
             'legalName',
             'taxId',
-            ['address' => $addressSignature]
+            ['address' => $addressSignature],
         ];
 
         $fundingSignature = [
@@ -117,7 +120,7 @@ final class MerchantAccountGateway
             'masterMerchantAccountId',
             ['individual' => $individualSignature],
             ['funding' => $fundingSignature],
-            ['business' => $businessSignature]
+            ['business' => $businessSignature],
         ];
     }
 
@@ -135,14 +138,14 @@ final class MerchantAccountGateway
             'taxId',
             'routingNumber',
             'accountNumber',
-            ['address' => $applicantDetailsAddressSignature]
+            ['address' => $applicantDetailsAddressSignature],
         ];
 
         return [
-            ['applicantDetails' =>  $applicantDetailsSignature],
+            ['applicantDetails' => $applicantDetailsSignature],
             'id',
             'tosAccepted',
-            'masterMerchantAccountId'
+            'masterMerchantAccountId',
         ];
     }
 
@@ -169,12 +172,10 @@ final class MerchantAccountGateway
             return new Result\Successful(
                     MerchantAccount::factory($response['merchantAccount'])
             );
-        } else if (isset($response['apiErrorResponse'])) {
+        } elseif (isset($response['apiErrorResponse'])) {
             return new Result\Error($response['apiErrorResponse']);
         } else {
-            throw new Exception\Unexpected(
-            "Expected merchant account or apiErrorResponse"
-            );
+            throw new Exception\Unexpected('Expected merchant account or apiErrorResponse');
         }
     }
 }

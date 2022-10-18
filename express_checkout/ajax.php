@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,18 +22,16 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once dirname(__FILE__).'/../../../config/config.inc.php';
-include_once _PS_ROOT_DIR_.'/init.php';
-include_once dirname(__FILE__).'/../paypal.php';
+include_once dirname(__FILE__) . '/../../../config/config.inc.php';
+include_once _PS_ROOT_DIR_ . '/init.php';
+include_once dirname(__FILE__) . '/../paypal.php';
 
 // Ajax query
 $quantity = Tools::getValue('get_qty');
 
 if (Configuration::get('PS_CATALOG_MODE') == 1) {
-    die('0');
+    exit('0');
 }
 
 if ($quantity && $quantity > 0) {
@@ -45,15 +42,15 @@ if ($quantity && $quantity > 0) {
     $product = new Product($id_product);
 
     if (!$product->available_for_order) {
-        die('0');
+        exit('0');
     }
 
     if ($product_quantity > 0) {
-        die('1');
+        exit('1');
     }
 
     if ($product_quantity <= 0 && $product->isAvailableWhenOutOfStock((int) $product->out_of_stock)) {
-        die('1');
+        exit('1');
     }
 }
-die('0');
+exit('0');

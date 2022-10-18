@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -31,8 +29,8 @@ namespace Braintree;
 /**
  * Braintree PayPalAccount module
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 
@@ -41,15 +39,14 @@ namespace Braintree;
  *
  * <b>== More information ==</b>
  *
- *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $customerId
- * @property-read string $email
- * @property-read string $token
- * @property-read string $imageUrl
+ * @property string $customerId
+ * @property string $email
+ * @property string $token
+ * @property string $imageUrl
  */
 class PayPalAccount extends Base
 {
@@ -58,12 +55,14 @@ class PayPalAccount extends Base
      *  to the requesting method, with populated properties
      *
      * @ignore
+     *
      * @return PayPalAccount
      */
     public static function factory($attributes)
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
     }
 
@@ -72,7 +71,7 @@ class PayPalAccount extends Base
     /**
      * returns false if default is null or false
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault()
     {
@@ -82,8 +81,8 @@ class PayPalAccount extends Base
     /**
      * sets instance properties from an array of values
      *
-     * @access protected
      * @param array $paypalAccountAttribs array of paypalAccount data
+     *
      * @return void
      */
     protected function _initialize($paypalAccountAttribs)
@@ -93,7 +92,7 @@ class PayPalAccount extends Base
 
         $subscriptionArray = [];
         if (isset($paypalAccountAttribs['subscriptions'])) {
-            foreach ($paypalAccountAttribs['subscriptions'] AS $subscription) {
+            foreach ($paypalAccountAttribs['subscriptions'] as $subscription) {
                 $subscriptionArray[] = Subscription::factory($subscription);
             }
         }
@@ -104,14 +103,14 @@ class PayPalAccount extends Base
     /**
      * create a printable representation of the object as:
      * ClassName[property=value, property=value]
+     *
      * @return string
      */
-    public function  __toString()
+    public function __toString()
     {
         return __CLASS__ . '[' .
                 Util::attributesToString($this->_attributes) . ']';
     }
-
 
     // static methods redirecting to gateway
 

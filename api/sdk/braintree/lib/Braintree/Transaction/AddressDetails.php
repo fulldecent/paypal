@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
@@ -33,20 +31,17 @@ use Braintree\Instance;
 /**
  * Creates an instance of AddressDetails as returned from a transaction
  *
- *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $firstName
- * @property-read string $lastName
- * @property-read string $company
- * @property-read string $streetAddress
- * @property-read string $extendedAddress
- * @property-read string $locality
- * @property-read string $region
- * @property-read string $postalCode
- * @property-read string $countryName
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $company
+ * @property string $streetAddress
+ * @property string $extendedAddress
+ * @property string $locality
+ * @property string $region
+ * @property string $postalCode
+ * @property string $countryName
  */
 class AddressDetails extends Instance
 {

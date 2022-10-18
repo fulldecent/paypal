@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -31,14 +29,13 @@ namespace Braintree;
 /**
  * Braintree Gateway module
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 class Gateway
 {
     /**
-     *
      * @var Configuration
      */
     public $config;
@@ -52,7 +49,6 @@ class Gateway
     }
 
     /**
-     *
      * @return AddOnGateway
      */
     public function addOn()
@@ -61,7 +57,6 @@ class Gateway
     }
 
     /**
-     *
      * @return AddressGateway
      */
     public function address()
@@ -70,7 +65,6 @@ class Gateway
     }
 
     /**
-     *
      * @return ClientTokenGateway
      */
     public function clientToken()
@@ -79,7 +73,6 @@ class Gateway
     }
 
     /**
-     *
      * @return CreditCardGateway
      */
     public function creditCard()
@@ -88,7 +81,6 @@ class Gateway
     }
 
     /**
-     *
      * @return CreditCardVerificationGateway
      */
     public function creditCardVerification()
@@ -97,7 +89,6 @@ class Gateway
     }
 
     /**
-     *
      * @return CustomerGateway
      */
     public function customer()
@@ -106,7 +97,6 @@ class Gateway
     }
 
     /**
-     *
      * @return DiscountGateway
      */
     public function discount()
@@ -115,7 +105,6 @@ class Gateway
     }
 
     /**
-     *
      * @return MerchantGateway
      */
     public function merchant()
@@ -124,7 +113,6 @@ class Gateway
     }
 
     /**
-     *
      * @return MerchantAccountGateway
      */
     public function merchantAccount()
@@ -133,7 +121,6 @@ class Gateway
     }
 
     /**
-     *
      * @return OAuthGateway
      */
     public function oauth()
@@ -142,7 +129,6 @@ class Gateway
     }
 
     /**
-     *
      * @return PaymentMethodGateway
      */
     public function paymentMethod()
@@ -151,7 +137,6 @@ class Gateway
     }
 
     /**
-     *
      * @return PaymentMethodNonceGateway
      */
     public function paymentMethodNonce()
@@ -160,7 +145,6 @@ class Gateway
     }
 
     /**
-     *
      * @return PayPalAccountGateway
      */
     public function payPalAccount()
@@ -169,7 +153,6 @@ class Gateway
     }
 
     /**
-     *
      * @return PlanGateway
      */
     public function plan()
@@ -178,7 +161,6 @@ class Gateway
     }
 
     /**
-     *
      * @return SettlementBatchSummaryGateway
      */
     public function settlementBatchSummary()
@@ -187,7 +169,6 @@ class Gateway
     }
 
     /**
-     *
      * @return SubscriptionGateway
      */
     public function subscription()
@@ -196,7 +177,6 @@ class Gateway
     }
 
     /**
-     *
      * @return TestingGateway
      */
     public function testing()
@@ -205,7 +185,6 @@ class Gateway
     }
 
     /**
-     *
      * @return TransactionGateway
      */
     public function transaction()
@@ -214,7 +193,6 @@ class Gateway
     }
 
     /**
-     *
      * @return TransparentRedirectGateway
      */
     public function transparentRedirect()

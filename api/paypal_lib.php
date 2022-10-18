@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,19 +22,17 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once _PS_MODULE_DIR_.'paypal/api/paypal_connect.php';
+include_once _PS_MODULE_DIR_ . 'paypal/api/paypal_connect.php';
 
 define('PAYPAL_API_VERSION', '106.0');
 
 class PaypalLib
 {
-
     private $enable_log = false;
-    private $_logs = array();
+    private $_logs = [];
     protected $paypal = null;
+
     public function __construct()
     {
         $this->paypal = new PayPal();
@@ -51,29 +48,29 @@ class PaypalLib
         // Making request string
         $method_version = (!empty($method_version)) ? $method_version : PAYPAL_API_VERSION;
 
-        $params = array(
+        $params = [
             'METHOD' => $method_name,
             'VERSION' => $method_version,
             'PWD' => Configuration::get('PAYPAL_API_PASSWORD'),
             'USER' => Configuration::get('PAYPAL_API_USER'),
             'SIGNATURE' => Configuration::get('PAYPAL_API_SIGNATURE'),
-        );
+        ];
 
         $request = http_build_query($params, '', '&');
-        $request .= '&'.(!is_array($data) ? $data : http_build_query($data, '', '&'));
+        $request .= '&' . (!is_array($data) ? $data : http_build_query($data, '', '&'));
 
         // Making connection
         $result = $this->makeSimpleCall($host, $script, $request, true);
         $response = explode('&', $result);
         $logs_request = $this->_logs;
-        $return = array();
+        $return = [];
 
         if ($this->enable_log === true) {
-            $handle = fopen(dirname(__FILE__).'/Results.txt', 'a+');
-            fwrite($handle, 'Host : '.print_r($host, true)."\r\n");
-            fwrite($handle, 'Request : '.print_r($request, true)."\r\n");
-            fwrite($handle, 'Result : '.print_r($result, true)."\r\n");
-            fwrite($handle, 'Logs : '.print_r($this->_logs, true)."\r\n");
+            $handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
+            fwrite($handle, 'Host : ' . print_r($host, true) . "\r\n");
+            fwrite($handle, 'Request : ' . print_r($request, true) . "\r\n");
+            fwrite($handle, 'Result : ' . print_r($result, true) . "\r\n");
+            fwrite($handle, 'Logs : ' . print_r($this->_logs, true) . "\r\n");
             fclose($handle);
         }
 
@@ -83,18 +80,18 @@ class PaypalLib
         }
 
         if (!Configuration::get('PAYPAL_DEBUG_MODE')) {
-            $this->_logs = array();
+            $this->_logs = [];
         }
 
-        $to_exclude = array('TOKEN', 'SUCCESSPAGEREDIRECTREQUESTED', 'VERSION', 'BUILD', 'ACK', 'CORRELATIONID');
-        $this->_logs[] = '<b>'.$this->paypal->l('PayPal response:').'</b>';
+        $to_exclude = ['TOKEN', 'SUCCESSPAGEREDIRECTREQUESTED', 'VERSION', 'BUILD', 'ACK', 'CORRELATIONID'];
+        $this->_logs[] = '<b>' . $this->paypal->l('PayPal response:') . '</b>';
 
         foreach ($return as $key => $value) {
             if (!Configuration::get('PAYPAL_DEBUG_MODE') && in_array($key, $to_exclude)) {
                 continue;
             }
 
-            $this->_logs[] = $key.' -> '.$value;
+            $this->_logs[] = $key . ' -> ' . $value;
         }
 
         // if (count($this->_logs) <= 2) {

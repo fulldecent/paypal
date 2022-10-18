@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,10 +22,8 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-require_once _PS_MODULE_DIR_.'paypal/api/ApiPaypalPlus.php';
+require_once _PS_MODULE_DIR_ . 'paypal/api/ApiPaypalPlus.php';
 
 define('URL_PPP_CREATE_TOKEN', '/v1/oauth2/token');
 define('URL_PPP_CREATE_PAYMENT', '/v1/payments/payment');
@@ -36,7 +33,6 @@ define('URL_PPP_EXECUTE_PAYMENT', '/v1/payments/payment/');
 define('URL_PPP_EXECUTE_REFUND', '/v1/payments/sale/');
 
 define('URL_PPP_PATCH', '/v1/payments/payment/');
-
 
 class CallApiPaypalPlus extends ApiPaypalPlus
 {
@@ -55,7 +51,7 @@ class CallApiPaypalPlus extends ApiPaypalPlus
         /*
          * Récupération du token
          */
-        $accessToken = $this->getToken(URL_PPP_CREATE_TOKEN, array('grant_type' => 'client_credentials'));
+        $accessToken = $this->getToken(URL_PPP_CREATE_TOKEN, ['grant_type' => 'client_credentials']);
 
         if ($accessToken != false) {
             $result = Tools::jsonDecode($this->createPayment($this->customer, $this->cart, $accessToken));
@@ -63,69 +59,67 @@ class CallApiPaypalPlus extends ApiPaypalPlus
                 foreach ($result->links as $link) {
                     if ($link->rel == 'approval_url') {
                         $this->id_payment = $result->id;
+
                         return $link->href;
                     }
                 }
             }
         }
+
         return false;
     }
 
     public function lookUpPayment($paymentId)
     {
-
         if ($paymentId == 'NULL') {
             return false;
         }
 
         $accessToken = $this->refreshToken();
 
-        $header = array(
+        $header = [
             'Content-Type:application/json',
-            'Authorization:Bearer '.$accessToken,
-        );
+            'Authorization:Bearer ' . $accessToken,
+        ];
 
-        return $this->sendByCURL(URL_PPP_LOOK_UP.$paymentId, false, $header);
+        return $this->sendByCURL(URL_PPP_LOOK_UP . $paymentId, false, $header);
     }
 
     public function executePayment($payer_id, $paymentId)
     {
-
         if ($payer_id == 'NULL' || $paymentId == 'NULL') {
             return false;
         }
 
         $accessToken = $this->refreshToken();
 
-        $header = array(
+        $header = [
             'Content-Type:application/json',
-            'Authorization:Bearer '.$accessToken,
-        );
+            'Authorization:Bearer ' . $accessToken,
+        ];
 
-        $data = array('payer_id' => $payer_id);
-        $response = $this->sendByCURL(URL_PPP_EXECUTE_PAYMENT.$paymentId.'/execute/', Tools::jsonEncode($data), $header);
+        $data = ['payer_id' => $payer_id];
+        $response = $this->sendByCURL(URL_PPP_EXECUTE_PAYMENT . $paymentId . '/execute/', Tools::jsonEncode($data), $header);
 
         return $response;
     }
 
     public function executeRefund($paymentId, $data)
     {
-
         if ($paymentId == 'NULL' || !is_object($data)) {
             return false;
         }
 
         $accessToken = $this->refreshToken();
 
-        $header = array(
+        $header = [
             'Content-Type:application/json',
-            'Authorization:Bearer '.$accessToken,
-        );
+            'Authorization:Bearer ' . $accessToken,
+        ];
 
-        return $this->sendByCURL(URL_PPP_EXECUTE_REFUND.$paymentId.'/refund', Tools::jsonEncode($data), $header);
+        return $this->sendByCURL(URL_PPP_EXECUTE_REFUND . $paymentId . '/refund', Tools::jsonEncode($data), $header);
     }
-    
-    
+
     public function patch($id_payment, $address)
     {
         /*
@@ -186,23 +180,24 @@ class CallApiPaypalPlus extends ApiPaypalPlus
 
         $state = new State($address->id_state);
 
-        $payment = array(0 => new stdClass);
+        $payment = [0 => new stdClass()];
         $payment[0]->op = 'add';
         $payment[0]->path = '/transactions/0/item_list/shipping_address';
         $payment[0]->value = new stdClass();
         $payment[0]->value->line1 = $address->address1;
         $payment[0]->value->city = $address->city;
-        $payment[0]->value->recipient_name = $address->firstname.' '.$address->lastname;//$address->alias;
+        $payment[0]->value->recipient_name = $address->firstname . ' ' . $address->lastname; //$address->alias;
         $payment[0]->value->state = ($state->iso_code == null) ? '' : $state->iso_code;
         $payment[0]->value->country_code = $country->iso_code;
         $payment[0]->value->postal_code = $address->postcode;
 
         $accessToken = $this->refreshToken();
-        $header = array(
+        $header = [
             'Content-Type:application/json',
-            'Authorization:Bearer '.$accessToken,
-        );
+            'Authorization:Bearer ' . $accessToken,
+        ];
         $body = str_replace('\/transactions\/0\/item_list\/shipping_address', '/transactions/0/item_list/shipping_address', Tools::jsonEncode($payment));
-        return $this->sendByCURL(URL_PPP_PATCH.$id_payment, $body, $header, false, 'PATCH');
+
+        return $this->sendByCURL(URL_PPP_PATCH . $id_payment, $body, $header, false, 'PATCH');
     }
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
@@ -34,18 +32,16 @@ use Braintree\Instance;
  * Customer details from a transaction
  * Creates an instance of customer details as returned from a transaction
  *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $company
- * @property-read string $email
- * @property-read string $fax
- * @property-read string $firstName
- * @property-read string $id
- * @property-read string $lastName
- * @property-read string $phone
- * @property-read string $website
+ * @property string $company
+ * @property string $email
+ * @property string $fax
+ * @property string $firstName
+ * @property string $id
+ * @property string $lastName
+ * @property string $phone
+ * @property string $website
  */
 class CustomerDetails extends Instance
 {

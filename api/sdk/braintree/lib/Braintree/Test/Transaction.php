@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Test;
@@ -45,6 +43,7 @@ final class Transaction
      *
      * @param string $id transaction id
      * @param Configuration $config gateway config
+     *
      * @return Transaction
      */
     public static function settle($transactionId)
@@ -57,6 +56,7 @@ final class Transaction
      *
      * @param string $id transaction id
      * @param Configuration $config gateway config
+     *
      * @return Transaction
      */
     public static function settlementConfirm($transactionId)
@@ -69,6 +69,7 @@ final class Transaction
      *
      * @param string $id transaction id
      * @param Configuration $config gateway config
+     *
      * @return Transaction
      */
     public static function settlementDecline($transactionId)
@@ -81,6 +82,7 @@ final class Transaction
      *
      * @param string $id transaction id
      * @param Configuration $config gateway config
+     *
      * @return Transaction
      */
     public static function settlementPending($transactionId)

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -31,45 +29,43 @@ namespace Braintree;
 /**
  * Creates an instance of Dispute as returned from a transaction
  *
- *
- * @package    Braintree
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $amount
- * @property-read string $currencyIsoCode
- * @property-read date   $receivedDate
- * @property-read string $reason
- * @property-read string $status
- * @property-read string $disbursementDate
- * @property-read object $transactionDetails
+ * @property string $amount
+ * @property string $currencyIsoCode
+ * @property date   $receivedDate
+ * @property string $reason
+ * @property string $status
+ * @property string $disbursementDate
+ * @property object $transactionDetails
  */
 final class Dispute extends Base
 {
     protected $_attributes = [];
 
     /* Dispute Status */
-    const OPEN  = 'open';
-    const WON  = 'won';
+    const OPEN = 'open';
+    const WON = 'won';
     const LOST = 'lost';
 
     /* deprecated; for backwards compatibilty */
-    const Open  = 'open';
+    const Open = 'open';
 
     /* Dispute Reason */
-    const CANCELLED_RECURRING_TRANSACTION = "cancelled_recurring_transaction";
-    const CREDIT_NOT_PROCESSED            = "credit_not_processed";
-    const DUPLICATE                       = "duplicate";
-    const FRAUD                           = "fraud";
-    const GENERAL                         = "general";
-    const INVALID_ACCOUNT                 = "invalid_account";
-    const NOT_RECOGNIZED                  = "not_recognized";
-    const PRODUCT_NOT_RECEIVED            = "product_not_received";
-    const PRODUCT_UNSATISFACTORY          = "product_unsatisfactory";
-    const TRANSACTION_AMOUNT_DIFFERS      = "transaction_amount_differs";
-    const RETRIEVAL                       = "retrieval";
+    const CANCELLED_RECURRING_TRANSACTION = 'cancelled_recurring_transaction';
+    const CREDIT_NOT_PROCESSED = 'credit_not_processed';
+    const DUPLICATE = 'duplicate';
+    const FRAUD = 'fraud';
+    const GENERAL = 'general';
+    const INVALID_ACCOUNT = 'invalid_account';
+    const NOT_RECOGNIZED = 'not_recognized';
+    const PRODUCT_NOT_RECEIVED = 'product_not_received';
+    const PRODUCT_UNSATISFACTORY = 'product_unsatisfactory';
+    const TRANSACTION_AMOUNT_DIFFERS = 'transaction_amount_differs';
+    const RETRIEVAL = 'retrieval';
 
     /* Dispute Kind */
-    const CHARGEBACK      = 'chargeback';
+    const CHARGEBACK = 'chargeback';
     const PRE_ARBITRATION = 'pre_arbitration';
     // RETRIEVAL for kind already defined under Dispute Reason
 
@@ -88,22 +84,24 @@ final class Dispute extends Base
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
     }
 
-    public function  __toString()
+    public function __toString()
     {
         $display = [
             'amount', 'reason', 'status',
-            'replyByDate', 'receivedDate', 'currencyIsoCode'
+            'replyByDate', 'receivedDate', 'currencyIsoCode',
             ];
 
         $displayAttributes = [];
-        foreach ($display AS $attrib) {
+        foreach ($display as $attrib) {
             $displayAttributes[$attrib] = $this->$attrib;
         }
+
         return __CLASS__ . '[' .
-                Util::attributesToString($displayAttributes) .']';
+                Util::attributesToString($displayAttributes) . ']';
     }
 }
 class_alias('Braintree\Dispute', 'Braintree_Dispute');

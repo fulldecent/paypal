@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Exception;
@@ -33,12 +31,9 @@ use Braintree\Exception;
 /**
  * Raised when the Braintree library is not completely configured.
  *
- * @package    Braintree
- * @subpackage Exception
  * @see        Configuration
  */
 class Configuration extends Exception
 {
-
 }
 class_alias('Braintree\Exception\Configuration', 'Braintree_Exception_Configuration');

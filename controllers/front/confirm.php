@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,13 +22,11 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 /**
  * @since 1.5.0
  */
-
 class PayPalConfirmModuleFrontController extends ModuleFrontController
 {
     public $display_column_left = false;
@@ -50,9 +47,9 @@ class PayPalConfirmModuleFrontController extends ModuleFrontController
 
         $this->module->assignCartSummary();
 
-        $this->context->smarty->assign(array(
-            'form_action' => PayPal::getShopDomainSsl(true, true)._MODULE_DIR_.$this->paypal->name.'/express_checkout/payment.php',
-        ));
+        $this->context->smarty->assign([
+            'form_action' => PayPal::getShopDomainSsl(true, true) . _MODULE_DIR_ . $this->paypal->name . '/express_checkout/payment.php',
+        ]);
 
         $this->setTemplate('order-summary.tpl');
     }

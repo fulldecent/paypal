@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -40,14 +38,13 @@ final class Xml
     /**
      * @ignore
      */
-    protected function  __construct()
+    protected function __construct()
     {
-
     }
 
     /**
-     *
      * @param string $xml
+     *
      * @return array
      */
     public static function buildArrayFromXml($xml)
@@ -56,8 +53,8 @@ final class Xml
     }
 
     /**
-     *
      * @param array $array
+     *
      * @return string
      */
     public static function buildXmlFromArray($array)

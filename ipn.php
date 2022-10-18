@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,12 +22,10 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once dirname(__FILE__).'/../../config/config.inc.php';
-include_once _PS_ROOT_DIR_.'/init.php';
-include_once _PS_MODULE_DIR_.'paypal/paypal.php';
+include_once dirname(__FILE__) . '/../../config/config.inc.php';
+include_once _PS_ROOT_DIR_ . '/init.php';
+include_once _PS_MODULE_DIR_ . 'paypal/paypal.php';
 
 /*
  * Instant payment notification class.
@@ -36,13 +33,12 @@ include_once _PS_MODULE_DIR_.'paypal/paypal.php';
  */
 class PayPalIPN extends PayPal
 {
-
     public function getIPNTransactionDetails($result)
     {
-        if (is_array($result) || (strcmp(trim($result), "VERIFIED") === false)) {
+        if (is_array($result) || (strcmp(trim($result), 'VERIFIED') === false)) {
             $transaction_id = pSQL($result['txn_id']);
 
-            return array(
+            return [
                 'id_transaction' => $transaction_id,
                 'transaction_id' => $transaction_id,
                 'id_invoice' => $result['invoice'],
@@ -51,11 +47,11 @@ class PayPalIPN extends PayPal
                 'shipping' => (float) $result['mc_shipping'],
                 'payment_date' => pSQL($result['payment_date']),
                 'payment_status' => pSQL($result['payment_status']),
-            );
+            ];
         } else {
             $transaction_id = pSQL(Tools::getValue('txn_id'));
 
-            return array(
+            return [
                 'id_transaction' => $transaction_id,
                 'transaction_id' => $transaction_id,
                 'id_invoice' => pSQL(Tools::getValue('invoice')),
@@ -64,7 +60,7 @@ class PayPalIPN extends PayPal
                 'shipping' => (float) Tools::getValue('mc_shipping'),
                 'payment_date' => pSQL(Tools::getValue('payment_date')),
                 'payment_status' => pSQL(Tools::getValue('payment_status')),
-            );
+            ];
         }
     }
 
@@ -89,7 +85,7 @@ class PayPalIPN extends PayPal
             Context::getContext()->shop = new Shop(Context::getContext()->cart->id_shop);
         }
 
-        if (strcmp(trim($result), "VERIFIED") === false) {
+        if (strcmp(trim($result), 'VERIFIED') === false) {
             $details = $this->getIPNTransactionDetails($result);
 
             if ($id_order) {
@@ -102,7 +98,7 @@ class PayPalIPN extends PayPal
                 $history->addWithemail();
                 $history->save();
             }
-        } elseif (strcmp(trim($result), "VERIFIED") === 0) {
+        } elseif (strcmp(trim($result), 'VERIFIED') === 0) {
             $details = $this->getIPNTransactionDetails($result);
 
             if (version_compare(_PS_VERSION_, '1.5', '<')) {
@@ -129,9 +125,9 @@ class PayPalIPN extends PayPal
 
                 $history->addWithemail();
                 $history->save();
-                Db::getInstance()->update('order_payment', array(
+                Db::getInstance()->update('order_payment', [
                     'transaction_id' => pSQL($details['transaction_id']),
-                ), 'order_reference = "'.pSQL($order->reference).'"');
+                ], 'order_reference = "' . pSQL($order->reference) . '"');
             } else {
                 $values = $this->checkPayment($payment_status, $mc_gross, true);
                 $customer = new Customer((int) Context::getContext()->cart->id_customer);
@@ -159,49 +155,50 @@ class PayPalIPN extends PayPal
 
         if (($new_order) && ($this->comp($mc_gross, $total_price, 2) !== 0)) {
             $payment_type = (int) Configuration::get('PS_OS_ERROR');
-            $message = $this->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';
+            $message = $this->l('Price paid on paypal is not the same that on PrestaShop.') . '<br />';
         } elseif (($new_order) && ($custom['hash'] != $cart_hash)) {
             $payment_type = (int) Configuration::get('PS_OS_ERROR');
-            $message = $this->l('Cart changed, please retry.').'<br />';
+            $message = $this->l('Cart changed, please retry.') . '<br />';
         } else {
-            return $this->getDetails($payment_status) + array(
+            return $this->getDetails($payment_status) + [
                 'payment_status' => $payment_status,
                 'total_price' => $total_price,
-            );
+            ];
         }
-        return array(
+
+        return [
             'message' => $message,
             'payment_type' => $payment_type,
             'payment_status' => $payment_status,
             'total_price' => $total_price,
-        );
+        ];
     }
 
     public function getDetails($payment_status)
     {
         if ((bool) Configuration::get('PAYPAL_CAPTURE')) {
             $payment_type = (int) Configuration::get('PS_OS_WS_PAYMENT');
-            $message = $this->l('Pending payment capture.').'<br />';
+            $message = $this->l('Pending payment capture.') . '<br />';
         } else {
             if (strcmp($payment_status, 'Completed') === 0) {
                 $payment_type = (int) Configuration::get('PS_OS_PAYMENT');
-                $message = $this->l('Payment accepted.').'<br />';
+                $message = $this->l('Payment accepted.') . '<br />';
             } elseif (strcmp($payment_status, 'Pending') === 0) {
                 $payment_type = (int) Configuration::get('PS_OS_PAYPAL');
-                $message = $this->l('Pending payment confirmation.').'<br />';
+                $message = $this->l('Pending payment confirmation.') . '<br />';
             } elseif (strcmp($payment_status, 'Refunded') === 0) {
                 $payment_type = (int) Configuration::get('PS_OS_REFUND');
-                $message = $this->l('Payment refunded.').'<br />';
+                $message = $this->l('Payment refunded.') . '<br />';
             } else {
                 $payment_type = (int) Configuration::get('PS_OS_ERROR');
-                $message = $this->l('Cart changed, please retry.').'<br />';
+                $message = $this->l('Cart changed, please retry.') . '<br />';
             }
         }
 
-        return array(
+        return [
             'message' => $message,
             'payment_type' => (int) $payment_type,
-        );
+        ];
     }
 
     public function getResult()
@@ -218,16 +215,16 @@ class PayPalIPN extends PayPal
             $request .= "&$key=$value";
         }
 
-
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_URL, $action_url.$request);
+        curl_setopt($curl, CURLOPT_URL, $action_url . $request);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($curl, CURLOPT_TIMEOUT, 5);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 
         $content = curl_exec($curl);
         curl_close($curl);
+
         return $content;
     }
 }
@@ -236,24 +233,24 @@ if (Tools::getValue('receiver_email') == Configuration::get('PAYPAL_BUSINESS_ACC
     if (Tools::getIsset('custom')) {
         $ipn = new PayPalIPN();
         $custom = Tools::jsonDecode(Tools::getValue('custom'), true);
-        $res = @fopen($custom['id_cart'].'.txt', 'x');
+        $res = @fopen($custom['id_cart'] . '.txt', 'x');
         $seconds = 0;
         if (!$res) {
-            while (file_exists($custom['id_cart'].'.txt')) {
+            while (file_exists($custom['id_cart'] . '.txt')) {
                 sleep(1);
-                $seconds++;
+                ++$seconds;
                 if ($seconds >= 300) {
-                    @rename($custom['id_cart'].'.txt', date('YmdHis').'_'.$custom['id_cart'].'.txt');
+                    @rename($custom['id_cart'] . '.txt', date('YmdHis') . '_' . $custom['id_cart'] . '.txt');
                 }
             }
         }
         $ipn->confirmOrder($custom);
         if ($res) {
             fclose($res);
-            unlink($custom['id_cart'].'.txt');
+            unlink($custom['id_cart'] . '.txt');
         }
     }
-} elseif (Tools::isSubmit('custom') && (int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) {
+} elseif (Tools::isSubmit('custom') && (int) Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) {
     $custom = Tools::jsonDecode(Tools::getValue('custom'), true);
-    Db::getInstance()->insert('paypal_hss_email_error', array('id_cart' => (int) $custom['id_cart'], 'email' => pSQL(Tools::getValue('receiver_email', ''))));
+    Db::getInstance()->insert('paypal_hss_email_error', ['id_cart' => (int) $custom['id_cart'], 'email' => pSQL(Tools::getValue('receiver_email', ''))]);
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
@@ -33,31 +31,26 @@ use Braintree\Instance;
 /**
  * Android Pay card details from a transaction
  *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 
 /**
  * creates an instance of AndroidPayCardDetails
  *
- *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $bin
- * @property-read string $default
- * @property-read string $expirationMonth
- * @property-read string $expirationYear
- * @property-read string $googleTransactionId
- * @property-read string $imageUrl
- * @property-read string $sourceCardLast4
- * @property-read string $sourceCardType
- * @property-read string $sourceDescription
- * @property-read string $token
- * @property-read string $virtualCardLast4
- * @property-read string $virtualCardType
+ * @property string $bin
+ * @property string $default
+ * @property string $expirationMonth
+ * @property string $expirationYear
+ * @property string $googleTransactionId
+ * @property string $imageUrl
+ * @property string $sourceCardLast4
+ * @property string $sourceCardType
+ * @property string $sourceDescription
+ * @property string $token
+ * @property string $virtualCardLast4
+ * @property string $virtualCardType
  */
 class AndroidPayCardDetails extends Instance
 {

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -33,25 +31,21 @@ use InvalidArgumentException;
 class ClientTokenGateway
 {
     /**
-     *
      * @var Gateway
      */
     private $_gateway;
 
     /**
-     *
      * @var Configuration
      */
     private $_config;
 
     /**
-     *
      * @var Http
      */
     private $_http;
 
     /**
-     *
      * @param Gateway $gateway
      */
     public function __construct($gateway)
@@ -62,14 +56,14 @@ class ClientTokenGateway
         $this->_http = new Http($gateway->config);
     }
 
-    public function generate($params=[])
+    public function generate($params = [])
     {
-        if (!array_key_exists("version", $params)) {
-            $params["version"] = ClientToken::DEFAULT_VERSION;
+        if (!array_key_exists('version', $params)) {
+            $params['version'] = ClientToken::DEFAULT_VERSION;
         }
 
         $this->conditionallyVerifyKeys($params);
-        $generateParams = ["client_token" => $params];
+        $generateParams = ['client_token' => $params];
 
         return $this->_doGenerate('/client_token', $generateParams);
     }
@@ -78,8 +72,10 @@ class ClientTokenGateway
      * sends the generate request to the gateway
      *
      * @ignore
+     *
      * @param var $url
      * @param array $params
+     *
      * @return mixed
      */
     public function _doGenerate($subPath, $params)
@@ -91,13 +87,13 @@ class ClientTokenGateway
     }
 
     /**
-     *
      * @param array $params
+     *
      * @throws InvalidArgumentException
      */
     public function conditionallyVerifyKeys($params)
     {
-        if (array_key_exists("customerId", $params)) {
+        if (array_key_exists('customerId', $params)) {
             Util::verifyKeys($this->generateWithCustomerIdSignature(), $params);
         } else {
             Util::verifyKeys($this->generateWithoutCustomerIdSignature(), $params);
@@ -105,24 +101,22 @@ class ClientTokenGateway
     }
 
     /**
-     *
      * @return mixed[]
      */
     public function generateWithCustomerIdSignature()
     {
         return [
-            "version", "customerId", "proxyMerchantId",
-            ["options" => ["makeDefault", "verifyCard", "failOnDuplicatePaymentMethod"]],
-            "merchantAccountId", "sepaMandateType", "sepaMandateAcceptanceLocation"];
+            'version', 'customerId', 'proxyMerchantId',
+            ['options' => ['makeDefault', 'verifyCard', 'failOnDuplicatePaymentMethod']],
+            'merchantAccountId', 'sepaMandateType', 'sepaMandateAcceptanceLocation', ];
     }
 
     /**
-     *
      * @return string[]
      */
     public function generateWithoutCustomerIdSignature()
     {
-        return ["version", "proxyMerchantId", "merchantAccountId"];
+        return ['version', 'proxyMerchantId', 'merchantAccountId'];
     }
 
     /**
@@ -133,24 +127,22 @@ class ClientTokenGateway
      * response from the Gateway or an HTTP status code exception.
      *
      * @ignore
+     *
      * @param array $response gateway response values
+     *
      * @return string client token
-     * @throws InvalidArgumentException | HTTP status code exception
+     *
+     * @throws InvalidArgumentException|HTTP status code exception
      */
     private function _verifyGatewayResponse($response)
     {
         if (isset($response['clientToken'])) {
             return $response['clientToken']['value'];
         } elseif (isset($response['apiErrorResponse'])) {
-            throw new InvalidArgumentException(
-                $response['apiErrorResponse']['message']
-            );
+            throw new InvalidArgumentException($response['apiErrorResponse']['message']);
         } else {
-            throw new Exception\Unexpected(
-                "Expected clientToken or apiErrorResponse"
-            );
+            throw new Exception\Unexpected('Expected clientToken or apiErrorResponse');
         }
     }
-
 }
 class_alias('Braintree\ClientTokenGateway', 'Braintree_ClientTokenGateway');

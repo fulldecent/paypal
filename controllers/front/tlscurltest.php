@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 class PayPalTlscurltestModuleFrontController extends ModuleFrontController
 {
     public function displayAjax()
@@ -42,17 +39,17 @@ class PayPalTlscurltestModuleFrontController extends ModuleFrontController
             if ($response != 'ok') {
                 $curl_info = curl_getinfo($curl);
                 if ($curl_info['http_code'] == 401) {
-                    echo '<p style="color:red">'.$paypal->l('401 Unauthorized').'</p>';
+                    echo '<p style="color:red">' . $paypal->l('401 Unauthorized') . '</p>';
                 } else {
-                    echo '<p style="color:red">'.curl_error($curl).'</p>';
+                    echo '<p style="color:red">' . curl_error($curl) . '</p>';
                 }
             } else {
-                echo '<p style="color:green">'.$paypal->l('TLS version is compatible').'</p>';
+                echo '<p style="color:green">' . $paypal->l('TLS version is compatible') . '</p>';
             }
         } else {
-            echo '<p style="color:red">'.$paypal->l('TLS version is not compatible').'</p>';
+            echo '<p style="color:red">' . $paypal->l('TLS version is not compatible') . '</p>';
         }
 
-        die;
+        exit;
     }
 }

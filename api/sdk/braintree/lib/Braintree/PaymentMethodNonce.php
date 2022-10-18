@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -31,8 +29,8 @@ namespace Braintree;
 /**
  * Braintree PaymentMethodNonce module
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 
@@ -41,11 +39,9 @@ namespace Braintree;
  *
  * <b>== More information ==</b>
  *
- *
- * @package    Braintree
  * @category   Resources
- * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
+ * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 class PaymentMethodNonce extends Base
 {
@@ -65,6 +61,7 @@ class PaymentMethodNonce extends Base
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
     }
 
@@ -74,7 +71,7 @@ class PaymentMethodNonce extends Base
         $this->_set('nonce', $nonceAttributes['nonce']);
         $this->_set('type', $nonceAttributes['type']);
 
-        if(isset($nonceAttributes['threeDSecureInfo'])) {
+        if (isset($nonceAttributes['threeDSecureInfo'])) {
             $this->_set('threeDSecureInfo', ThreeDSecureInfo::factory($nonceAttributes['threeDSecureInfo']));
         }
     }

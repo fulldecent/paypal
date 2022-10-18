@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -46,6 +44,7 @@ final class MerchantGateway
     public function create($attribs)
     {
         $response = $this->_http->post('/merchants/create_via_api', ['merchant' => $attribs]);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -57,12 +56,10 @@ final class MerchantGateway
                 Merchant::factory($response['response']['merchant']),
                 OAuthCredentials::factory($response['response']['credentials']),
             ]);
-        } else if (isset($response['apiErrorResponse'])) {
+        } elseif (isset($response['apiErrorResponse'])) {
             return new Result\Error($response['apiErrorResponse']);
         } else {
-            throw new Exception\Unexpected(
-            "Expected merchant or apiErrorResponse"
-            );
+            throw new Exception\Unexpected('Expected merchant or apiErrorResponse');
         }
     }
 }

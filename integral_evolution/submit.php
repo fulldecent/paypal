@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,14 +22,12 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once dirname(__FILE__).'/../../../config/config.inc.php';
-include_once _PS_ROOT_DIR_.'/init.php';
+include_once dirname(__FILE__) . '/../../../config/config.inc.php';
+include_once _PS_ROOT_DIR_ . '/init.php';
 
 if (version_compare(_PS_VERSION_, '1.5', '<')) {
-    require_once _PS_ROOT_DIR_.'/controllers/OrderConfirmationController.php';
+    require_once _PS_ROOT_DIR_ . '/controllers/OrderConfirmationController.php';
 }
 
 class PayPalIntegralEvolutionSubmit extends OrderConfirmationControllerCore
@@ -40,7 +37,7 @@ class PayPalIntegralEvolutionSubmit extends OrderConfirmationControllerCore
     public function __construct()
     {
         /** Backward compatibility */
-        include_once _PS_MODULE_DIR_.'paypal/backward_compatibility/backward.php';
+        include_once _PS_MODULE_DIR_ . 'paypal/backward_compatibility/backward.php';
         $this->context = Context::getContext();
         parent::__construct();
     }
@@ -54,17 +51,17 @@ class PayPalIntegralEvolutionSubmit extends OrderConfirmationControllerCore
         $order = PayPalOrder::getOrderById($id_order);
         $price = Tools::displayPrice($order['total_paid'], $this->context->currency);
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'order' => $order,
             'price' => $price,
-        ));
+        ]);
         if (version_compare(_PS_VERSION_, '1.5', '>')) {
-            $this->context->smarty->assign(array(
+            $this->context->smarty->assign([
                 'reference_order' => Order::getUniqReferenceOf($id_order),
-            ));
+            ]);
         }
 
-        echo $this->context->smarty->fetch(_PS_MODULE_DIR_.'paypal/views/templates/front/order-confirmation.tpl');
+        echo $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/front/order-confirmation.tpl');
     }
 }
 
@@ -80,17 +77,17 @@ if ($id_module && $id_order && $id_cart && $key) {
     }
 } elseif ($id_cart) {
     // Redirection
-    $values = array(
+    $values = [
         'id_cart' => (int) $id_cart,
         'id_module' => (int) Module::getInstanceByName('paypal')->id,
         'id_order' => (int) Order::getOrderByCartId((int) $id_cart),
-    );
+    ];
 
     if (version_compare(_PS_VERSION_, '1.5', '<')) {
         $customer = new Customer(Context::getContext()->cookie->id_customer);
         $values['key'] = $customer->secure_key;
-        $url = _MODULE_DIR_.'/paypal/integral_evolution/submit.php';
-        Tools::redirectLink($url.'?'.http_build_query($values, '', '&'));
+        $url = _MODULE_DIR_ . '/paypal/integral_evolution/submit.php';
+        Tools::redirectLink($url . '?' . http_build_query($values, '', '&'));
     } else {
         $values['key'] = Context::getContext()->customer->secure_key;
         $link = Context::getContext()->link->getModuleLink('paypal', 'submit', $values);

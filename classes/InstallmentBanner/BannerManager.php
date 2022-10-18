@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,18 +22,16 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 require_once 'Banner.php';
 require_once __DIR__ . '/../Services/CurrencyConverter.php';
 
 class BannerManager
 {
-    /** @var Banner*/
+    /** @var Banner */
     protected $banner;
 
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
     public function __construct()
@@ -62,37 +59,37 @@ class BannerManager
             return false;
         }
 
-        if (false === (bool)Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT)) {
+        if (false === (bool) Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT)) {
             return false;
         }
 
         if ($this->context->controller instanceof CartController
-            && false === (bool)Configuration::get(ConfigurationMap::CART_PAGE)) {
+            && false === (bool) Configuration::get(ConfigurationMap::CART_PAGE)) {
             return false;
         }
 
         if ($this->context->controller instanceof OrderController
-            && false === (bool)Configuration::get(ConfigurationMap::CHECKOUT_PAGE)) {
+            && false === (bool) Configuration::get(ConfigurationMap::CHECKOUT_PAGE)) {
             return false;
         }
 
         if ($this->context->controller instanceof ProductController
-            && false === (bool)Configuration::get(ConfigurationMap::PRODUCT_PAGE)) {
+            && false === (bool) Configuration::get(ConfigurationMap::PRODUCT_PAGE)) {
             return false;
         }
 
         if ($this->context->controller instanceof IndexController
-            && false === (bool)Configuration::get(ConfigurationMap::HOME_PAGE)) {
+            && false === (bool) Configuration::get(ConfigurationMap::HOME_PAGE)) {
             return false;
         }
 
         if ($this->context->controller instanceof CategoryController
-            && false === (bool)Configuration::get(ConfigurationMap::CATEGORY_PAGE)) {
+            && false === (bool) Configuration::get(ConfigurationMap::CATEGORY_PAGE)) {
             return false;
         }
 
         $isoCountryDefault = Country::getIsoById(
-            (int)Configuration::get(
+            (int) Configuration::get(
                 'PS_COUNTRY_DEFAULT',
                 null,
                 null,
@@ -125,6 +122,7 @@ class BannerManager
     public function renderForCartPage()
     {
         $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
+
         return $this->banner
             ->setPlacement('cart')
             ->setLayout('text')
@@ -140,6 +138,7 @@ class BannerManager
     public function renderForCheckoutPage()
     {
         $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
+
         return $this->banner
             ->setPlacement('payment')
             ->setLayout('text')

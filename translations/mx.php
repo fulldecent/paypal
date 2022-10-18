@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,11 +22,9 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{paypal}prestashop>back_office_dded4ff4c6103f5b41af5a17c215d75c'] = 'Pago en 3x';
 $_MODULE['<{paypal}prestashop>back_office_0822861afd7b07b0dc60ec6b127cb143'] = 'https://www.paypal.com/bizsignup/?country.x=MX';
 $_MODULE['<{paypal}prestashop>installmentsettings_1b139287ea9bd54f5252e7868dae1f40'] = 'Muestre el Pago en 3X de PayPal en su sitio web';

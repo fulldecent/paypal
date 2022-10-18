@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -33,7 +31,6 @@ namespace Braintree;
  * PHP Version 5
  * Creates and manages Braintree Addresses
  *
- * @package   Braintree
  * @copyright 2015 Braintree, a division of PayPal, Inc.
  */
 class OAuthGateway
@@ -54,13 +51,15 @@ class OAuthGateway
 
     public function createTokenFromCode($params)
     {
-        $params['grantType'] = "authorization_code";
+        $params['grantType'] = 'authorization_code';
+
         return $this->_createToken($params);
     }
 
     public function createTokenFromRefreshToken($params)
     {
-        $params['grantType'] = "refresh_token";
+        $params['grantType'] = 'refresh_token';
+
         return $this->_createToken($params);
     }
 
@@ -68,23 +67,24 @@ class OAuthGateway
     {
         $params = ['credentials' => $params];
         $response = $this->_http->post('/oauth/access_tokens', $params);
+
         return $this->_verifyGatewayResponse($response);
     }
 
     private function _verifyGatewayResponse($response)
     {
         if (isset($response['credentials'])) {
-            $result =  new Result\Successful(
+            $result = new Result\Successful(
                 OAuthCredentials::factory($response['credentials'])
             );
+
             return $this->_mapSuccess($result);
-        } else if (isset($response['apiErrorResponse'])) {
+        } elseif (isset($response['apiErrorResponse'])) {
             $result = new Result\Error($response['apiErrorResponse']);
+
             return $this->_mapError($result);
         } else {
-            throw new Exception\Unexpected(
-                "Expected credentials or apiErrorResponse"
-            );
+            throw new Exception\Unexpected('Expected credentials or apiErrorResponse');
         }
     }
 
@@ -94,12 +94,13 @@ class OAuthGateway
 
         if ($error->code == Error\Codes::OAUTH_INVALID_GRANT) {
             $result->error = 'invalid_grant';
-        } else if ($error->code == Error\Codes::OAUTH_INVALID_CREDENTIALS) {
+        } elseif ($error->code == Error\Codes::OAUTH_INVALID_CREDENTIALS) {
             $result->error = 'invalid_credentials';
-        } else if ($error->code == Error\Codes::OAUTH_INVALID_SCOPE) {
+        } elseif ($error->code == Error\Codes::OAUTH_INVALID_SCOPE) {
             $result->error = 'invalid_scope';
         }
         $result->errorDescription = explode(': ', $error->message)[1];
+
         return $result;
     }
 
@@ -110,6 +111,7 @@ class OAuthGateway
         $result->refreshToken = $credentials->refreshToken;
         $result->tokenType = $credentials->tokenType;
         $result->expiresAt = $credentials->expiresAt;
+
         return $result;
     }
 
@@ -126,6 +128,7 @@ class OAuthGateway
     public function computeSignature($url)
     {
         $key = hash('sha256', $this->_config->getClientSecret(), true);
+
         return hash_hmac('sha256', $url, $key);
     }
 }

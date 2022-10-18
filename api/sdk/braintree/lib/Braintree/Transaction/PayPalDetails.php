@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
@@ -33,27 +31,22 @@ use Braintree\Instance;
 /**
  * PayPal details from a transaction
  *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 
 /**
  * creates an instance of PayPalDetails
  *
- *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $payerEmail
- * @property-read string $paymentId
- * @property-read string $authorizationId
- * @property-read string $token
- * @property-read string $imageUrl
- * @property-read string $transactionFeeAmount
- * @property-read string $transactionFeeCurrencyIsoCode
- * @property-read string $description
+ * @property string $payerEmail
+ * @property string $paymentId
+ * @property string $authorizationId
+ * @property string $token
+ * @property string $imageUrl
+ * @property string $transactionFeeAmount
+ * @property string $transactionFeeCurrencyIsoCode
+ * @property string $description
  */
 class PayPalDetails extends Instance
 {

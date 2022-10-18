@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,18 +22,17 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
 
 final class PaymentInstrumentType
 {
-    const PAYPAL_ACCOUNT      = 'paypal_account';
-    const COINBASE_ACCOUNT    = 'coinbase_account';
+    const PAYPAL_ACCOUNT = 'paypal_account';
+    const COINBASE_ACCOUNT = 'coinbase_account';
     const EUROPE_BANK_ACCOUNT = 'europe_bank_account';
-    const CREDIT_CARD         = 'credit_card';
-    const APPLE_PAY_CARD      = 'apple_pay_card';
-    const ANDROID_PAY_CARD    = 'android_pay_card';
+    const CREDIT_CARD = 'credit_card';
+    const APPLE_PAY_CARD = 'apple_pay_card';
+    const ANDROID_PAY_CARD = 'android_pay_card';
 }
 class_alias('Braintree\PaymentInstrumentType', 'Braintree_PaymentInstrumentType');

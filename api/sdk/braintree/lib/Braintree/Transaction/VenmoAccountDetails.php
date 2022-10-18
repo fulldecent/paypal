@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,38 +22,34 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
 
 use Braintree\Instance;
+
 /**
  * Venmo account details from a transaction
  *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 
 /**
  * creates an instance of VenmoAccountDetails
  *
- *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $sourceDescription
- * @property-read string $token
- * @property-read string $imageUrl
- * @property-read string $username
- * @property-read string $venmo_user_id
+ * @property string $sourceDescription
+ * @property string $token
+ * @property string $imageUrl
+ * @property string $username
+ * @property string $venmo_user_id
+ *
  * @uses Instance inherits methods
  */
 class VenmoAccountDetails extends Instance
 {
-    protected $_attributes = array();
+    protected $_attributes = [];
 
     /**
      * @ignore

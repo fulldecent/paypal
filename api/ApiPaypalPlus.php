@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,14 +22,10 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 class ApiPaypalPlus
 {
-    /*     * ********************************************************* */
     /*     * ******************** CONNECT METHODS ******************** */
-    /*     * ********************************************************* */
 
     public function __construct()
     {
@@ -50,13 +45,13 @@ class ApiPaypalPlus
 
         if ($ch) {
             if ((int) Configuration::get('PAYPAL_SANDBOX') == 1) {
-                curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.paypal.com'.$url);
+                curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.paypal.com' . $url);
             } else {
-                curl_setopt($ch, CURLOPT_URL, 'https://api.paypal.com'.$url);
+                curl_setopt($ch, CURLOPT_URL, 'https://api.paypal.com' . $url);
             }
 
             if ($identify) {
-                curl_setopt($ch, CURLOPT_USERPWD, Configuration::get('PAYPAL_PLUS_CLIENT_ID').':'.Configuration::get('PAYPAL_PLUS_SECRET'));
+                curl_setopt($ch, CURLOPT_USERPWD, Configuration::get('PAYPAL_PLUS_CLIENT_ID') . ':' . Configuration::get('PAYPAL_PLUS_SECRET'));
             }
 
             if ($http_header) {
@@ -92,8 +87,6 @@ class ApiPaypalPlus
 
     public function getToken($url, $body)
     {
-
-
         $result = $this->sendByCURL($url, $body, false, true);
 
         /*
@@ -124,10 +117,9 @@ class ApiPaypalPlus
 
     private function _createWebProfile()
     {
-
         $presentation = new stdClass();
         $presentation->brand_name = Configuration::get('PS_SHOP_NAME');
-        $presentation->logo_image = Tools::getHttpHost(true).__PS_BASE_URI__.'img/logo.jpg';
+        $presentation->logo_image = Tools::getHttpHost(true) . __PS_BASE_URI__ . 'img/logo.jpg';
         $presentation->locale_code = Tools::strtoupper(Language::getIsoById($this->context->language->id));
         $input_fields = new stdClass();
         $input_fields->allow_note = false;
@@ -147,14 +139,14 @@ class ApiPaypalPlus
 
     public function getWebProfile()
     {
-        $accessToken = $this->getToken(URL_PPP_CREATE_TOKEN, array('grant_type' => 'client_credentials'));
+        $accessToken = $this->getToken(URL_PPP_CREATE_TOKEN, ['grant_type' => 'client_credentials']);
 
         if ($accessToken) {
             $data = $this->_createWebProfile();
-            $header = array(
+            $header = [
                 'Content-Type:application/json',
-                'Authorization:Bearer '.$accessToken,
-            );
+                'Authorization:Bearer ' . $accessToken,
+            ];
 
             $result = Tools::jsonDecode($this->sendByCURL(URL_PPP_WEBPROFILE, Tools::jsonEncode($data), $header));
             if (isset($result->id)) {
@@ -175,14 +167,13 @@ class ApiPaypalPlus
 
     public function getListProfile()
     {
-
-        $accessToken = $this->getToken(URL_PPP_CREATE_TOKEN, array('grant_type' => 'client_credentials'));
+        $accessToken = $this->getToken(URL_PPP_CREATE_TOKEN, ['grant_type' => 'client_credentials']);
 
         if ($accessToken) {
-            $header = array(
+            $header = [
                 'Content-Type:application/json',
-                'Authorization:Bearer '.$accessToken,
-            );
+                'Authorization:Bearer ' . $accessToken,
+            ];
 
             return Tools::jsonDecode($this->sendByCURL(URL_PPP_WEBPROFILE, false, $header));
         }
@@ -191,7 +182,7 @@ class ApiPaypalPlus
     public function refreshToken()
     {
         if ($this->context->cookie->paypal_access_token_time_max < time()) {
-            return $this->getToken(URL_PPP_CREATE_TOKEN, array('grant_type' => 'client_credentials'));
+            return $this->getToken(URL_PPP_CREATE_TOKEN, ['grant_type' => 'client_credentials']);
         } else {
             return $this->context->cookie->paypal_access_token_access_token;
         }
@@ -249,17 +240,17 @@ class ApiPaypalPlus
         $shipping_address->phone = $address->phone;
 
         $payer_info = new stdClass();
-        $payer_info->email = '"'.$customer->email.'"';
+        $payer_info->email = '"' . $customer->email . '"';
         $payer_info->first_name = $address->firstname;
         $payer_info->last_name = $address->lastname;
-        $payer_info->country_code = '"'.$iso_code.'"';
-        $payer_info->shipping_address = array($shipping_address);
+        $payer_info->country_code = '"' . $iso_code . '"';
+        $payer_info->shipping_address = [$shipping_address];
 
         $payer = new stdClass();
-        $payer->payment_method = "paypal";
+        $payer->payment_method = 'paypal';
         //$payer->payer_info = $payer_info; // Objet set by PayPal
 
-        $aItems = array();
+        $aItems = [];
         /* Item */
         foreach ($cartItems as $cartItem) {
             $item = new stdClass();
@@ -306,38 +297,39 @@ class ApiPaypalPlus
         $transaction = new stdClass();
         $transaction->amount = $amount;
         $transaction->item_list = $itemList;
-        $transaction->description = "Payment description";
-        $transaction->notify_url = $shop_url.'/modules/paypal/ipn.php';
+        $transaction->description = 'Payment description';
+        $transaction->notify_url = $shop_url . '/modules/paypal/ipn.php';
 
         /* Redirecte Url */
 
         $redirectUrls = new stdClass();
-        $redirectUrls->cancel_url = $shop_url._MODULE_DIR_.'paypal/paypal_plus/submit.php?id_cart='.(int) $cart->id;
-        $redirectUrls->return_url = $shop_url._MODULE_DIR_.'paypal/paypal_plus/submit.php?id_cart='.(int) $cart->id;
+        $redirectUrls->cancel_url = $shop_url . _MODULE_DIR_ . 'paypal/paypal_plus/submit.php?id_cart=' . (int) $cart->id;
+        $redirectUrls->return_url = $shop_url . _MODULE_DIR_ . 'paypal/paypal_plus/submit.php?id_cart=' . (int) $cart->id;
 
         /* Payment */
         $payment = new stdClass();
-        $payment->transactions = array($transaction);
+        $payment->transactions = [$transaction];
         $payment->payer = $payer;
-        $payment->intent = "sale";
+        $payment->intent = 'sale';
         if (Configuration::get('PAYPAL_WEB_PROFILE_ID')) {
             $payment->experience_profile_id = Configuration::get('PAYPAL_WEB_PROFILE_ID');
         }
         $payment->redirect_urls = $redirectUrls;
+
         return $payment;
     }
 
     protected function createPayment($customer, $cart, $access_token)
     {
-
         $data = $this->_createObjectPayment($customer, $cart);
 
-        $header = array(
+        $header = [
             'Content-Type:application/json',
-            'Authorization:Bearer '.$access_token,
-        );
+            'Authorization:Bearer ' . $access_token,
+        ];
 
         $result = $this->sendByCURL(URL_PPP_CREATE_PAYMENT, Tools::jsonEncode($data), $header);
+
         return $result;
     }
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -39,30 +37,35 @@ class MultipleValueOrTextNode extends MultipleValueNode
     public function contains($value)
     {
         $this->textNode->contains($value);
+
         return $this;
     }
 
     public function endsWith($value)
     {
         $this->textNode->endsWith($value);
+
         return $this;
     }
 
     public function is($value)
     {
         $this->textNode->is($value);
+
         return $this;
     }
 
     public function isNot($value)
     {
         $this->textNode->isNot($value);
+
         return $this;
     }
 
     public function startsWith($value)
     {
         $this->textNode->startsWith($value);
+
         return $this;
     }
 

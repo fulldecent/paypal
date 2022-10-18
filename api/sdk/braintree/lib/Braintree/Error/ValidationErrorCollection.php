@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Error;
@@ -37,12 +35,10 @@ use Braintree\Collection;
  *
  * For more detailed information on Validation errors, see {@link http://www.braintreepayments.com/gateway/validation-errors http://www.braintreepaymentsolutions.com/gateway/validation-errors}
  *
- * @package    Braintree
- * @subpackage Error
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read array $errors
- * @property-read array $nested
+ * @property array $errors
+ * @property array $nested
  */
 class ValidationErrorCollection extends Collection
 {
@@ -52,43 +48,43 @@ class ValidationErrorCollection extends Collection
     /**
      * @ignore
      */
-    public function  __construct($data)
+    public function __construct($data)
     {
-        foreach($data AS $key => $errorData)
+        foreach ($data as $key => $errorData) {
             // map errors to new collections recursively
             if ($key == 'errors') {
-                foreach ($errorData AS $error) {
+                foreach ($errorData as $error) {
                     $this->_errors[] = new Validation($error);
                 }
             } else {
                 $this->_nested[$key] = new ValidationErrorCollection($errorData);
             }
-
+        }
     }
 
     public function deepAll()
     {
         $validationErrors = array_merge([], $this->_errors);
-        foreach($this->_nested as $nestedErrors)
-        {
+        foreach ($this->_nested as $nestedErrors) {
             $validationErrors = array_merge($validationErrors, $nestedErrors->deepAll());
         }
+
         return $validationErrors;
     }
 
     public function deepSize()
     {
         $total = sizeof($this->_errors);
-        foreach($this->_nested as $_nestedErrors)
-        {
+        foreach ($this->_nested as $_nestedErrors) {
             $total = $total + $_nestedErrors->deepSize();
         }
+
         return $total;
     }
 
     public function forIndex($index)
     {
-        return $this->forKey("index" . $index);
+        return $this->forKey('index' . $index);
     }
 
     public function forKey($key)
@@ -99,14 +95,14 @@ class ValidationErrorCollection extends Collection
     public function onAttribute($attribute)
     {
         $matches = [];
-        foreach ($this->_errors AS $key => $error) {
-           if($error->attribute == $attribute) {
-               $matches[] = $error;
-           }
+        foreach ($this->_errors as $key => $error) {
+            if ($error->attribute == $attribute) {
+                $matches[] = $error;
+            }
         }
+
         return $matches;
     }
-
 
     public function shallowAll()
     {
@@ -114,12 +110,12 @@ class ValidationErrorCollection extends Collection
     }
 
     /**
-     *
      * @ignore
      */
-    public function  __get($name)
+    public function __get($name)
     {
         $varName = "_$name";
+
         return isset($this->$varName) ? $this->$varName : null;
     }
 
@@ -135,10 +131,11 @@ class ValidationErrorCollection extends Collection
             $output[] = $this->_inspect($this->_errors);
         }
         if (!empty($this->_nested)) {
-            foreach ($this->_nested AS $key => $values) {
+            foreach ($this->_nested as $key => $values) {
                 $output[] = $this->_inspect($this->_nested);
             }
         }
+
         return join(', ', $output);
     }
 
@@ -148,7 +145,7 @@ class ValidationErrorCollection extends Collection
     private function _inspect($errors, $scope = null)
     {
         $eOutput = '[' . __CLASS__ . '/errors:[';
-        foreach($errors AS $error => $errorObj) {
+        foreach ($errors as $error => $errorObj) {
             $outputErrs[] = "({$errorObj->error['code']} {$errorObj->error['message']})";
         }
         $eOutput .= join(', ', $outputErrs) . ']]';

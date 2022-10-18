@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,11 +22,9 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{paypal}prestashop>ipn_8a34d4a5b0c3928059f6f92ead9e8aa6'] = 'Die Preise bei PayPal und PrestaShop sind nicht identisch.';
 $_MODULE['<{paypal}prestashop>ipn_572f9af7615560af2cba038cc1948287'] = 'Warenkorb geändert, versuchen Sie es wieder.';
 $_MODULE['<{paypal}prestashop>ipn_ada2b5d5bbf3065de283d61526141780'] = 'Offene Zahlung einziehen.';

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -34,7 +31,6 @@ require_once _PS_MODULE_DIR_ . 'paypal/classes/Services/OrderPrice.php';
 
 class PaypalCapture extends ObjectModel
 {
-
     public $id_order;
     public $capture_amount;
     public $result;
@@ -58,21 +54,21 @@ class PaypalCapture extends ObjectModel
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         if (version_compare(_PS_VERSION_, '1.5', '>')) {
-            self::$definition = array(
+            self::$definition = [
                 'table' => 'paypal_capture',
                 'primary' => 'id_paypal_capture',
-                'fields' => array(
-                    'id_order' => array('type' => 1, 'validate' => 'isUnsignedId'),
-                    'result' => array('type' => 3, 'validate' => 'isString'),
-                    'capture_amount' => array('type' => 4, 'validate' => 'isFloat'),
-                    'date_add' => array('type' => 5, 'validate' => 'isDate'),
-                    'date_upd' => array('type' => 5, 'validate' => 'isDate'),
-                ),
-            );
+                'fields' => [
+                    'id_order' => ['type' => 1, 'validate' => 'isUnsignedId'],
+                    'result' => ['type' => 3, 'validate' => 'isString'],
+                    'capture_amount' => ['type' => 4, 'validate' => 'isFloat'],
+                    'date_add' => ['type' => 5, 'validate' => 'isDate'],
+                    'date_upd' => ['type' => 5, 'validate' => 'isDate'],
+                ],
+            ];
         } else {
-            $tables = array('paypal_capture');
-            $fieldsRequired = array('id_order', 'result', 'capture_amount', 'date_add', 'date_upd');
-            $fieldsValidate = array();
+            $tables = ['paypal_capture'];
+            $fieldsRequired = ['id_order', 'result', 'capture_amount', 'date_add', 'date_upd'];
+            $fieldsValidate = [];
         }
 
         $this->date_add = date('Y-m-d H:i:s');
@@ -101,7 +97,7 @@ class PaypalCapture extends ObjectModel
         //Tester la version de prestashop
 
         if (version_compare(_PS_VERSION_, '1.5', '<')) {
-            $query = 'SELECT SUM(capture_amount) AS tt FROM '._DB_PREFIX_.'paypal_capture WHERE id_order ='.(int) $id_order.' AND result="Completed" ';
+            $query = 'SELECT SUM(capture_amount) AS tt FROM ' . _DB_PREFIX_ . 'paypal_capture WHERE id_order =' . (int) $id_order . ' AND result="Completed" ';
             $result = Db::getInstance()->getRow($query);
 
             return Tools::ps_round($result['tt'], 2);
@@ -109,8 +105,9 @@ class PaypalCapture extends ObjectModel
             $query = new DbQuery();
             $query->select('SUM(capture_amount)');
             $query->from(self::$definition['table']);
-            $query->where('id_order = '.(int) $id_order);
+            $query->where('id_order = ' . (int) $id_order);
             $query->where('result = "Completed"');
+
             return Tools::ps_round(DB::getInstance()->getValue($query), 2);
         }
     }
@@ -118,6 +115,7 @@ class PaypalCapture extends ObjectModel
     public function getRestToPaid(Order $order)
     {
         $totalPaid = Tools::ps_round($this->getOrderPriceService()->getTotalPaidByReference($order->reference), 2);
+
         return Tools::ps_round($totalPaid, 2) - Tools::ps_round(self::getTotalAmountCapturedByIdOrder($order->id), 2);
     }
 
@@ -141,11 +139,11 @@ class PaypalCapture extends ObjectModel
     public function getListCaptured()
     {
         if (version_compare(_PS_VERSION_, '1.5', '<')) {
-            $query = 'SELECT * FROM '._DB_PREFIX_.'paypal_capture WHERE id_order ='.(int)$this->id_order.' ORDER BY date_add DESC ;';
+            $query = 'SELECT * FROM ' . _DB_PREFIX_ . 'paypal_capture WHERE id_order =' . (int) $this->id_order . ' ORDER BY date_add DESC ;';
         } else {
             $query = new DbQuery();
             $query->from(self::$definition['table']);
-            $query->where('id_order = '.(int)$this->id_order);
+            $query->where('id_order = ' . (int) $this->id_order);
             $query->orderBy('date_add DESC');
         }
 
@@ -156,6 +154,7 @@ class PaypalCapture extends ObjectModel
                 $foo['date'] = Tools::displayDate($foo['date_add'], Configuration::get('PS_LANG_DEFAULT'), true);
             }
         }
+
         return $result;
     }
 
@@ -164,8 +163,8 @@ class PaypalCapture extends ObjectModel
         $regexp = "/^([0-9\s]{0,10})((\.|,)[0-9]{0,2})?$/isD";
 
         if (preg_match($regexp, $price)) {
-            $array_regexp = array("#,#isD", "# #isD");
-            $array_replace = array(".", "");
+            $array_regexp = ['#,#isD', '# #isD'];
+            $array_replace = ['.', ''];
             $price = preg_replace($array_regexp, $array_replace, $price);
 
             return Tools::ps_round($price, 2);

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,13 +22,12 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 class CurrencyConverter
 {
     /**
      * @param float $amount
+     *
      * @return float
      */
     public function convert($amount, $currency = null, $to = false)
@@ -39,6 +37,5 @@ class CurrencyConverter
         } catch (Exception $e) {
             return 0;
         }
-
     }
 }

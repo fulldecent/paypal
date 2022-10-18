@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -36,22 +34,23 @@ class MultipleValueNode
     {
         $this->name = $name;
         $this->items = [];
-		$this->allowedValues = $allowedValues;
+        $this->allowedValues = $allowedValues;
     }
 
     public function in($values)
     {
-		$bad_values = array_diff($values, $this->allowedValues);
-		if (count($this->allowedValues) > 0 && count($bad_values) > 0) {
-			$message = 'Invalid argument(s) for ' . $this->name . ':';
-			foreach ($bad_values AS $bad_value) {
-				$message .= ' ' . $bad_value;
-			}
+        $bad_values = array_diff($values, $this->allowedValues);
+        if (count($this->allowedValues) > 0 && count($bad_values) > 0) {
+            $message = 'Invalid argument(s) for ' . $this->name . ':';
+            foreach ($bad_values as $bad_value) {
+                $message .= ' ' . $bad_value;
+            }
 
-			throw new InvalidArgumentException($message);
-		}
+            throw new InvalidArgumentException($message);
+        }
 
         $this->items = $values;
+
         return $this;
     }
 

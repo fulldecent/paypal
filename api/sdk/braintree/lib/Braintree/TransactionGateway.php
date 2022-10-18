@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -34,16 +32,14 @@ use InvalidArgumentException;
  * Braintree TransactionGateway processor
  * Creates and manages transactions
  *
- *
  * <b>== More information ==</b>
  *
  * For more detailed information on Transactions, see {@link http://www.braintreepayments.com/gateway/transaction-api http://www.braintreepaymentsolutions.com/gateway/transaction-api}
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
-
 final class TransactionGateway
 {
     private $_gateway;
@@ -61,61 +57,71 @@ final class TransactionGateway
     public function cloneTransaction($transactionId, $attribs)
     {
         Util::verifyKeys(self::cloneSignature(), $attribs);
+
         return $this->_doCreate('/transactions/' . $transactionId . '/clone', ['transactionClone' => $attribs]);
     }
 
     /**
      * @ignore
-     * @access private
+     *
      * @param array $attribs
+     *
      * @return object
      */
     private function create($attribs)
     {
         Util::verifyKeys(self::createSignature(), $attribs);
+
         return $this->_doCreate('/transactions', ['transaction' => $attribs]);
     }
 
     /**
      * @ignore
-     * @access private
+     *
      * @param array $attribs
+     *
      * @return object
+     *
      * @throws Exception\ValidationError
      */
     private function createNoValidate($attribs)
     {
         $result = $this->create($attribs);
+
         return Util::returnObjectOrThrowException(__CLASS__, $result);
     }
+
     /**
-     *
      * @deprecated since version 2.3.0
-     * @access public
+     *
      * @param array $attribs
+     *
      * @return object
      */
     public function createFromTransparentRedirect($queryString)
     {
-        trigger_error("DEPRECATED: Please use TransparentRedirectRequest::confirm", E_USER_NOTICE);
+        trigger_error('DEPRECATED: Please use TransparentRedirectRequest::confirm', E_USER_NOTICE);
         $params = TransparentRedirect::parseAndValidateQueryString(
                 $queryString
         );
+
         return $this->_doCreate(
                 '/transactions/all/confirm_transparent_redirect_request',
                 ['id' => $params['id']]
         );
     }
+
     /**
-     *
      * @deprecated since version 2.3.0
-     * @access public
+     *
      * @param none
+     *
      * @return string
      */
     public function createTransactionUrl()
     {
-        trigger_error("DEPRECATED: Please use TransparentRedirectRequest::url", E_USER_NOTICE);
+        trigger_error('DEPRECATED: Please use TransparentRedirectRequest::url', E_USER_NOTICE);
+
         return $this->_config->baseUrl() . $this->_config->merchantPath() .
                 '/transactions/all/create_via_transparent_redirect_request';
     }
@@ -127,6 +133,7 @@ final class TransactionGateway
 
     /**
      * creates a full array signature of a valid gateway request
+     *
      * @return array gateway request signature format
      */
     public static function createSignature()
@@ -156,30 +163,25 @@ final class TransactionGateway
             'threeDSecureToken',
             'type',
             'venmoSdkPaymentMethodCode',
-            ['creditCard' =>
-                ['token', 'cardholderName', 'cvv', 'expirationDate', 'expirationMonth', 'expirationYear', 'number'],
+            ['creditCard' => ['token', 'cardholderName', 'cvv', 'expirationDate', 'expirationMonth', 'expirationYear', 'number'],
             ],
-            ['customer' =>
-                [
+            ['customer' => [
                     'id', 'company', 'email', 'fax', 'firstName',
-                    'lastName', 'phone', 'website'],
+                    'lastName', 'phone', 'website', ],
             ],
-            ['billing' =>
-                [
+            ['billing' => [
                     'firstName', 'lastName', 'company', 'countryName',
                     'countryCodeAlpha2', 'countryCodeAlpha3', 'countryCodeNumeric',
                     'extendedAddress', 'locality', 'postalCode', 'region',
-                    'streetAddress'],
+                    'streetAddress', ],
             ],
-            ['shipping' =>
-                [
+            ['shipping' => [
                     'firstName', 'lastName', 'company', 'countryName',
                     'countryCodeAlpha2', 'countryCodeAlpha3', 'countryCodeNumeric',
                     'extendedAddress', 'locality', 'postalCode', 'region',
-                    'streetAddress'],
+                    'streetAddress', ],
             ],
-            ['options' =>
-                [
+            ['options' => [
                     'holdInEscrow',
                     'storeInVault',
                     'storeInVaultOnSuccess',
@@ -188,35 +190,30 @@ final class TransactionGateway
                     'venmoSdkSession',
                     'storeShippingAddressInVault',
                     'payeeEmail',
-                    ['three_d_secure' =>
-                        ['required']
+                    ['three_d_secure' => ['required'],
                     ],
-                    ['paypal' =>
-                        [
+                    ['paypal' => [
                             'payeeEmail',
                             'customField',
                             'description',
                             ['supplementaryData' => ['_anyKey_']],
-                        ]
+                        ],
                     ],
-                    ['amexRewards' =>
-                        [
+                    ['amexRewards' => [
                             'requestId',
                             'points',
                             'currencyAmount',
-                            'currencyIsoCode'
-                        ]
-                    ]
+                            'currencyIsoCode',
+                        ],
+                    ],
                 ],
             ],
             ['customFields' => ['_anyKey_']],
             ['descriptor' => ['name', 'phone', 'url']],
             ['paypalAccount' => ['payeeEmail']],
             ['apple_pay_card' => ['number', 'cardholder_name', 'cryptogram', 'expiration_month', 'expiration_year']],
-            ['industry' =>
-                ['industryType',
-                    ['data' =>
-                        [
+            ['industry' => ['industryType',
+                    ['data' => [
                             'folioNumber',
                             'checkInDate',
                             'checkOutDate',
@@ -225,11 +222,11 @@ final class TransactionGateway
                             'lodgingCheckInDate',
                             'lodgingCheckOutDate',
                             'lodgingName',
-                            'roomRate'
-                        ]
-                    ]
-                ]
-            ]
+                            'roomRate',
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -239,9 +236,8 @@ final class TransactionGateway
     }
 
     /**
-     *
-     * @access public
      * @param array $attribs
+     *
      * @return Result\Successful|Result\Error
      */
     public function credit($attribs)
@@ -250,21 +246,22 @@ final class TransactionGateway
     }
 
     /**
-     *
-     * @access public
      * @param array $attribs
+     *
      * @return Result\Successful|Result\Error
+     *
      * @throws Exception\ValidationError
      */
     public function creditNoValidate($attribs)
     {
         $result = $this->credit($attribs);
+
         return Util::returnObjectOrThrowException(__CLASS__, $result);
     }
 
     /**
-     * @access public
      * @param string id
+     *
      * @return Transaction
      */
     public function find($id)
@@ -273,16 +270,18 @@ final class TransactionGateway
         try {
             $path = $this->_config->merchantPath() . '/transactions/' . $id;
             $response = $this->_http->get($path);
+
             return Transaction::factory($response['transaction']);
         } catch (Exception\NotFound $e) {
-            throw new Exception\NotFound(
-            'transaction with id ' . $id . ' not found'
-            );
+            throw new Exception\NotFound('transaction with id ' . $id . ' not found');
         }
     }
+
     /**
      * new sale
+     *
      * @param array $attribs
+     *
      * @return array
      */
     public function sale($attribs)
@@ -292,14 +291,17 @@ final class TransactionGateway
 
     /**
      * roughly equivalent to the ruby bang method
-     * @access public
+     *
      * @param array $attribs
+     *
      * @return array
+     *
      * @throws Exception\ValidationsFailed
      */
     public function saleNoValidate($attribs)
     {
         $result = $this->sale($attribs);
+
         return Util::returnObjectOrThrowException(__CLASS__, $result);
     }
 
@@ -312,7 +314,9 @@ final class TransactionGateway
      *
      * @param mixed $query search query
      * @param array $options options such as page number
+     *
      * @return ResourceCollection
+     *
      * @throws InvalidArgumentException
      */
     public function search($query)
@@ -328,7 +332,7 @@ final class TransactionGateway
             $pager = [
                 'object' => $this,
                 'method' => 'fetch',
-                'methodArgs' => [$query]
+                'methodArgs' => [$query],
                 ];
 
             return new ResourceCollection($response, $pager);
@@ -343,7 +347,7 @@ final class TransactionGateway
         foreach ($query as $term) {
             $criteria[$term->name] = $term->toparam();
         }
-        $criteria["ids"] = TransactionSearch::ids()->in($ids)->toparam();
+        $criteria['ids'] = TransactionSearch::ids()->in($ids)->toparam();
         $path = $this->_config->merchantPath() . '/transactions/advanced_search';
         $response = $this->_http->post($path, ['search' => $criteria]);
 
@@ -357,22 +361,23 @@ final class TransactionGateway
      * void a transaction by id
      *
      * @param string $id transaction id
+     *
      * @return Result\Successful|Result\Error
      */
     public function void($transactionId)
     {
         $this->_validateId($transactionId);
 
-        $path = $this->_config->merchantPath() . '/transactions/'. $transactionId . '/void';
+        $path = $this->_config->merchantPath() . '/transactions/' . $transactionId . '/void';
         $response = $this->_http->put($path);
+
         return $this->_verifyGatewayResponse($response);
     }
-    /**
-     *
-     */
+
     public function voidNoValidate($transactionId)
     {
         $result = $this->void($transactionId);
+
         return Util::returnObjectOrThrowException(__CLASS__, $result);
     }
 
@@ -382,14 +387,16 @@ final class TransactionGateway
         Util::verifyKeys(self::submitForSettlementSignature(), $attribs);
         $attribs['amount'] = $amount;
 
-        $path = $this->_config->merchantPath() . '/transactions/'. $transactionId . '/submit_for_settlement';
+        $path = $this->_config->merchantPath() . '/transactions/' . $transactionId . '/submit_for_settlement';
         $response = $this->_http->put($path, ['transaction' => $attribs]);
+
         return $this->_verifyGatewayResponse($response);
     }
 
     public function submitForSettlementNoValidate($transactionId, $amount = null, $attribs = [])
     {
         $result = $this->submitForSettlement($transactionId, $amount, $attribs);
+
         return Util::returnObjectOrThrowException(__CLASS__, $result);
     }
 
@@ -399,8 +406,9 @@ final class TransactionGateway
         Util::verifyKeys(self::submitForSettlementSignature(), $attribs);
         $attribs['amount'] = $amount;
 
-        $path = $this->_config->merchantPath() . '/transactions/'. $transactionId . '/submit_for_partial_settlement';
+        $path = $this->_config->merchantPath() . '/transactions/' . $transactionId . '/submit_for_partial_settlement';
         $response = $this->_http->post($path, ['transaction' => $attribs]);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -410,6 +418,7 @@ final class TransactionGateway
 
         $path = $this->_config->merchantPath() . '/transactions/' . $transactionId . '/hold_in_escrow';
         $response = $this->_http->put($path, []);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -419,6 +428,7 @@ final class TransactionGateway
 
         $path = $this->_config->merchantPath() . '/transactions/' . $transactionId . '/release_from_escrow';
         $response = $this->_http->put($path, []);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -428,6 +438,7 @@ final class TransactionGateway
 
         $path = $this->_config->merchantPath() . '/transactions/' . $transactionId . '/cancel_release';
         $response = $this->_http->put($path, []);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -438,6 +449,7 @@ final class TransactionGateway
         $params = ['transaction' => ['amount' => $amount]];
         $path = $this->_config->merchantPath() . '/transactions/' . $transactionId . '/refund';
         $response = $this->_http->post($path, $params);
+
         return $this->_verifyGatewayResponse($response);
     }
 
@@ -445,8 +457,10 @@ final class TransactionGateway
      * sends the create request to the gateway
      *
      * @ignore
+     *
      * @param var $subPath
      * @param array $params
+     *
      * @return mixed
      */
     public function _doCreate($subPath, $params)
@@ -459,20 +473,20 @@ final class TransactionGateway
 
     /**
      * verifies that a valid transaction id is being used
+     *
      * @ignore
+     *
      * @param string transaction id
+     *
      * @throws InvalidArgumentException
      */
-    private function _validateId($id = null) {
+    private function _validateId($id = null)
+    {
         if (empty($id)) {
-           throw new InvalidArgumentException(
-                   'expected transaction id to be set'
-                   );
+            throw new InvalidArgumentException('expected transaction id to be set');
         }
         if (!preg_match('/^[0-9a-z]+$/', $id)) {
-            throw new InvalidArgumentException(
-                    $id . ' is an invalid transaction id.'
-                    );
+            throw new InvalidArgumentException($id . ' is an invalid transaction id.');
         }
     }
 
@@ -485,8 +499,11 @@ final class TransactionGateway
      * alternatively, throws an Unexpected exception if the response is invalid.
      *
      * @ignore
+     *
      * @param array $response gateway response values
+     *
      * @return Result\Successful|Result\Error
+     *
      * @throws Exception\Unexpected
      */
     private function _verifyGatewayResponse($response)
@@ -496,12 +513,10 @@ final class TransactionGateway
             return new Result\Successful(
                     Transaction::factory($response['transaction'])
             );
-        } else if (isset($response['apiErrorResponse'])) {
+        } elseif (isset($response['apiErrorResponse'])) {
             return new Result\Error($response['apiErrorResponse']);
         } else {
-            throw new Exception\Unexpected(
-            "Expected transaction or apiErrorResponse"
-            );
+            throw new Exception\Unexpected('Expected transaction or apiErrorResponse');
         }
     }
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,14 +22,11 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once _PS_MODULE_DIR_.'paypal/api/sdk/braintree/lib/Braintree.php';
+include_once _PS_MODULE_DIR_ . 'paypal/api/sdk/braintree/lib/Braintree.php';
 
 class PrestaBraintree
 {
-
     public $gateway;
     public $error;
 
@@ -46,6 +42,7 @@ class PrestaBraintree
 
     /**
      * @param $id_account_braintree
+     *
      * @return bool
      */
     public function createToken($id_account_braintree)
@@ -54,10 +51,11 @@ class PrestaBraintree
             $this->initConfig();
 
             $clientToken = $this->gateway->clientToken()->generate();
-            
+
             return $clientToken;
         } catch (Exception $e) {
-            $this->addLog($e->getCode().'; '.$e->getMessage());
+            $this->addLog($e->getCode() . '; ' . $e->getMessage());
+
             return false;
         }
     }
@@ -65,16 +63,17 @@ class PrestaBraintree
     public function isConfigured($sandboxMode = null)
     {
         $this->initConfig($sandboxMode);
+
         return $this->createToken(null) !== false;
     }
 
     /**
      * @param $id_account_braintree
+     *
      * @return mixed
      */
     public function sale($cart, $id_account_braintree, $token_payment, $device_data)
     {
-
         $this->initConfig();
 
         $address_billing = new Address($cart->id_address_invoice);
@@ -83,63 +82,64 @@ class PrestaBraintree
         $country_shipping = new Country($address_shipping->id_country);
 
         try {
-            $data = array(
-                'amount'                => $cart->getOrderTotal(),
-                'paymentMethodNonce'    => $token_payment,//'fake-processor-declined-visa-nonce',//
-                'merchantAccountId'     => $id_account_braintree,
-                'orderId'               => $cart->id,
-                'channel'               => 'PrestaShop_Cart_Braintree',
-                'billing' => array(
-                    'firstName'         => $address_billing->firstname,
-                    'lastName'          => $address_billing->lastname,
-                    'company'           => $address_billing->company,
-                    'streetAddress'     => $address_billing->address1,
-                    'extendedAddress'   => $address_billing->address2,
-                    'locality'          => $address_billing->city,
-                    'postalCode'        => $address_billing->postcode,
+            $data = [
+                'amount' => $cart->getOrderTotal(),
+                'paymentMethodNonce' => $token_payment, //'fake-processor-declined-visa-nonce',//
+                'merchantAccountId' => $id_account_braintree,
+                'orderId' => $cart->id,
+                'channel' => 'PrestaShop_Cart_Braintree',
+                'billing' => [
+                    'firstName' => $address_billing->firstname,
+                    'lastName' => $address_billing->lastname,
+                    'company' => $address_billing->company,
+                    'streetAddress' => $address_billing->address1,
+                    'extendedAddress' => $address_billing->address2,
+                    'locality' => $address_billing->city,
+                    'postalCode' => $address_billing->postcode,
                     'countryCodeAlpha2' => $country_billing->iso_code,
-                ),
-                'shipping' => array(
-                    'firstName'         => $address_shipping->firstname,
-                    'lastName'          => $address_shipping->lastname,
-                    'company'           => $address_shipping->company,
-                    'streetAddress'     => $address_shipping->address1,
-                    'extendedAddress'   => $address_shipping->address2,
-                    'locality'          => $address_shipping->city,
-                    'postalCode'        => $address_shipping->postcode,
+                ],
+                'shipping' => [
+                    'firstName' => $address_shipping->firstname,
+                    'lastName' => $address_shipping->lastname,
+                    'company' => $address_shipping->company,
+                    'streetAddress' => $address_shipping->address1,
+                    'extendedAddress' => $address_shipping->address2,
+                    'locality' => $address_shipping->city,
+                    'postalCode' => $address_shipping->postcode,
                     'countryCodeAlpha2' => $country_shipping->iso_code,
-                ),
-                "deviceData"            => $device_data,
-                'options' => array(
+                ],
+                'deviceData' => $device_data,
+                'options' => [
                     'submitForSettlement' => !Configuration::get('PAYPAL_CAPTURE'),
-                    'three_d_secure' => array(
-                        'required' => Configuration::get('PAYPAL_USE_3D_SECURE')
-                    )
-                )
-            );
-            
+                    'three_d_secure' => [
+                        'required' => Configuration::get('PAYPAL_USE_3D_SECURE'),
+                    ],
+                ],
+            ];
+
             $result = $this->gateway->transaction()->sale($data);
 
             if (($result instanceof Braintree_Result_Successful) && $result->success && $this->isValidStatus($result->transaction->status)) {
                 return $result->transaction;
             } else {
-                $log = '### Braintree transaction error # '.date('Y-m-d H:i:s').' ###'."\n";
-                $log .= '## cart id # '.$cart->id.' ##'."\n";
-                $log .= '## amount # '.$cart->getOrderTotal().' ##'."\n";
-                $log .= '## Braintree error message ##'."\n";
+                $log = '### Braintree transaction error # ' . date('Y-m-d H:i:s') . ' ###' . "\n";
+                $log .= '## cart id # ' . $cart->id . ' ##' . "\n";
+                $log .= '## amount # ' . $cart->getOrderTotal() . ' ##' . "\n";
+                $log .= '## Braintree error message ##' . "\n";
 
-                $log .= '# '.$result->message.' #'."\n";
+                $log .= '# ' . $result->message . ' #' . "\n";
 
                 foreach ($result->errors->deepAll() as $error) {
-                    $log .= '# error code: '.$error->code.' # message: '.$error->message.' #';
+                    $log .= '# error code: ' . $error->code . ' # message: ' . $error->message . ' #';
                 }
 
-                file_put_contents(_PS_MODULE_DIR_.'paypal/log/braintree_log.txt', $log, FILE_APPEND);
+                file_put_contents(_PS_MODULE_DIR_ . 'paypal/log/braintree_log.txt', $log, FILE_APPEND);
 
                 $this->error = $result->transaction->status;
             }
         } catch (Exception $e) {
-            $this->error = $e->getCode().' : '.$e->getMessage();
+            $this->error = $e->getCode() . ' : ' . $e->getMessage();
+
             return false;
         }
 
@@ -148,14 +148,15 @@ class PrestaBraintree
 
     public function saveTransaction($data)
     {
-        Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'paypal_braintree`(`id_cart`,`nonce_payment_token`,`client_token`,`datas`)
-            VALUES (\''.pSQL($data['id_cart']).'\',\''.pSQL($data['nonce_payment_token']).'\',\''.pSQL($data['client_token']).'\',\''.pSQL($data['datas']).'\')');
+        Db::getInstance()->Execute('INSERT INTO `' . _DB_PREFIX_ . 'paypal_braintree`(`id_cart`,`nonce_payment_token`,`client_token`,`datas`)
+            VALUES (\'' . pSQL($data['id_cart']) . '\',\'' . pSQL($data['nonce_payment_token']) . '\',\'' . pSQL($data['client_token']) . '\',\'' . pSQL($data['datas']) . '\')');
+
         return Db::getInstance()->Insert_ID();
     }
 
     public function updateTransaction($braintree_id, $transaction, $id_order)
     {
-        Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'paypal_braintree` set transaction=\''.pSQL($transaction).'\', id_order = \''.pSQL($id_order).'\' WHERE id_paypal_braintree = '.(int)$braintree_id);
+        Db::getInstance()->Execute('UPDATE `' . _DB_PREFIX_ . 'paypal_braintree` set transaction=\'' . pSQL($transaction) . '\', id_order = \'' . pSQL($id_order) . '\' WHERE id_paypal_braintree = ' . (int) $braintree_id);
     }
 
     public function checkStatus($id_cart)
@@ -163,31 +164,33 @@ class PrestaBraintree
         $this->initConfig();
         try {
             $collection = $this->gateway->transaction()->search(
-                array(
-                    Braintree_TransactionSearch::orderId()->is($id_cart)
-                )
+                [
+                    Braintree_TransactionSearch::orderId()->is($id_cart),
+                ]
             );
 
             $transaction = $this->gateway->transaction()->find($collection->_ids[0]);
         } catch (Exception $e) {
-            $this->error = $e->getCode().' : '.$e->getMessage();
+            $this->error = $e->getCode() . ' : ' . $e->getMessage();
+
             return false;
         }
+
         return $transaction;
     }
 
     public function cartStatus($id_cart)
     {
-
         $sql = 'SELECT *
-        FROM '._DB_PREFIX_.'paypal_braintree
-        WHERE id_cart = '.(int)$id_cart;
+        FROM ' . _DB_PREFIX_ . 'paypal_braintree
+        WHERE id_cart = ' . (int) $id_cart;
 
         $result = Db::getInstance()->getRow($sql);
         if (!empty($result['id_paypal_braintree'])) {
             if (!empty($result['id_order'])) {
                 return 'alreadyUse';
             }
+
             return 'alreadyTry';
         } else {
             return false;
@@ -196,7 +199,8 @@ class PrestaBraintree
 
     public function getTransactionId($id_order)
     {
-        $result = Db::getInstance()->getValue('SELECT transaction FROM `'._DB_PREFIX_.'paypal_braintree` WHERE id_order = '.(int)$id_order);
+        $result = Db::getInstance()->getValue('SELECT transaction FROM `' . _DB_PREFIX_ . 'paypal_braintree` WHERE id_order = ' . (int) $id_order);
+
         return $result;
     }
 
@@ -209,7 +213,8 @@ class PrestaBraintree
 
             return $result->status;
         } catch (Exception $e) {
-            $this->addLog($e->getCode().'; '.$e->getMessage());
+            $this->addLog($e->getCode() . '; ' . $e->getMessage());
+
             return false;
         }
     }
@@ -230,14 +235,15 @@ class PrestaBraintree
                         return true;
                     }
                 }
+
                 return false;
             }
         } catch (Exception $e) {
-            $this->addLog($e->getCode().'; '.$e->getMessage());
+            $this->addLog($e->getCode() . '; ' . $e->getMessage());
+
             return false;
         }
     }
-
 
     public function submitForSettlement($transaction_id, $amount)
     {
@@ -259,9 +265,11 @@ class PrestaBraintree
                 }
             }
         } catch (Exception $e) {
-            $this->addLog($e->getCode().'; '.$e->getMessage());
+            $this->addLog($e->getCode() . '; ' . $e->getMessage());
+
             return false;
         }
+
         return false;
     }
 
@@ -274,19 +282,20 @@ class PrestaBraintree
                 return true;
             }
         } catch (Exception $e) {
-            $this->addLog($e->getCode().'; '.$e->getMessage());
+            $this->addLog($e->getCode() . '; ' . $e->getMessage());
+
             return false;
         }
     }
 
     public function isValidStatus($status)
     {
-        return in_array($status, array('submitted_for_settlement','authorized','settled'));
+        return in_array($status, ['submitted_for_settlement', 'authorized', 'settled']);
     }
 
     protected function getConfigurations($sandboxMode = null)
     {
-        $configurations = array();
+        $configurations = [];
         if ($this->useToken()) {
             $this->_checkToken();
             $configurations['accessToken'] = Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN');
@@ -330,7 +339,7 @@ class PrestaBraintree
             $datetime_now->format(DateTime::ISO8601);
             if ($datetime_now->getTimestamp() >= $datetime_bt->getTimestamp()) {
                 $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, PROXY_HOST.'prestashop/refreshToken?refreshToken='.urlencode(Configuration::get('PAYPAL_BRAINTREE_REFRESH_TOKEN')));
+                curl_setopt($ch, CURLOPT_URL, PROXY_HOST . 'prestashop/refreshToken?refreshToken=' . urlencode(Configuration::get('PAYPAL_BRAINTREE_REFRESH_TOKEN')));
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_ENCODING, '');
                 $resp = curl_exec($ch);
@@ -339,8 +348,10 @@ class PrestaBraintree
                 Configuration::updateValue('PAYPAL_BRAINTREE_ACCESS_TOKEN', $json->data->accessToken);
                 Configuration::updateValue('PAYPAL_BRAINTREE_REFRESH_TOKEN', $json->data->refreshToken);
                 Configuration::updateValue('PAYPAL_BRAINTREE_EXPIRES_AT', $json->data->expiresAt);
+
                 return true;
             }
+
             return true;
         } else {
             return false;

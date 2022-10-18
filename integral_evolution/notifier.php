@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,11 +22,9 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once dirname(__FILE__).'/../../../config/config.inc.php';
-include_once _PS_MODULE_DIR_.'paypal/paypal.php';
+include_once dirname(__FILE__) . '/../../../config/config.inc.php';
+include_once _PS_MODULE_DIR_ . 'paypal/paypal.php';
 
 /*
  * Instant payment notification class.
@@ -55,7 +52,7 @@ class PayPalNotifier extends PayPal
 
         $result = $this->getResult();
 
-        if (strcmp(trim($result), "VERIFIED") == 0) {
+        if (strcmp(trim($result), 'VERIFIED') == 0) {
             $currency_decimals = is_array($this->context->currency) ? (int) $this->context->currency['decimals'] : (int) $this->context->currency->decimals;
             $this->decimals = $currency_decimals * _PS_PRICE_DISPLAY_PRECISION_;
 
@@ -72,13 +69,13 @@ class PayPalNotifier extends PayPal
 
             if ($this->comp($mc_gross, $total_price, 2) !== 0) {
                 $payment = (int) Configuration::get('PS_OS_ERROR');
-                $message = $this->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';
+                $message = $this->l('Price paid on paypal is not the same that on PrestaShop.') . '<br />';
             } elseif ($custom['hash'] != $cart_hash) {
                 $payment = (int) Configuration::get('PS_OS_ERROR');
-                $message = $this->l('Cart changed, please retry.').'<br />';
+                $message = $this->l('Cart changed, please retry.') . '<br />';
             } else {
                 $payment = (int) Configuration::get('PS_OS_PAYMENT');
-                $message = $this->l('Payment accepted.').'<br />';
+                $message = $this->l('Payment accepted.') . '<br />';
             }
 
             $customer = new Customer((int) $cart->id_customer);
@@ -103,8 +100,9 @@ class PayPalNotifier extends PayPal
             $action_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_notify-validate';
         }
 
-        $request = '&'.http_build_query($_POST, '&');
-        return Tools::file_get_contents($action_url.$request);
+        $request = '&' . http_build_query($_POST, '&');
+
+        return Tools::file_get_contents($action_url . $request);
     }
 }
 

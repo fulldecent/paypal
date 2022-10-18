@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,14 +22,12 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
+require_once dirname(__FILE__) . '/../../config/config.inc.php';
+require_once dirname(__FILE__) . '/../../init.php';
 
-require_once dirname(__FILE__).'/../../config/config.inc.php';
-require_once dirname(__FILE__).'/../../init.php';
-
-include_once dirname(__FILE__).'/paypal.php';
-include_once dirname(__FILE__).'/backward_compatibility/backward.php';
+include_once dirname(__FILE__) . '/paypal.php';
+include_once dirname(__FILE__) . '/backward_compatibility/backward.php';
 
 $paypal = new PayPal();
 
@@ -42,5 +39,5 @@ $iso_lang = Tools::strtolower(Language::getIsoById($id_lang));
 $paypal->context->smarty->assign('iso_code', $iso_lang);
 
 $display = new BWDisplay();
-$display->setTemplate(_PS_MODULE_DIR_.'paypal/views/templates/front/about.tpl');
+$display->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/front/about.tpl');
 $display->run();

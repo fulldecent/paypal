@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 class ConfigurationMap
 {
     const ENABLE_INSTALLMENT = 'PAYPAL_ENABLE_INSTALLMENT';
@@ -72,7 +69,7 @@ class ConfigurationMap
             self::COLOR_WHITE => '#ffffff',
             self::COLOR_MONOCHROME => '#ffffff',
             self::COLOR_GRAYSCALE => '#ffffff',
-            self::COLOR_GRAY => '#ebecee'
+            self::COLOR_GRAY => '#ebecee',
         ];
 
         return isset($gradientMap[$color]) ? $gradientMap[$color] : $gradientMap[self::COLOR_BLUE];
@@ -84,14 +81,15 @@ class ConfigurationMap
     public static function getClientId()
     {
         if ((int) Configuration::get('PAYPAL_SANDBOX')) {
-            return (string)Configuration::get(self::CLIENT_ID . '_SANDBOX');
+            return (string) Configuration::get(self::CLIENT_ID . '_SANDBOX');
         } else {
-            return (string)Configuration::get(self::CLIENT_ID . '_LIVE');
+            return (string) Configuration::get(self::CLIENT_ID . '_LIVE');
         }
     }
 
     /**
      * @param string $clientId
+     *
      * @return bool
      */
     public static function setClientId($clientId)

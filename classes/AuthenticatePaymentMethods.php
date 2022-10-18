@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,12 +22,9 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 class AuthenticatePaymentMethods
 {
-
     public static function getPaymentMethodsByIsoCode($iso_code)
     {
         // WPS -> Web Payment Standard
@@ -37,23 +33,24 @@ class AuthenticatePaymentMethods
         // PPP -> PAYPAL PLUS
         // PVZ -> Braintree / Payment VZero
 
-        $payment_method = array(
-            'DE'=>array(PPP),
-            'ES'=>array(HSS),
-            'FR'=>array(HSS, PVZ),
-            'IT'=>array(HSS),
-            'VA'=>array(HSS),
-            'GB'=>array(HSS),
-            'HK'=>array(HSS),
-            'JP'=>array(HSS),
-            'AU'=>array(HSS),
-        );
-        $return = isset($payment_method[$iso_code]) ? $payment_method[$iso_code] : array();
+        $payment_method = [
+            'DE' => [PPP],
+            'ES' => [HSS],
+            'FR' => [HSS, PVZ],
+            'IT' => [HSS],
+            'VA' => [HSS],
+            'GB' => [HSS],
+            'HK' => [HSS],
+            'JP' => [HSS],
+            'AU' => [HSS],
+        ];
+        $return = isset($payment_method[$iso_code]) ? $payment_method[$iso_code] : [];
 
         if (Configuration::get('VZERO_ENABLED')) {
             $return[] = PVZ;
         }
         array_push($return, WPS, ECS);
+
         return $return;
     }
 

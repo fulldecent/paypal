@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -63,7 +60,8 @@ class PayPalOrder
     {
         if ($ppec && $payment_status) {
             $transaction_id = pSQL($ppec->result['PAYMENTINFO_0_TRANSACTIONID']);
-            return array(
+
+            return [
                 'currency' => pSQL($ppec->result['PAYMENTINFO_0_CURRENCYCODE']),
                 'id_invoice' => null,
                 'id_transaction' => $transaction_id,
@@ -72,10 +70,11 @@ class PayPalOrder
                 'shipping' => (float) $ppec->result['PAYMENTREQUEST_0_SHIPPINGAMT'],
                 'payment_date' => pSQL($ppec->result['PAYMENTINFO_0_ORDERTIME']),
                 'payment_status' => pSQL($payment_status),
-            );
+            ];
         } else {
             $transaction_id = pSQL(Tools::getValue(ID_TRANSACTION));
-            return array(
+
+            return [
                 'currency' => pSQL(Tools::getValue(CURRENCY)),
                 'id_invoice' => pSQL(Tools::getValue(ID_INVOICE)),
                 'id_transaction' => $transaction_id,
@@ -84,23 +83,23 @@ class PayPalOrder
                 'shipping' => (float) Tools::getValue(SHIPPING),
                 'payment_date' => pSQL(Tools::getValue(PAYMENT_DATE)),
                 'payment_status' => pSQL($payment_status),
-            );
+            ];
         }
     }
 
     public static function getOrderById($id_order)
     {
         return Db::getInstance()->getRow(
-            'SELECT * FROM `'._DB_PREFIX_.'paypal_order`
-			WHERE `id_order` = '.(int) $id_order
+            'SELECT * FROM `' . _DB_PREFIX_ . 'paypal_order`
+			WHERE `id_order` = ' . (int) $id_order
         );
     }
 
     public static function getIdOrderByTransactionId($id_transaction)
     {
         $sql = 'SELECT `id_order`
-			FROM `'._DB_PREFIX_.'paypal_order`
-			WHERE `id_transaction` = \''.pSQL($id_transaction).'\'';
+			FROM `' . _DB_PREFIX_ . 'paypal_order`
+			WHERE `id_transaction` = \'' . pSQL($id_transaction) . '\'';
 
         $result = Db::getInstance()->getRow($sql);
 
@@ -121,16 +120,16 @@ class PayPalOrder
         }
 
         Db::getInstance()->Execute(
-            'INSERT INTO `'._DB_PREFIX_.'paypal_order`
+            'INSERT INTO `' . _DB_PREFIX_ . 'paypal_order`
 			(`id_order`, `id_transaction`, `id_invoice`, `currency`, `total_paid`, `shipping`, `capture`, `payment_date`, `payment_method`, `payment_status`)
-			VALUES ('.(int) $id_order.', \''.pSQL($transaction['id_transaction']).'\', \''.pSQL($transaction['id_invoice']).'\',
-				\''.pSQL($transaction['currency']).'\',
-				\''.$total_paid.'\',
-				\''.(float) $transaction['shipping'].'\',
-				\''.(int) Configuration::get('PAYPAL_CAPTURE').'\',
-				\''.pSQL($transaction['payment_date']).'\',
-				\''.(int) Configuration::get('PAYPAL_PAYMENT_METHOD').'\',
-				\''.pSQL($transaction['payment_status']).'\')'
+			VALUES (' . (int) $id_order . ', \'' . pSQL($transaction['id_transaction']) . '\', \'' . pSQL($transaction['id_invoice']) . '\',
+				\'' . pSQL($transaction['currency']) . '\',
+				\'' . $total_paid . '\',
+				\'' . (float) $transaction['shipping'] . '\',
+				\'' . (int) Configuration::get('PAYPAL_CAPTURE') . '\',
+				\'' . pSQL($transaction['payment_date']) . '\',
+				\'' . (int) Configuration::get('PAYPAL_PAYMENT_METHOD') . '\',
+				\'' . pSQL($transaction['payment_status']) . '\')'
         );
     }
 
@@ -142,14 +141,14 @@ class PayPalOrder
             $transaction['payment_status'] = 'NULL';
         }
 
-        $sql = 'UPDATE `'._DB_PREFIX_.'paypal_order`
-			SET `payment_status` = \''.pSQL($transaction['payment_status']).'\'
-			WHERE `id_order` = \''.(int) $id_order.'\'
-				AND `id_transaction` = \''.pSQL($transaction['id_transaction']).'\'
-				AND `currency` = \''.pSQL($transaction['currency']).'\'';
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'paypal_order`
+			SET `payment_status` = \'' . pSQL($transaction['payment_status']) . '\'
+			WHERE `id_order` = \'' . (int) $id_order . '\'
+				AND `id_transaction` = \'' . pSQL($transaction['id_transaction']) . '\'
+				AND `currency` = \'' . pSQL($transaction['currency']) . '\'';
         if ((int) Configuration::get('PAYPAL_SANDBOX') != 1) {
-            $sql .= 'AND `total_paid` = \''.pSQL($transaction['total_paid']).'\'
-				AND `shipping` = \''.(float) $transaction['shipping'].'\';';
+            $sql .= 'AND `total_paid` = \'' . pSQL($transaction['total_paid']) . '\'
+				AND `shipping` = \'' . (float) $transaction['shipping'] . '\';';
         }
 
         Db::getInstance()->Execute($sql);

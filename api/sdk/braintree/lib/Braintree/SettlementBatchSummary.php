@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -31,19 +29,21 @@ namespace Braintree;
 class SettlementBatchSummary extends Base
 {
     /**
-     *
      * @param array $attributes
+     *
      * @return SettlementBatchSummary
      */
     public static function factory($attributes)
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
     }
 
     /**
      * @ignore
+     *
      * @param array $attributes
      */
     protected function _initialize($attributes)
@@ -56,15 +56,15 @@ class SettlementBatchSummary extends Base
         return $this->_attributes['records'];
     }
 
-
     /**
      * static method redirecting to gateway
      *
      * @param string $settlement_date Date YYYY-MM-DD
      * @param string $groupByCustomField
+     *
      * @return Result\Successful|Result\Error
      */
-    public static function generate($settlement_date, $groupByCustomField = NULL)
+    public static function generate($settlement_date, $groupByCustomField = null)
     {
         return Configuration::gateway()->settlementBatchSummary()->generate($settlement_date, $groupByCustomField);
     }

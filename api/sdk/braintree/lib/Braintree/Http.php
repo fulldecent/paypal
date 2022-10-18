@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -47,7 +45,7 @@ class Http
     public function delete($path)
     {
         $response = $this->_doRequest('DELETE', $path);
-        if($response['status'] === 200) {
+        if ($response['status'] === 200) {
             return true;
         } else {
             Util::throwStatusCodeException($response['status']);
@@ -68,7 +66,7 @@ class Http
     {
         $response = $this->_doRequest('POST', $path, $this->_buildXml($params));
         $responseCode = $response['status'];
-        if($responseCode === 200 || $responseCode === 201 || $responseCode === 422 || $responseCode == 400) {
+        if ($responseCode === 200 || $responseCode === 201 || $responseCode === 422 || $responseCode == 400) {
             return Xml::buildArrayFromXml($response['body']);
         } else {
             Util::throwStatusCodeException($responseCode);
@@ -79,7 +77,7 @@ class Http
     {
         $response = $this->_doRequest('PUT', $path, $this->_buildXml($params));
         $responseCode = $response['status'];
-        if($responseCode === 200 || $responseCode === 201 || $responseCode === 422 || $responseCode == 400) {
+        if ($responseCode === 200 || $responseCode === 201 || $responseCode === 422 || $responseCode == 400) {
             return Xml::buildArrayFromXml($response['body']);
         } else {
             Util::throwStatusCodeException($responseCode);
@@ -106,7 +104,7 @@ class Http
                 'user' => $this->_config->getClientId(),
                 'password' => $this->_config->getClientSecret(),
             ];
-        } else if ($this->_config->isAccessToken()) {
+        } elseif ($this->_config->isAccessToken()) {
             return [
                 'token' => $this->_config->getAccessToken(),
             ];
@@ -144,7 +142,7 @@ class Http
         if (isset($authorization['user'])) {
             curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
             curl_setopt($curl, CURLOPT_USERPWD, $authorization['user'] . ':' . $authorization['password']);
-        } else if (isset($authorization['token'])) {
+        } elseif (isset($authorization['token'])) {
             $headers[] = 'Authorization: Bearer ' . $authorization['token'];
         }
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -156,16 +154,16 @@ class Http
             curl_setopt($curl, CURLOPT_CAINFO, $this->getCaFile());
         }
 
-        if(!empty($requestBody)) {
+        if (!empty($requestBody)) {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $requestBody);
         }
 
-        if($this->_config->isUsingProxy()) {
+        if ($this->_config->isUsingProxy()) {
             $proxyHost = $this->_config->getProxyHost();
             $proxyPort = $this->_config->getProxyPort();
             $proxyType = $this->_config->getProxyType();
             curl_setopt($curl, CURLOPT_PROXY, $proxyHost . ':' . $proxyPort);
-            if(!empty($proxyType)) {
+            if (!empty($proxyType)) {
                 curl_setopt($curl, CURLOPT_PROXYTYPE, $proxyType);
             }
         }
@@ -185,6 +183,7 @@ class Http
                 throw new Exception\SSLCertificate();
             }
         }
+
         return ['status' => $httpStatus, 'body' => $response];
     }
 

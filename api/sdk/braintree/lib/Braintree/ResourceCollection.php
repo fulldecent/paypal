@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -45,8 +43,6 @@ use Iterator;
  * }
  * </code>
  *
- * @package    Braintree
- * @subpackage Utility
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 class ResourceCollection implements Iterator
@@ -65,10 +61,10 @@ class ResourceCollection implements Iterator
      * @param array $response
      * @param array $pager
      */
-    public function  __construct($response, $pager)
+    public function __construct($response, $pager)
     {
-        $this->_pageSize = $response["searchResults"]["pageSize"];
-        $this->_ids = $response["searchResults"]["ids"];
+        $this->_pageSize = $response['searchResults']['pageSize'];
+        $this->_ids = $response['searchResults']['ids'];
         $this->_pager = $pager;
     }
 
@@ -89,6 +85,7 @@ class ResourceCollection implements Iterator
     {
         $ids = $this->_ids;
         $page = $this->_getPage([$ids[0]]);
+
         return $page[0];
     }
 
@@ -137,12 +134,9 @@ class ResourceCollection implements Iterator
 
     private function _getNextPage()
     {
-        if (empty($this->_ids))
-        {
+        if (empty($this->_ids)) {
             $this->_items = [];
-        }
-        else
-        {
+        } else {
             $this->_items = $this->_getPage(array_slice($this->_ids, $this->_batchIndex, $this->_pageSize));
             $this->_batchIndex += $this->_pageSize;
             $this->_index = 0;

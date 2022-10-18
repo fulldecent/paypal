@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,21 +22,20 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
 
-use InvalidArgumentException;
 use DateTime;
 use DateTimeZone;
+use InvalidArgumentException;
 
 /**
  * Braintree Transparent Redirect Gateway module
  * Static class providing methods to build Transparent Redirect urls
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 class TransparentRedirectGateway
@@ -53,7 +51,6 @@ class TransparentRedirectGateway
     }
 
     /**
-     *
      * @ignore
      */
     private static $_transparentRedirectKeys = 'redirectUrl';
@@ -65,11 +62,11 @@ class TransparentRedirectGateway
 
     /**
      * create signatures for different call types
+     *
      * @ignore
      */
     public static function init()
     {
-
         self::$_createCustomerSignature = [
             self::$_transparentRedirectKeys,
             ['customer' => CustomerGateway::createSignature()],
@@ -106,13 +103,16 @@ class TransparentRedirectGateway
             TransparentRedirect::CREATE_PAYMENT_METHOD => 'Braintree\CreditCardGateway',
             TransparentRedirect::UPDATE_PAYMENT_METHOD => 'Braintree\CreditCardGateway',
         ];
-        $confirmationGateway = new $confirmationKlasses[$params["kind"]]($this->_gateway);
+        $confirmationGateway = new $confirmationKlasses[$params['kind']]($this->_gateway);
+
         return $confirmationGateway->_doCreate('/transparent_redirect_requests/' . $params['id'] . '/confirm', []);
     }
 
     /**
      * returns the trData string for creating a credit card,
+     *
      * @param array $params
+     *
      * @return string
      */
     public function createCreditCardData($params)
@@ -121,13 +121,16 @@ class TransparentRedirectGateway
                 self::$_createCreditCardSignature,
                 $params
                 );
-        $params["kind"] = TransparentRedirect::CREATE_PAYMENT_METHOD;
+        $params['kind'] = TransparentRedirect::CREATE_PAYMENT_METHOD;
+
         return $this->_data($params);
     }
 
     /**
      * returns the trData string for creating a customer.
+     *
      * @param array $params
+     *
      * @return string
      */
     public function createCustomerData($params)
@@ -136,9 +139,9 @@ class TransparentRedirectGateway
                 self::$_createCustomerSignature,
                 $params
                 );
-        $params["kind"] = TransparentRedirect::CREATE_CUSTOMER;
-        return $this->_data($params);
+        $params['kind'] = TransparentRedirect::CREATE_CUSTOMER;
 
+        return $this->_data($params);
     }
 
     public function url()
@@ -148,7 +151,9 @@ class TransparentRedirectGateway
 
     /**
      * returns the trData string for creating a transaction
+     *
      * @param array $params
+     *
      * @return string
      */
     public function transactionData($params)
@@ -157,15 +162,12 @@ class TransparentRedirectGateway
                 self::$_transactionSignature,
                 $params
                 );
-        $params["kind"] = TransparentRedirect::CREATE_TRANSACTION;
+        $params['kind'] = TransparentRedirect::CREATE_TRANSACTION;
         $transactionType = isset($params['transaction']['type']) ?
             $params['transaction']['type'] :
             null;
         if ($transactionType != Transaction::SALE && $transactionType != Transaction::CREDIT) {
-           throw new InvalidArgumentException(
-                   'expected transaction[type] of sale or credit, was: ' .
-                   $transactionType
-                   );
+            throw new InvalidArgumentException('expected transaction[type] of sale or credit, was: ' . $transactionType);
         }
 
         return $this->_data($params);
@@ -184,6 +186,7 @@ class TransparentRedirectGateway
      * </code>
      *
      * @param array $params
+     *
      * @return string
      */
     public function updateCreditCardData($params)
@@ -193,11 +196,10 @@ class TransparentRedirectGateway
                 $params
                 );
         if (!isset($params['paymentMethodToken'])) {
-            throw new InvalidArgumentException(
-                   'expected params to contain paymentMethodToken.'
-                   );
+            throw new InvalidArgumentException('expected params to contain paymentMethodToken.');
         }
-        $params["kind"] = TransparentRedirect::UPDATE_PAYMENT_METHOD;
+        $params['kind'] = TransparentRedirect::UPDATE_PAYMENT_METHOD;
+
         return $this->_data($params);
     }
 
@@ -214,6 +216,7 @@ class TransparentRedirectGateway
      * </code>
      *
      * @param array $params
+     *
      * @return string
      */
     public function updateCustomerData($params)
@@ -223,11 +226,10 @@ class TransparentRedirectGateway
                 $params
                 );
         if (!isset($params['customerId'])) {
-            throw new InvalidArgumentException(
-                   'expected params to contain customerId of customer to update'
-                   );
+            throw new InvalidArgumentException('expected params to contain customerId of customer to update');
         }
-        $params["kind"] = TransparentRedirect::UPDATE_CUSTOMER;
+        $params['kind'] = TransparentRedirect::UPDATE_CUSTOMER;
+
         return $this->_data($params);
     }
 
@@ -241,9 +243,9 @@ class TransparentRedirectGateway
             $queryStringWithoutHash = $match[1];
         }
 
-        if($params['http_status'] != '200') {
+        if ($params['http_status'] != '200') {
             $message = null;
-            if(array_key_exists('bt_message', $params)) {
+            if (array_key_exists('bt_message', $params)) {
                 $message = $params['bt_message'];
             }
             Util::throwStatusCodeException(isset($params['http_status']) ? $params['http_status'] : null, $message);
@@ -257,51 +259,45 @@ class TransparentRedirectGateway
         }
     }
 
-
     /**
-     *
      * @ignore
      */
     private function _data($params)
     {
         if (!isset($params['redirectUrl'])) {
-            throw new InvalidArgumentException(
-                    'expected params to contain redirectUrl'
-                    );
+            throw new InvalidArgumentException('expected params to contain redirectUrl');
         }
         $params = $this->_underscoreKeys($params);
         $now = new DateTime('now', new DateTimeZone('UTC'));
         $trDataParams = array_merge($params,
             [
                 'api_version' => Configuration::API_VERSION,
-                'public_key'  => $this->_config->publicKey(),
-                'time'        => $now->format('YmdHis'),
+                'public_key' => $this->_config->publicKey(),
+                'time' => $now->format('YmdHis'),
             ]
         );
         ksort($trDataParams);
-        $urlEncodedData = http_build_query($trDataParams, null, "&");
+        $urlEncodedData = http_build_query($trDataParams, null, '&');
         $signatureService = new SignatureService(
             $this->_config->privateKey(),
             "Braintree\Digest::hexDigestSha1"
         );
+
         return $signatureService->sign($urlEncodedData);
     }
 
     private function _underscoreKeys($array)
     {
-        foreach($array as $key=>$value)
-        {
+        foreach ($array as $key => $value) {
             $newKey = Util::camelCaseToDelimiter($key, '_');
             unset($array[$key]);
-            if (is_array($value))
-            {
+            if (is_array($value)) {
                 $array[$newKey] = $this->_underscoreKeys($value);
-            }
-            else
-            {
+            } else {
                 $array[$newKey] = $value;
             }
         }
+
         return $array;
     }
 

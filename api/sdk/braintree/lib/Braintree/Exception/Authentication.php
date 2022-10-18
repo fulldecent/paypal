@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Exception;
@@ -34,12 +32,9 @@ use Braintree\Exception;
  * Raised when authentication fails.
  * This may be caused by an incorrect Configuration
  *
- * @package    Braintree
- * @subpackage Exception
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 class Authentication extends Exception
 {
-
 }
 class_alias('Braintree\Exception\Authentication', 'Braintree_Exception_Authentication');

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,14 +22,12 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 /**
  * @since 1.5.0
  */
-
-require_once _PS_MODULE_DIR_.'paypal/classes/PaypalPlusPui.php';
+require_once _PS_MODULE_DIR_ . 'paypal/classes/PaypalPlusPui.php';
 
 class PayPalSubmitplusModuleFrontController extends ModuleFrontController
 {
@@ -58,7 +55,6 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
 
     public function initContent()
     {
-
         parent::initContent();
         $paypal = new PayPal();
 
@@ -74,28 +70,28 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
             if (isset($payment->state)) {
                 $this->context->smarty->assign('state', $payment->state);
 
-                $transaction = array(
+                $transaction = [
                     'id_transaction' => $payment->id,
                     'payment_status' => $payment->state,
                     'currency' => $payment->transactions[0]->amount->currency,
-                    'payment_date' => date("Y-m-d H:i:s"),
+                    'payment_date' => date('Y-m-d H:i:s'),
                     'total_paid' => $payment->transactions[0]->amount->total,
                     'id_invoice' => 0,
                     'shipping' => 0,
-                );
+                ];
 
                 switch ($payment->state) {
                     case 'created':
                         /* LookUp OK */
                         /* Affichage bouton confirmation */
 
-                        $this->context->smarty->assign(array(
+                        $this->context->smarty->assign([
                             'PayerID' => $payment->payer->payer_info->payer_id,
                             'paymentId' => $this->paymentId,
                             'id_cart' => $this->id_cart,
                             'totalAmount' => Tools::displayPrice(Cart::getTotalCart($this->id_cart)),
                             'linkSubmitPlus' => $this->context->link->getModuleLink('paypal', 'submitplus'),
-                        ));
+                        ]);
                         break;
 
                     case 'canceled':
@@ -151,7 +147,7 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
             $currency = new Currency((int) $order->id_currency);
 
             if (Validate::isLoadedObject($order)) {
-                $params = array();
+                $params = [];
                 $params['objOrder'] = $order;
                 $params['currencyObj'] = $currency;
                 $params['currency'] = $currency->sign;
@@ -167,11 +163,11 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
     public function displayAjax()
     {
         $ajax = Tools::getValue('ajax');
-        $return = array();
+        $return = [];
         if (!$ajax) {
             $return['error'][] = $this->module->l('An error occured during the payment');
             echo Tools::jsonEncode($return);
-            die();
+            exit();
         }
 
         $payerID = Tools::getValue('payerID');
@@ -190,15 +186,15 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
                 $payment = Tools::jsonDecode($CallApiPaypalPlus->executePayment($payerID, $paymentId));
 
                 if (isset($payment->state)) {
-                    $transaction = array(
+                    $transaction = [
                         'id_transaction' => $payment->transactions[0]->related_resources[0]->sale->id,
                         'payment_status' => $payment->state,
                         'total_paid' => $payment->transactions[0]->amount->total,
                         'id_invoice' => 0,
                         'shipping' => 0,
                         'currency' => $payment->transactions[0]->amount->currency,
-                        'payment_date' => date("Y-m-d H:i:s"),
-                    );
+                        'payment_date' => date('Y-m-d H:i:s'),
+                    ];
 
                     if ($payment->state == 'approved') {
                         $paypal->validateOrder(
@@ -250,7 +246,7 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
         }
 
         echo Tools::jsonEncode($return);
-        die();
+        exit();
     }
 
     /**
@@ -289,6 +285,6 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
          * order_canceled
          * refund
          */
-        return Db::getInstance()->getValue('SELECT id_order_state FROM '._DB_PREFIX_.'order_state_lang WHERE template = "'.pSQL($template).'" AND id_lang = "'.(int) $this->context->language->id.'"');
+        return Db::getInstance()->getValue('SELECT id_order_state FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE template = "' . pSQL($template) . '" AND id_lang = "' . (int) $this->context->language->id . '"');
     }
 }

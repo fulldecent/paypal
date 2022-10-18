@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -38,11 +35,10 @@ function upgrade_module_3_11_2($object, $install = false)
         // OS BRAINTREE
 
         $order_state_auth = new OrderState();
-        $order_state_auth->name = array();
+        $order_state_auth->name = [];
 
         $order_state_wait = new OrderState();
-        $order_state_wait->name = array();
-
+        $order_state_wait->name = [];
 
         foreach (Language::getLanguages() as $language) {
             if (Tools::strtolower($language['iso_code']) == 'fr') {
@@ -69,18 +65,19 @@ function upgrade_module_3_11_2($object, $install = false)
         $order_state_wait->invoice = false;
 
         if ($order_state_auth->add()) {
-            $source = _PS_MODULE_DIR_.'paypal/views/img/logos/os_braintree.png';
-            $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state_auth->id.'.gif';
+            $source = _PS_MODULE_DIR_ . 'paypal/views/img/logos/os_braintree.png';
+            $destination = _PS_ROOT_DIR_ . '/img/os/' . (int) $order_state_auth->id . '.gif';
             copy($source, $destination);
         }
         Configuration::updateValue('PAYPAL_BT_OS_AUTHORIZATION', (int) $order_state_auth->id);
 
         if ($order_state_wait->add()) {
-            $source = _PS_MODULE_DIR_.'paypal/views/img/logos/os_braintree.png';
-            $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state_wait->id.'.gif';
+            $source = _PS_MODULE_DIR_ . 'paypal/views/img/logos/os_braintree.png';
+            $destination = _PS_ROOT_DIR_ . '/img/os/' . (int) $order_state_wait->id . '.gif';
             copy($source, $destination);
         }
         Configuration::updateValue('PAYPAL_BRAINTREE_OS_AWAITING', (int) $order_state_wait->id);
     }
+
     return true;
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,19 +22,17 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-require_once('autoload.php');
+require_once 'autoload.php';
 
 if (version_compare(PHP_VERSION, '5.4.0', '<')) {
     throw new Braintree_Exception('PHP version >= 5.4.0 required');
 }
 
-
-function requireDependencies() {
+function requireDependencies()
+{
     $requiredExtensions = ['xmlwriter', 'openssl', 'dom', 'hash', 'curl'];
-    foreach ($requiredExtensions AS $ext) {
+    foreach ($requiredExtensions as $ext) {
         if (!extension_loaded($ext)) {
             throw new Braintree_Exception('The Braintree library requires the ' . $ext . ' extension.');
         }

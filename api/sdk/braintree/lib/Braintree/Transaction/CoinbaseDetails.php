@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
@@ -33,24 +31,19 @@ use Braintree\Instance;
 /**
  * Coinbase details from a transaction
  *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 
 /**
  * creates an instance of Coinbase
  *
- *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $token
- * @property-read string $userId
- * @property-read string $userName
- * @property-read string $userEmail
- * @property-read string $imageUrl
+ * @property string $token
+ * @property string $userId
+ * @property string $userName
+ * @property string $userEmail
+ * @property string $imageUrl
  */
 class CoinbaseDetails extends Instance
 {

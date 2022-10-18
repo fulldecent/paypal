@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,20 +22,15 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
 
 /**
- *
  * CredentialsParser registry
  *
- * @package    Braintree
- * @subpackage Utility
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
-
 class CredentialsParser
 {
     private $_clientId;
@@ -62,9 +56,8 @@ class CredentialsParser
     }
 
     /**
-     *
-     * @access protected
      * @static
+     *
      * @var array valid environments, used for validation
      */
     private static $_validEnvironments = [
@@ -74,7 +67,6 @@ class CredentialsParser
         'production',
         'qa',
     ];
-
 
     public function parse()
     {
@@ -92,9 +84,7 @@ class CredentialsParser
         $checkEnv = $environments[0];
         foreach ($environments as $env) {
             if ($env[1] !== $checkEnv[1]) {
-                throw new Exception\Configuration(
-                    'Mismatched credential environments: ' . $checkEnv[0] . ' environment is ' . $checkEnv[1] .
-                    ' and ' . $env[0] . ' environment is ' . $env[1]);
+                throw new Exception\Configuration('Mismatched credential environments: ' . $checkEnv[0] . ' environment is ' . $checkEnv[1] . ' and ' . $env[0] . ' environment is ' . $env[1]);
             }
         }
 
@@ -102,10 +92,10 @@ class CredentialsParser
         $this->_environment = $checkEnv[1];
     }
 
-    public static function assertValidEnvironment($environment) {
+    public static function assertValidEnvironment($environment)
+    {
         if (!in_array($environment, self::$_validEnvironments)) {
-            throw new Exception\Configuration('"' .
-                                    $environment . '" is not a valid environment.');
+            throw new Exception\Configuration('"' . $environment . '" is not a valid environment.');
         }
     }
 
@@ -144,6 +134,7 @@ class CredentialsParser
         }
 
         $this->_merchantId = $merchantId;
+
         return $environment;
     }
 

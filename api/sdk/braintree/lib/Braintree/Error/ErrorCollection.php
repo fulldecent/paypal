@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Error;
@@ -31,18 +29,16 @@ namespace Braintree\Error;
 use Braintree\Util;
 
 /**
- *
  * Error handler
  * Handles validation errors
  *
  * Contains a read-only property $error which is a ValidationErrorCollection
  *
- * @package    Braintree
- * @subpackage Errors
  * @category   Errors
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read object $errors
+ * @property object $errors
  */
 class ErrorCollection
 {
@@ -53,7 +49,6 @@ class ErrorCollection
         $this->_errors =
                 new ValidationErrorCollection($errorData);
     }
-
 
     /**
      * Returns all of the validation errors at all levels of nesting in a single, flat array.
@@ -73,6 +68,7 @@ class ErrorCollection
     public function deepSize()
     {
         $size = $this->_errors->deepSize();
+
         return $size;
     }
 
@@ -80,6 +76,7 @@ class ErrorCollection
      * return errors for the passed key name
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function forKey($key)
@@ -92,17 +89,21 @@ class ErrorCollection
      * For example, $result->errors->onHtmlField("transaction[customer][last_name]")
      *
      * @param string $field
+     *
      * @return array
      */
     public function onHtmlField($field)
     {
         $pieces = preg_split("/[\[\]]+/", $field, 0, PREG_SPLIT_NO_EMPTY);
         $errors = $this;
-        foreach(array_slice($pieces, 0, -1) as $key) {
+        foreach (array_slice($pieces, 0, -1) as $key) {
             $errors = $errors->forKey(Util::delimiterToCamelCase($key));
-            if (!isset($errors)) { return []; }
+            if (!isset($errors)) {
+                return [];
+            }
         }
         $finalKey = Util::delimiterToCamelCase(end($pieces));
+
         return $errors->onAttribute($finalKey);
     }
 
@@ -120,20 +121,19 @@ class ErrorCollection
     }
 
     /**
-     *
      * @ignore
      */
-    public function  __get($name)
+    public function __get($name)
     {
         $varName = "_$name";
+
         return isset($this->$varName) ? $this->$varName : null;
     }
 
     /**
-     *
      * @ignore
      */
-    public function  __toString()
+    public function __toString()
     {
         return sprintf('%s', $this->_errors);
     }

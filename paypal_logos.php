@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -45,14 +42,14 @@ class PayPalLogos
 
     public function getLogos()
     {
-        $file = dirname(__FILE__).'/'._PAYPAL_LOGO_XML_;
+        $file = dirname(__FILE__) . '/' . _PAYPAL_LOGO_XML_;
 
         if (!file_exists($file)) {
             return false;
         }
 
         $xml = simplexml_load_file($file);
-        $logos = array();
+        $logos = [];
 
         if (isset($xml) && $xml != false) {
             foreach ($xml->country as $item) {
@@ -78,16 +75,16 @@ class PayPalLogos
         $logos = $this->getLogos();
 
         $orientation = $vertical === true ? self::VERTICAL : self::HORIZONTAL;
-        $logo_ref = self::LOCAL.'PayPal'.$orientation.'SolutionPP';
+        $logo_ref = self::LOCAL . 'PayPal' . $orientation . 'SolutionPP';
 
         if (array_key_exists($logo_ref, $logos)) {
             return $logos[$logo_ref];
-        } elseif (($vertical !== false) && isset($logos[self::LOCAL.'PayPal'.self::HORIZONTAL.'SolutionPP'])) {
-            return $logos[self::LOCAL.'PayPal'.self::HORIZONTAL.'SolutionPP'];
+        } elseif (($vertical !== false) && isset($logos[self::LOCAL . 'PayPal' . self::HORIZONTAL . 'SolutionPP'])) {
+            return $logos[self::LOCAL . 'PayPal' . self::HORIZONTAL . 'SolutionPP'];
         }
 
-        if (isset($logos['default'][self::LOCAL.'Local'.$orientation.'SolutionPP'])) {
-            return _MODULE_DIR_._PAYPAL_MODULE_DIRNAME_.$logos['default'][self::LOCAL.'Local'.$orientation.'SolutionPP'];
+        if (isset($logos['default'][self::LOCAL . 'Local' . $orientation . 'SolutionPP'])) {
+            return _MODULE_DIR_ . _PAYPAL_MODULE_DIRNAME_ . $logos['default'][self::LOCAL . 'Local' . $orientation . 'SolutionPP'];
         }
 
         return false;
@@ -101,21 +98,21 @@ class PayPalLogos
                 preg_match('#.*/([\w._-]*)$#', $value, $logo);
 
                 if ((count($logo) == 2) && (strstr($key, 'Local') === false)) {
-                    $destination = _PAYPAL_MODULE_DIRNAME_.'/views/img/logos/'.$iso_code.'_'.$logo[1];
+                    $destination = _PAYPAL_MODULE_DIRNAME_ . '/views/img/logos/' . $iso_code . '_' . $logo[1];
                     $this->updatePictures($logo[0], $destination);
 
                     // Define the local path after picture have been downloaded
-                    $values['Local'.$key] = _MODULE_DIR_.$destination;
+                    $values['Local' . $key] = _MODULE_DIR_ . $destination;
 
                     // Load back office cards path
-                    if (file_exists(dirname(__FILE__).'/views/img/bo-cards/'.Tools::strtoupper($iso_code).'_bo_cards.png')) {
-                        $values['BackOfficeCards'] = _MODULE_DIR_._PAYPAL_MODULE_DIRNAME_.'/views/img/bo-cards/'.Tools::strtoupper($iso_code).'_bo_cards.png';
-                    } else if (file_exists(dirname(__FILE__).'/views/img/bo-cards/default.png')) {
-                        $values['BackOfficeCards'] = _MODULE_DIR_._PAYPAL_MODULE_DIRNAME_.'/views/img/bo-cards/default.png';
+                    if (file_exists(dirname(__FILE__) . '/views/img/bo-cards/' . Tools::strtoupper($iso_code) . '_bo_cards.png')) {
+                        $values['BackOfficeCards'] = _MODULE_DIR_ . _PAYPAL_MODULE_DIRNAME_ . '/views/img/bo-cards/' . Tools::strtoupper($iso_code) . '_bo_cards.png';
+                    } elseif (file_exists(dirname(__FILE__) . '/views/img/bo-cards/default.png')) {
+                        $values['BackOfficeCards'] = _MODULE_DIR_ . _PAYPAL_MODULE_DIRNAME_ . '/views/img/bo-cards/default.png';
                     }
-                } else if (isset($values['Local'.$key])) {
+                } elseif (isset($values['Local' . $key])) {
                     // Use the local version
-                    $values['Local'.$key] = _MODULE_DIR_._PAYPAL_MODULE_DIRNAME_.$values['Local'.$key];
+                    $values['Local' . $key] = _MODULE_DIR_ . _PAYPAL_MODULE_DIRNAME_ . $values['Local' . $key];
                 }
             }
         }
@@ -129,13 +126,13 @@ class PayPalLogos
         $https_wrapper = in_array('https', $wrappers) ? true : false;
 
         // 604800 => One week timestamp
-        if (!file_exists(_PS_MODULE_DIR_.$destination) || ((time() - filemtime(_PS_MODULE_DIR_.$destination)) > 604800) || $force) {
+        if (!file_exists(_PS_MODULE_DIR_ . $destination) || ((time() - filemtime(_PS_MODULE_DIR_ . $destination)) > 604800) || $force) {
             $picture = Tools::file_get_contents($source);
             if ((bool) $picture !== false) {
-                if ($handle = @fopen(_PS_MODULE_DIR_.$destination, 'w+')) {
+                if ($handle = @fopen(_PS_MODULE_DIR_ . $destination, 'w+')) {
                     $size = fwrite($handle, $picture);
-                    if ($size > 0 || (file_exists(_MODULE_DIR_.$destination) && (@filesize(_MODULE_DIR_.$destination) > 0))) {
-                        return _MODULE_DIR_.$destination;
+                    if ($size > 0 || (file_exists(_MODULE_DIR_ . $destination) && (@filesize(_MODULE_DIR_ . $destination) > 0))) {
+                        return _MODULE_DIR_ . $destination;
                     }
                 }
             } elseif (strstr($source, 'https')) {
@@ -145,6 +142,6 @@ class PayPalLogos
             }
         }
 
-        return _MODULE_DIR_.$destination;
+        return _MODULE_DIR_ . $destination;
     }
 }

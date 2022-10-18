@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -36,7 +33,7 @@ function upgrade_module_3_11($object, $install = false)
 
     if ((!$paypal_version) || (empty($paypal_version)) || ($paypal_version < $object->version)) {
         if (!Db::getInstance()->Execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_braintree` (
+			CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_braintree` (
                 `id_paypal_braintree` int(11) NOT NULL AUTO_INCREMENT,
                 `id_cart` int(11) NOT NULL,
                 `nonce_payment_token` varchar(255) NOT NULL,
@@ -45,16 +42,16 @@ function upgrade_module_3_11($object, $install = false)
                 `datas` varchar(255) NULL,
                 `id_order` int(11) NULL,
 			    PRIMARY KEY (`id_paypal_braintree`)
-				) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;')) {
+				) ENGINE=' . _MYSQL_ENGINE_ . '  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;')) {
             return false;
         }
         if (!Db::getInstance()->Execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_plus_pui` (
+			CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_plus_pui` (
                 `id_paypal_plus_pui` int(11) NOT NULL AUTO_INCREMENT,
                 `id_order` int(11) NOT NULL,
                 `pui_informations` text NOT NULL,
                 PRIMARY KEY (`id_paypal_plus_pui`)
-        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;')) {
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;')) {
             return false;
         }
 
@@ -65,5 +62,6 @@ function upgrade_module_3_11($object, $install = false)
 
         Configuration::updateValue('PAYPAL_VERSION', '3.11.0');
     }
+
     return true;
 }

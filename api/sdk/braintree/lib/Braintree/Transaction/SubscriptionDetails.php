@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Transaction;
@@ -34,12 +32,10 @@ use Braintree\Instance;
  * Customer details from a transaction
  * Creates an instance of customer details as returned from a transaction
  *
- * @package    Braintree
- * @subpackage Transaction
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- * @property-read string $billing_period_start_date
- * @property-read string $billing_period_end_date
+ * @property string $billing_period_start_date
+ * @property string $billing_period_end_date
  */
 class SubscriptionDetails extends Instance
 {

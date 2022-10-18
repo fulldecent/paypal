@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -44,7 +42,7 @@ class Plan extends Base
 
         $addOnArray = [];
         if (isset($attributes['addOns'])) {
-            foreach ($attributes['addOns'] AS $addOn) {
+            foreach ($attributes['addOns'] as $addOn) {
                 $addOnArray[] = AddOn::factory($addOn);
             }
         }
@@ -52,7 +50,7 @@ class Plan extends Base
 
         $discountArray = [];
         if (isset($attributes['discounts'])) {
-            foreach ($attributes['discounts'] AS $discount) {
+            foreach ($attributes['discounts'] as $discount) {
                 $discountArray[] = Discount::factory($discount);
             }
         }
@@ -60,13 +58,12 @@ class Plan extends Base
 
         $planArray = [];
         if (isset($attributes['plans'])) {
-            foreach ($attributes['plans'] AS $plan) {
+            foreach ($attributes['plans'] as $plan) {
                 $planArray[] = self::factory($plan);
             }
         }
         $this->_attributes['plans'] = $planArray;
     }
-
 
     // static methods redirecting to gateway
 

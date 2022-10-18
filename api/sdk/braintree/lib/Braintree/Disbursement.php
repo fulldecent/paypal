@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -57,23 +55,25 @@ final class Disbursement extends Base
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
     }
 
-    public function  __toString()
+    public function __toString()
     {
         $display = [
             'id', 'merchantAccountDetails', 'exceptionMessage', 'amount',
             'disbursementDate', 'followUpAction', 'retry', 'success',
-            'transactionIds'
+            'transactionIds',
             ];
 
         $displayAttributes = [];
-        foreach ($display AS $attrib) {
+        foreach ($display as $attrib) {
             $displayAttributes[$attrib] = $this->$attrib;
         }
+
         return __CLASS__ . '[' .
-                Util::attributesToString($displayAttributes) .']';
+                Util::attributesToString($displayAttributes) . ']';
     }
 }
 class_alias('Braintree\Disbursement', 'Braintree_Disbursement');

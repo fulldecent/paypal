@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 class AdminPaypalAjaxHandlerController extends ModuleAdminControllerCore
 {
     public function __construct()
@@ -36,7 +33,7 @@ class AdminPaypalAjaxHandlerController extends ModuleAdminControllerCore
     public function displayAjaxHandlePsCheckoutAction()
     {
         $action = Tools::getValue('actionHandled');
-        $response = array();
+        $response = [];
 
         switch ($action) {
             case 'close':
@@ -44,27 +41,27 @@ class AdminPaypalAjaxHandlerController extends ModuleAdminControllerCore
                 break;
             case 'install':
                 if (is_dir(_PS_MODULE_DIR_ . 'ps_checkout') == false) {
-                    $response = array(
+                    $response = [
                         'redirect' => true,
-                        'url' => 'https://addons.prestashop.com/en/payment-card-wallet/46347-prestashop-checkout-built-with-paypal.html'
-                    );
+                        'url' => 'https://addons.prestashop.com/en/payment-card-wallet/46347-prestashop-checkout-built-with-paypal.html',
+                    ];
                 } else {
                     if ($this->installPsCheckout()) {
-                        $response = array(
+                        $response = [
                             'redirect' => true,
-                            'url' => $this->context->link->getAdminLink('AdminModules') . '&configure=ps_checkout'
-                        );
+                            'url' => $this->context->link->getAdminLink('AdminModules') . '&configure=ps_checkout',
+                        ];
                     } else {
-                        $response = array(
+                        $response = [
                             'redirect' => false,
-                            'url' => 'someUrl'
-                        );
+                            'url' => 'someUrl',
+                        ];
                     }
                 }
                 break;
         }
 
-        die(json_encode($response));
+        exit(json_encode($response));
     }
 
     protected function installPsCheckout()
@@ -74,6 +71,7 @@ class AdminPaypalAjaxHandlerController extends ModuleAdminControllerCore
         }
 
         $module = Module::getInstanceByName('ps_checkout');
+
         return $module->install();
     }
 }

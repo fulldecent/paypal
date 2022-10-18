@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -36,7 +33,7 @@ function upgrade_module_3_7($object, $install = false)
 
     if ((!$paypal_version) || (empty($paypal_version)) || ($paypal_version < $object->version)) {
         if (!Db::getInstance()->Execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_login_user`  (
+			CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'paypal_login_user`  (
 				`id_paypal_login_user` INT(11) AUTO_INCREMENT,
 				`id_customer` INT(11) NOT NULL,
 				`token_type` VARCHAR(255) NOT NULL,
@@ -50,7 +47,7 @@ function upgrade_module_3_7($object, $install = false)
 				`zoneinfo` VARCHAR(255) NOT NULL,
 				`age_range` VARCHAR(255) NOT NULL,
 				PRIMARY KEY (`id_paypal_login_user`)
-			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8')) {
+			) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8')) {
             return false;
         }
 

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,16 +22,16 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
 
 class EqualityNode extends IsNode
 {
-    function isNot($value)
+    public function isNot($value)
     {
         $this->searchTerms['is_not'] = strval($value);
+
         return $this;
     }
 }

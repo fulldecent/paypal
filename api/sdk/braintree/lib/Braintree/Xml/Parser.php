@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,17 +22,16 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Xml;
 
+use Braintree\Util;
 use DateTime;
 use DateTimeZone;
 use DOMDocument;
 use DOMElement;
 use DOMText;
-use Braintree\Util;
 
 /**
  * Braintree XML Parser
@@ -46,6 +44,7 @@ class Parser
      * Converts an XML string into a multidimensional array
      *
      * @param string $xml
+     *
      * @return array
      */
     public static function arrayFromXml($xml)
@@ -64,6 +63,7 @@ class Parser
      * Converts a node to an array of values or nodes
      *
      * @param DOMNode @node
+     *
      * @return mixed
      */
     private static function _nodeToArray($node)
@@ -73,7 +73,7 @@ class Parser
             $type = $node->getAttribute('type');
         }
 
-        switch($type) {
+        switch ($type) {
         case 'array':
             $array = [];
             foreach ($node->childNodes as $child) {
@@ -82,6 +82,7 @@ class Parser
                     $array[] = $value;
                 }
             }
+
             return $array;
         case 'collection':
             $collection = [];
@@ -94,6 +95,7 @@ class Parser
                     $collection[$child->nodeName][] = self::_nodeToValue($child);
                 }
             }
+
             return $collection;
         default:
             $values = [];
@@ -105,6 +107,7 @@ class Parser
                         $values[$child->nodeName] = self::_nodeToValue($child);
                     }
                 }
+
                 return $values;
             }
         }
@@ -114,6 +117,7 @@ class Parser
      * Converts a node to a PHP value
      *
      * @param DOMNode $node
+     *
      * @return mixed
      */
     private static function _nodeToValue($node)
@@ -123,7 +127,7 @@ class Parser
             $type = $node->getAttribute('type');
         }
 
-        switch($type) {
+        switch ($type) {
         case 'datetime':
             return self::_timestampToUTC((string) $node->nodeValue);
         case 'date':
@@ -131,12 +135,13 @@ class Parser
         case 'integer':
             return (int) $node->nodeValue;
         case 'boolean':
-            $value =  (string) $node->nodeValue;
-            if(is_numeric($value)) {
+            $value = (string) $node->nodeValue;
+            if (is_numeric($value)) {
                 return (bool) $value;
             } else {
-                return ($value !== "true") ? false : true;
+                return ($value !== 'true') ? false : true;
             }
+            // no break
         case 'array':
         case 'collection':
             return self::_nodeToArray($node);
@@ -151,11 +156,11 @@ class Parser
         }
     }
 
-
     /**
      * Converts XML timestamps into DateTime instances
      *
      * @param string $timestamp
+     *
      * @return DateTime
      */
     private static function _timestampToUTC($timestamp)
@@ -163,6 +168,7 @@ class Parser
         $tz = new DateTimeZone('UTC');
         $dateTime = new DateTime($timestamp, $tz);
         $dateTime->setTimezone($tz);
+
         return $dateTime;
     }
 }

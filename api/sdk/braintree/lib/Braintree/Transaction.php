@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -164,97 +162,95 @@ namespace Braintree;
  *
  * For more detailed information on Transactions, see {@link http://www.braintreepayments.com/gateway/transaction-api http://www.braintreepaymentsolutions.com/gateway/transaction-api}
  *
- * @package    Braintree
  * @category   Resources
+ *
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  *
- *
- * @property-read string $avsErrorResponseCode
- * @property-read string $avsPostalCodeResponseCode
- * @property-read string $avsStreetAddressResponseCode
- * @property-read string $cvvResponseCode
- * @property-read string $id transaction id
- * @property-read string $amount transaction amount
- * @property-read Braintree\Transaction\AddressDetails $billingDetails transaction billing address
- * @property-read string $createdAt transaction created timestamp
- * @property-read Braintree\ApplePayCardDetails $applePayCardDetails transaction Apple Pay card info
- * @property-read Braintree\AndroidPayCardDetails $androidPayCardDetails transaction Android Pay card info
- * @property-read Braintree\AmexExpressCheckoutCardDetails $amexExpressCheckoutCardDetails transaction Amex Express Checkout card info
- * @property-read Braintree\CreditCardDetails $creditCardDetails transaction credit card info
- * @property-read Braintree\CoinbaseAccountDetails $coinbaseDetails transaction Coinbase account info
- * @property-read Braintree\PayPalAccountDetails $paypalDetails transaction paypal account info
- * @property-read Braintree\Customer $customerDetails transaction customer info
- * @property-read Braintree\VenmoAccount $venmoAccountDetails transaction Venmo Account info
- * @property-read array  $customFields custom fields passed with the request
- * @property-read string $processorResponseCode gateway response code
- * @property-read string $additionalProcessorResponse raw response from processor
- * @property-read Braintree\Transaction\AddressDetails $shippingDetails transaction shipping address
- * @property-read string $status transaction status
- * @property-read array  $statusHistory array of StatusDetails objects
- * @property-read string $type transaction type
- * @property-read string $updatedAt transaction updated timestamp
- * @property-read Braintree\Disbursement $disbursementDetails populated when transaction is disbursed
- * @property-read Braintree\Dispute $disputes populated when transaction is disputed
- *
+ * @property string $avsErrorResponseCode
+ * @property string $avsPostalCodeResponseCode
+ * @property string $avsStreetAddressResponseCode
+ * @property string $cvvResponseCode
+ * @property string $id transaction id
+ * @property string $amount transaction amount
+ * @property Braintree\Transaction\AddressDetails $billingDetails transaction billing address
+ * @property string $createdAt transaction created timestamp
+ * @property Braintree\ApplePayCardDetails $applePayCardDetails transaction Apple Pay card info
+ * @property Braintree\AndroidPayCardDetails $androidPayCardDetails transaction Android Pay card info
+ * @property Braintree\AmexExpressCheckoutCardDetails $amexExpressCheckoutCardDetails transaction Amex Express Checkout card info
+ * @property Braintree\CreditCardDetails $creditCardDetails transaction credit card info
+ * @property Braintree\CoinbaseAccountDetails $coinbaseDetails transaction Coinbase account info
+ * @property Braintree\PayPalAccountDetails $paypalDetails transaction paypal account info
+ * @property Braintree\Customer $customerDetails transaction customer info
+ * @property Braintree\VenmoAccount $venmoAccountDetails transaction Venmo Account info
+ * @property array  $customFields custom fields passed with the request
+ * @property string $processorResponseCode gateway response code
+ * @property string $additionalProcessorResponse raw response from processor
+ * @property Braintree\Transaction\AddressDetails $shippingDetails transaction shipping address
+ * @property string $status transaction status
+ * @property array  $statusHistory array of StatusDetails objects
+ * @property string $type transaction type
+ * @property string $updatedAt transaction updated timestamp
+ * @property Braintree\Disbursement $disbursementDetails populated when transaction is disbursed
+ * @property Braintree\Dispute $disputes populated when transaction is disputed
  */
-
 final class Transaction extends Base
 {
     // Transaction Status
-    const AUTHORIZATION_EXPIRED    = 'authorization_expired';
-    const AUTHORIZING              = 'authorizing';
-    const AUTHORIZED               = 'authorized';
-    const GATEWAY_REJECTED         = 'gateway_rejected';
-    const FAILED                   = 'failed';
-    const PROCESSOR_DECLINED       = 'processor_declined';
-    const SETTLED                  = 'settled';
-    const SETTLING                 = 'settling';
+    const AUTHORIZATION_EXPIRED = 'authorization_expired';
+    const AUTHORIZING = 'authorizing';
+    const AUTHORIZED = 'authorized';
+    const GATEWAY_REJECTED = 'gateway_rejected';
+    const FAILED = 'failed';
+    const PROCESSOR_DECLINED = 'processor_declined';
+    const SETTLED = 'settled';
+    const SETTLING = 'settling';
     const SUBMITTED_FOR_SETTLEMENT = 'submitted_for_settlement';
-    const VOIDED                   = 'voided';
-    const UNRECOGNIZED             = 'unrecognized';
-    const SETTLEMENT_DECLINED      = 'settlement_declined';
-    const SETTLEMENT_PENDING       = 'settlement_pending';
-    const SETTLEMENT_CONFIRMED     = 'settlement_confirmed';
+    const VOIDED = 'voided';
+    const UNRECOGNIZED = 'unrecognized';
+    const SETTLEMENT_DECLINED = 'settlement_declined';
+    const SETTLEMENT_PENDING = 'settlement_pending';
+    const SETTLEMENT_CONFIRMED = 'settlement_confirmed';
 
     // Transaction Escrow Status
-    const ESCROW_HOLD_PENDING    = 'hold_pending';
-    const ESCROW_HELD            = 'held';
+    const ESCROW_HOLD_PENDING = 'hold_pending';
+    const ESCROW_HELD = 'held';
     const ESCROW_RELEASE_PENDING = 'release_pending';
-    const ESCROW_RELEASED        = 'released';
-    const ESCROW_REFUNDED        = 'refunded';
+    const ESCROW_RELEASED = 'released';
+    const ESCROW_REFUNDED = 'refunded';
 
     // Transaction Types
-    const SALE   = 'sale';
+    const SALE = 'sale';
     const CREDIT = 'credit';
 
     // Transaction Created Using
     const FULL_INFORMATION = 'full_information';
-    const TOKEN            = 'token';
+    const TOKEN = 'token';
 
     // Transaction Sources
-    const API           = 'api';
+    const API = 'api';
     const CONTROL_PANEL = 'control_panel';
-    const RECURRING     = 'recurring';
+    const RECURRING = 'recurring';
 
     // Gateway Rejection Reason
-    const AVS            = 'avs';
-    const AVS_AND_CVV    = 'avs_and_cvv';
-    const CVV            = 'cvv';
-    const DUPLICATE      = 'duplicate';
-    const FRAUD          = 'fraud';
+    const AVS = 'avs';
+    const AVS_AND_CVV = 'avs_and_cvv';
+    const CVV = 'cvv';
+    const DUPLICATE = 'duplicate';
+    const FRAUD = 'fraud';
     const THREE_D_SECURE = 'three_d_secure';
     const APPLICATION_INCOMPLETE = 'application_incomplete';
 
     // Industry Types
-    const LODGING_INDUSTRY           = 'lodging';
+    const LODGING_INDUSTRY = 'lodging';
     const TRAVEL_AND_CRUISE_INDUSTRY = 'travel_cruise';
 
     /**
      * sets instance properties from an array of values
      *
      * @ignore
-     * @access protected
+     *
      * @param array $transactionAttribs array of transaction data
+     *
      * @return void
      */
     protected function _initialize($transactionAttribs)
@@ -373,7 +369,7 @@ final class Transaction extends Base
 
         $disputes = [];
         if (isset($transactionAttribs['disputes'])) {
-            foreach ($transactionAttribs['disputes'] AS $dispute) {
+            foreach ($transactionAttribs['disputes'] as $dispute) {
                 $disputes[] = Dispute::factory($dispute);
             }
         }
@@ -382,7 +378,7 @@ final class Transaction extends Base
 
         $statusHistory = [];
         if (isset($transactionAttribs['statusHistory'])) {
-            foreach ($transactionAttribs['statusHistory'] AS $history) {
+            foreach ($transactionAttribs['statusHistory'] as $history) {
                 $statusHistory[] = new Transaction\StatusDetails($history);
             }
         }
@@ -391,7 +387,7 @@ final class Transaction extends Base
 
         $addOnArray = [];
         if (isset($transactionAttribs['addOns'])) {
-            foreach ($transactionAttribs['addOns'] AS $addOn) {
+            foreach ($transactionAttribs['addOns'] as $addOn) {
                 $addOnArray[] = AddOn::factory($addOn);
             }
         }
@@ -399,41 +395,43 @@ final class Transaction extends Base
 
         $discountArray = [];
         if (isset($transactionAttribs['discounts'])) {
-            foreach ($transactionAttribs['discounts'] AS $discount) {
+            foreach ($transactionAttribs['discounts'] as $discount) {
                 $discountArray[] = Discount::factory($discount);
             }
         }
         $this->_set('discounts', $discountArray);
 
-        if(isset($transactionAttribs['riskData'])) {
+        if (isset($transactionAttribs['riskData'])) {
             $this->_set('riskData', RiskData::factory($transactionAttribs['riskData']));
         }
-        if(isset($transactionAttribs['threeDSecureInfo'])) {
+        if (isset($transactionAttribs['threeDSecureInfo'])) {
             $this->_set('threeDSecureInfo', ThreeDSecureInfo::factory($transactionAttribs['threeDSecureInfo']));
         }
-        if(isset($transactionAttribs['facilitatorDetails'])) {
+        if (isset($transactionAttribs['facilitatorDetails'])) {
             $this->_set('facilitatorDetails', FacilitatorDetails::factory($transactionAttribs['facilitatorDetails']));
         }
     }
 
     /**
      * returns a string representation of the transaction
+     *
      * @return string
      */
-    public function  __toString()
+    public function __toString()
     {
         // array of attributes to print
         $display = [
             'id', 'type', 'amount', 'status',
-            'createdAt', 'creditCardDetails', 'customerDetails'
+            'createdAt', 'creditCardDetails', 'customerDetails',
             ];
 
         $displayAttributes = [];
-        foreach ($display AS $attrib) {
+        foreach ($display as $attrib) {
             $displayAttributes[$attrib] = $this->$attrib;
         }
+
         return __CLASS__ . '[' .
-                Util::attributesToString($displayAttributes) .']';
+                Util::attributesToString($displayAttributes) . ']';
     }
 
     public function isEqual($otherTx)
@@ -446,8 +444,7 @@ final class Transaction extends Base
         $token = $this->creditCardDetails->token;
         if (empty($token)) {
             return null;
-        }
-        else {
+        } else {
             return CreditCard::find($token);
         }
     }
@@ -458,14 +455,14 @@ final class Transaction extends Base
         $customerId = $this->customerDetails->id;
         if (empty($customerId)) {
             return null;
-        }
-        else {
+        } else {
             return Customer::find($customerId);
         }
     }
 
     /** @return bool */
-    public function isDisbursed() {
+    public function isDisbursed()
+    {
         return $this->disbursementDetails->isValid();
     }
 
@@ -474,15 +471,16 @@ final class Transaction extends Base
      *  to the requesting method, with populated properties
      *
      * @ignore
+     *
      * @return Transaction
      */
     public static function factory($attributes)
     {
         $instance = new self();
         $instance->_initialize($attributes);
+
         return $instance;
     }
-
 
     // static methods redirecting to gateway
 

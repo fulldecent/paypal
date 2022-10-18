@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,15 +22,14 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Xml;
 
+use Braintree\Util;
 use DateTime;
 use DateTimeZone;
 use XMLWriter;
-use Braintree\Util;
 
 /**
  * PHP version 5
@@ -50,7 +48,9 @@ class Generator
     /**
      * arrays passed to this method should have a single root element
      * with an array as its value
+     *
      * @param array $aData the array of data
+     *
      * @return string XML string
      */
     public static function arrayToXml($aData)
@@ -83,10 +83,11 @@ class Generator
     /**
      * Construct XML elements with attributes from an associative array.
      *
-     * @access protected
      * @static
+     *
      * @param object $writer XMLWriter object
      * @param array $aData contains attributes and values
+     *
      * @return void
      */
     private static function _createElementsFromArray(&$writer, $aData)
@@ -97,21 +98,21 @@ class Generator
             } else {
                 $writer->text($aData);
             }
-          return;
+
+            return;
         }
-        foreach ($aData AS $elementName => $element) {
+        foreach ($aData as $elementName => $element) {
             // handle child elements
             $writer->startElement($elementName);
             if (is_array($element)) {
                 if (array_key_exists(0, $element) || empty($element)) {
                     $writer->writeAttribute('type', 'array');
-                    foreach ($element AS $ignored => $itemInArray) {
+                    foreach ($element as $ignored => $itemInArray) {
                         $writer->startElement('item');
                         self::_createElementsFromArray($writer, $itemInArray);
                         $writer->endElement();
                     }
-                }
-                else {
+                } else {
                     self::_createElementsFromArray($writer, $element);
                 }
             } else {
@@ -130,8 +131,9 @@ class Generator
     /**
      * convert passed data into an array of attributeType, attributeName, and value
      * dates sent as DateTime objects will be converted to strings
-     * @access protected
+     *
      * @param mixed $value
+     *
      * @return array attributes and element value
      */
     private static function _generateXmlAttribute($value)
@@ -145,29 +147,33 @@ class Generator
         if (is_bool($value)) {
             return ['type', 'boolean', ($value ? 'true' : 'false')];
         }
-        if ($value === NULL) {
+        if ($value === null) {
             return ['nil', 'true', $value];
         }
     }
+
     /**
      * converts datetime back to xml schema format
-     * @access protected
+     *
      * @param object $dateTime
+     *
      * @return string XML schema formatted timestamp
      */
     private static function _dateTimeToXmlTimestamp($dateTime)
     {
         $dateTime->setTimeZone(new DateTimeZone('UTC'));
-        return ($dateTime->format('Y-m-d\TH:i:s') . 'Z');
+
+        return $dateTime->format('Y-m-d\TH:i:s') . 'Z';
     }
 
     private static function _castDateTime($string)
     {
         try {
             if (empty($string)) {
-               return false;
+                return false;
             }
             $dateTime = new DateTime($string);
+
             return self::_dateTimeToXmlTimestamp($dateTime);
         } catch (Exception $e) {
             // not a datetime

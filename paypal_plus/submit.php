@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,19 +22,16 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
-include_once dirname(__FILE__).'/../../../config/config.inc.php';
-include_once _PS_ROOT_DIR_.'/init.php';
-
+include_once dirname(__FILE__) . '/../../../config/config.inc.php';
+include_once _PS_ROOT_DIR_ . '/init.php';
 
 /*
  * Init var
  */
 
 if (version_compare(_PS_VERSION_, '1.5', '<')) {
-    include_once _PS_MODULE_DIR_.'paypal/backward_compatibility/backward.php';
+    include_once _PS_MODULE_DIR_ . 'paypal/backward_compatibility/backward.php';
     $context = Context::getContext();
     $ajax = Tools::getValue('ajax');
     /*
@@ -47,22 +43,21 @@ if (version_compare(_PS_VERSION_, '1.5', '<')) {
         displayConfirm($context);
     }
 } else {
-    $values = array(
+    $values = [
         'id_cart' => (int) Tools::getValue('id_cart'),
         'id_module' => (int) Module::getInstanceByName('paypal')->id,
         'paymentId' => Tools::getValue('paymentId'),
         'token' => Tools::getValue('token'),
-    );
+    ];
     $values['key'] = Context::getContext()->customer->secure_key;
     $link = Context::getContext()->link->getModuleLink('paypal', 'submitplus', $values);
     Tools::redirect($link);
-    die();
+    exit();
 }
 
 function displayConfirm($context)
 {
-
-    include _PS_ROOT_DIR_.'/header.php';
+    include _PS_ROOT_DIR_ . '/header.php';
 
     $paypal = new PayPal();
 
@@ -80,28 +75,28 @@ function displayConfirm($context)
 
             $paypal->assignCartSummary();
 
-            $transaction = array(
+            $transaction = [
                 'id_transaction' => $payment->id,
                 'payment_status' => $payment->state,
                 'currency' => $payment->transactions[0]->amount->currency,
-                'payment_date' => date("Y-m-d H:i:s"),
+                'payment_date' => date('Y-m-d H:i:s'),
                 'total_paid' => $payment->transactions[0]->amount->total,
                 'id_invoice' => 0,
                 'shipping' => 0,
-            );
+            ];
 
             switch ($payment->state) {
                 case 'created':
                     /* LookUp OK */
                     /* Affichage bouton confirmation */
 
-                    $context->smarty->assign(array(
+                    $context->smarty->assign([
                         'PayerID' => $payment->payer->payer_info->payer_id,
                         'paymentId' => $paymentId,
                         'id_cart' => $id_cart,
                         'totalAmount' => Tools::displayPrice(Cart::getTotalCart($id_cart)),
-                        'linkSubmitPlus' => _MODULE_DIR_.'paypal/paypal_plus/submit.php',
-                    ));
+                        'linkSubmitPlus' => _MODULE_DIR_ . 'paypal/paypal_plus/submit.php',
+                    ]);
                     break;
 
                 case 'canceled':
@@ -136,11 +131,11 @@ function displayConfirm($context)
         $context->smarty->assign('state', 'failed');
     }
 
-    echo $context->smarty->fetch(_PS_MODULE_DIR_.'paypal/views/templates/front/order-confirmation-plus.tpl');
+    echo $context->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/front/order-confirmation-plus.tpl');
 
-    include _PS_ROOT_DIR_.'/footer.php';
+    include _PS_ROOT_DIR_ . '/footer.php';
 
-    die();
+    exit();
 }
 
 function displayAjax($context)
@@ -150,28 +145,28 @@ function displayAjax($context)
     $paymentId = Tools::getValue('paymentId');
     $submit = Tools::getValue('submit');
     $paypal = new PayPal();
-    $return = array();
+    $return = [];
 
     if ((!empty($id_cart) && $context->cart->id == $id_cart) &&
         !empty($payerID) &&
         !empty($paymentId) &&
         !empty($submit)
     ) {
-        include_once _PS_MODULE_DIR_.'paypal/paypal.php';
+        include_once _PS_MODULE_DIR_ . 'paypal/paypal.php';
 
         $CallApiPaypalPlus = new CallApiPaypalPlus();
         $payment = Tools::jsonDecode($CallApiPaypalPlus->executePayment($payerID, $paymentId));
 
         if (isset($payment->state)) {
-            $transaction = array(
+            $transaction = [
                 'id_transaction' => $payment->transactions[0]->related_resources[0]->sale->id,
                 'payment_status' => $payment->state,
                 'total_paid' => $payment->transactions[0]->amount->total,
                 'id_invoice' => 0,
                 'shipping' => 0,
                 'currency' => $payment->transactions[0]->amount->currency,
-                'payment_date' => date("Y-m-d H:i:s"),
-            );
+                'payment_date' => date('Y-m-d H:i:s'),
+            ];
 
             if ($submit == 'confirmPayment') {
                 if ($payment->state == 'approved') {
@@ -223,7 +218,7 @@ function displayAjax($context)
     }
 
     echo Tools::jsonEncode($return);
-    die();
+    exit();
 }
 
 function getOrderStatus($template)
@@ -235,5 +230,6 @@ function getOrderStatus($template)
      * refund
      */
     $context = Context::getContext();
-    return Db::getInstance()->getValue('SELECT id_order_state FROM '._DB_PREFIX_.'order_state_lang WHERE template = "'.pSQL($template).'" AND id_lang = "'.(int) $context->cookie->id_lang.'"');
+
+    return Db::getInstance()->getValue('SELECT id_order_state FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE template = "' . pSQL($template) . '" AND id_lang = "' . (int) $context->cookie->id_lang . '"');
 }

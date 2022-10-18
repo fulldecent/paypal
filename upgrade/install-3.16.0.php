@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,9 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 function upgrade_module_3_16_0($module)
 {
     $module->registerHook('displayTop');
@@ -39,7 +36,7 @@ function upgrade_module_3_16_0($module)
                 1,
                 false,
                 null,
-                (int)$shop['id_shop']
+                (int) $shop['id_shop']
             );
         }
     } else {

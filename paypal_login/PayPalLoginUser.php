@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,11 +22,9 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 if (!defined('_PS_VERSION_')) {
-    die(header('HTTP/1.0 404 Not Found'));
+    exit(header('HTTP/1.0 404 Not Found'));
 }
 
 /**
@@ -37,7 +34,6 @@ if (!defined('_PS_VERSION_')) {
  */
 class PaypalLoginUser extends ObjectModel
 {
-
     public $id_customer;
     public $token_type;
     public $expires_in;
@@ -52,7 +48,7 @@ class PaypalLoginUser extends ObjectModel
 
     protected $table = 'paypal_login_user';
     protected $identifier = 'id_paypal_login_user';
-    protected $fieldsRequired = array(
+    protected $fieldsRequired = [
         'id_customer',
         'token_type',
         'expires_in',
@@ -62,9 +58,9 @@ class PaypalLoginUser extends ObjectModel
         'user_id',
         'verified_account',
         'zoneinfo',
-    );
+    ];
 
-    protected $fieldsValidate = array(
+    protected $fieldsValidate = [
         'id_customer' => 'isInt',
         'token_type' => 'isString',
         'expires_in' => 'isString',
@@ -76,8 +72,7 @@ class PaypalLoginUser extends ObjectModel
         'verified_account' => 'isString',
         'zoneinfo' => 'isString',
         'age_range' => 'isString',
-
-    );
+    ];
 
     public function __construct($id = false, $id_lang = false)
     {
@@ -87,7 +82,7 @@ class PaypalLoginUser extends ObjectModel
     public function getFields()
     {
         parent::validateFields();
-        $fields = array();
+        $fields = [];
         foreach (array_keys($this->fieldsValidate) as $field) {
             $fields[$field] = $this->$field;
         }
@@ -97,26 +92,26 @@ class PaypalLoginUser extends ObjectModel
 
     public static function getPaypalLoginUsers($id_paypal_login_user = false, $id_customer = false, $refresh_token = false)
     {
-        $sql = "
+        $sql = '
 			SELECT `id_paypal_login_user`
-			FROM `"._DB_PREFIX_."paypal_login_user`
+			FROM `' . _DB_PREFIX_ . 'paypal_login_user`
 			WHERE 1
-		";
+		';
 
         if ($id_paypal_login_user && Validate::isInt($id_paypal_login_user)) {
-            $sql .= " AND `id_paypal_login_user` = '".(int) $id_paypal_login_user."' ";
+            $sql .= " AND `id_paypal_login_user` = '" . (int) $id_paypal_login_user . "' ";
         }
 
         if ($id_customer && Validate::isInt($id_customer)) {
-            $sql .= " AND `id_customer` = '".(int) $id_customer."' ";
+            $sql .= " AND `id_customer` = '" . (int) $id_customer . "' ";
         }
 
         if ($refresh_token) {
-            $sql .= " AND `refresh_token` = '".pSQL($refresh_token)."' ";
+            $sql .= " AND `refresh_token` = '" . pSQL($refresh_token) . "' ";
         }
 
         $results = DB::getInstance()->executeS($sql);
-        $logins = array();
+        $logins = [];
 
         if ($results && count($results)) {
             foreach ($results as $result) {

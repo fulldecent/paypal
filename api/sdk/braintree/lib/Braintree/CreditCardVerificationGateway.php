@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree;
@@ -44,23 +42,21 @@ class CreditCardVerificationGateway
 
     public function create($attributes)
     {
-        $response = $this->_http->post($this->_config->merchantPath() . "/verifications", ['verification' => $attributes]);
+        $response = $this->_http->post($this->_config->merchantPath() . '/verifications', ['verification' => $attributes]);
+
         return $this->_verifyGatewayResponse($response);
     }
 
     private function _verifyGatewayResponse($response)
     {
-
-        if(isset($response['verification'])){
+        if (isset($response['verification'])) {
             return new Result\Successful(
                 CreditCardVerification::factory($response['verification'])
             );
-        } else if (isset($response['apiErrorResponse'])) {
+        } elseif (isset($response['apiErrorResponse'])) {
             return new Result\Error($response['apiErrorResponse']);
         } else {
-            throw new Exception\Unexpected(
-                "Expected transaction or apiErrorResponse"
-            );
+            throw new Exception\Unexpected('Expected transaction or apiErrorResponse');
         }
     }
 
@@ -70,7 +66,7 @@ class CreditCardVerificationGateway
         foreach ($query as $term) {
             $criteria[$term->name] = $term->toparam();
         }
-        $criteria["ids"] = CreditCardVerificationSearch::ids()->in($ids)->toparam();
+        $criteria['ids'] = CreditCardVerificationSearch::ids()->in($ids)->toparam();
         $path = $this->_config->merchantPath() . '/verifications/advanced_search';
         $response = $this->_http->post($path, ['search' => $criteria]);
 
@@ -92,7 +88,7 @@ class CreditCardVerificationGateway
         $pager = [
             'object' => $this,
             'method' => 'fetch',
-            'methodArgs' => [$query]
+            'methodArgs' => [$query],
             ];
 
         return new ResourceCollection($response, $pager);

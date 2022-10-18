@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,11 +22,9 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{paypal}prestashop>ipn_8a34d4a5b0c3928059f6f92ead9e8aa6'] = 'Prezzo pagato su paypal non è lo stesso che su PrestaShop.';
 $_MODULE['<{paypal}prestashop>ipn_572f9af7615560af2cba038cc1948287'] = 'Il carrello è stato modificato, si prega di riprovare.';
 $_MODULE['<{paypal}prestashop>ipn_ada2b5d5bbf3065de283d61526141780'] = 'Acquisizione pagamento in sospeso.';
@@ -125,7 +122,7 @@ $_MODULE['<{paypal}prestashop>notifier_8a34d4a5b0c3928059f6f92ead9e8aa6'] = 'Il 
 $_MODULE['<{paypal}prestashop>notifier_572f9af7615560af2cba038cc1948287'] = 'Carrello modificato, si prega di riprovare.';
 $_MODULE['<{paypal}prestashop>notifier_36ec50c0e914dd2fb48a1b27540512ce'] = 'Pagamento accettato.';
 $_MODULE['<{paypal}prestashop>back_office_7837b4f9a9d71dad679da95a4b6acc68'] = 'Nota : Nell\'ambito del regolamento europeo PSD2 e della relativa SCA (Strong Customer Authentication) prevista dal 14 settembre 2019, tutte le transazioni dovranno passare attraverso SCA (3DS 2.0) con l\'obiettivo di ridurre l\'attrito (meno \"sfide del cliente\") (più responsabilità passa da commerciante a banca).';
-$_MODULE['<{paypal}prestashop>back_office_27cba130caad1a334c3c4a09a841490e'] = 'Si consiglia quindi di abilitare 3D Secure al fine di evitare i rifiuti bancari e l\'impatto sulla tua attività .';
+$_MODULE['<{paypal}prestashop>back_office_27cba130caad1a334c3c4a09a841490e'] = 'Si consiglia quindi di abilitare 3D Secure al fine di evitare i rifiuti bancari e l\'impatto sulla tua attività .';
 $_MODULE['<{paypal}prestashop>back_office_f5931ff1a89c64d01f26943e3eb09ce2'] = 'Ulteriori informazioni nel nostro post di blog [b]per ottenere gli ultimi aggiornamenti:[/b]';
 $_MODULE['<{paypal}prestashop>back_office_6c45c93036a56d32a44be5dca41a5a57'] = 'Impossibile creare ordini per i carrelli (id) a causa di un errore di email.';
 $_MODULE['<{paypal}prestashop>back_office_2eee7df6fecce0d204dcb15c93c2ff4f'] = 'è necessario modificare l\'e-mail nella configurazione del modulo con quella visualizzata sopra';

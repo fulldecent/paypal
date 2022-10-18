@@ -1,6 +1,5 @@
 <?php
 /**
- *
  *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,7 +22,6 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 namespace Braintree\Test;
@@ -34,13 +32,11 @@ namespace Braintree\Test;
  * The constants in this class can be used to create transactions with
  * the desired status in the sandbox environment.
  *
- * @package    Braintree
- * @subpackage Test
  * @copyright  2015 Braintree, a division of PayPal, Inc.
  */
 class TransactionAmounts
 {
-   public static $authorize = '1000.00';
-   public static $decline   = '2000.00';
+    public static $authorize = '1000.00';
+    public static $decline = '2000.00';
 }
 class_alias('Braintree\Test\TransactionAmounts', 'Braintree_Test_TransactionAmounts');
