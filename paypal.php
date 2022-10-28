@@ -774,7 +774,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         $action_text = $this->l('Pay with debit or credit card');
                         $payment_option->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/logo_card.png'));
                         $payment_option->setCallToActionText($action_text);
-                        $payment_option->setModuleName($this->name);
+                        $payment_option->setModuleName('paypal_cb');
                         $payment_option->setAction($this->context->link->getModuleLink($this->name, 'ecInit', ['credit_card' => '1'], true));
                         $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
                         $payments_options[] = $payment_option;
