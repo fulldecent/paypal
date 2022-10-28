@@ -1549,9 +1549,17 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $order = new Order($this->currentOrder);
         $orderState = new OrderState($order->current_state, $adminEmployee->id_lang);
 
+        if (is_string($orderState->name)) {
+            $message = $orderState->name;
+        } elseif (is_array($orderState->name)) {
+            $message = (isset($orderState->name[$order->id_lang]) ? $orderState->name[$order->id_lang] : current($orderState->name));
+        } else {
+            $message = $this->l('Order creation is successful');
+        }
+
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(
-            is_array($orderState->name) ? $orderState->name[$order->id_lang] : $orderState->name,
+            $message,
             isset($transaction['transaction_id']) ? $transaction['transaction_id'] : null,
             $this->currentOrder,
             (int) $id_cart,
