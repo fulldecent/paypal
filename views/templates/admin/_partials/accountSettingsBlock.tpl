@@ -96,7 +96,7 @@
               {include './ecCredentialFields.tpl'}
 
           </div>
-        {elseif isset($method) && in_array($method, ['EC', 'PPP'])}
+        {elseif isset($method) && in_array($method, ['EC'])}
           <a href="{$urlOnboarding|addslashes}"
             target="_blank"
             data-paypal-button
@@ -109,14 +109,14 @@
           </a>
 
           <script src="{$paypalOnboardingLib|addslashes}"></script>
+        {elseif isset($SignUpLinkButton)}
+            {$SignUpLinkButton->render() nofilter} {* html. cannot be escaped*}
         {/if}
-
     {/if}
 </div>
 
-{if isset($SignUpLinkButton)}
-    <div class="pp__mt-5">
-        {$SignUpLinkButton->render() nofilter} {* html. cannot be escaped*}
-    </div>
+{if isset($isPuiAvailable) && $isPuiAvailable}
+  <div class="alert alert-success pp__mt-3">
+      {l s='You successfully connected your PayPal account.' mod='paypal'}
+  </div>
 {/if}
-
