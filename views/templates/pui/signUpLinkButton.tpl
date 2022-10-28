@@ -36,19 +36,14 @@
   <a href="{$actionUrl|addslashes}"
      target="_blank"
      data-paypal-button
+     data-paypal-onboard-complete="onboardCallback"
      class="btn btn-default spinner-button"
   >
     <i class="icon-signin"></i>
     <div class="spinner pp__mr-1"></div>
-      {l s='Partner referral sign-up link' mod='paypal'}
+      {l s='Connect or create PayPal account' mod='paypal'}
   </a>
 
-{/if}
-
-{if isset($isPuiAvailable) && $isPuiAvailable}
-  <div class="alert alert-success pp__mt-3">
-      {l s='You successfully connected your PayPal account.' mod='paypal'}
-  </div>
 {/if}
 
 {if isset($paypalOnboardingLib)}

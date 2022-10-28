@@ -41,20 +41,10 @@ class SignupLink
 
     public function get()
     {
-        $urlLink = '';
-
-        if (empty($this->method->getClientId())) {
-            return $urlLink;
-        }
-
-        if (empty($this->initMerchantId()->get())) {
-            return $urlLink;
-        }
-
         if ($this->method->isSandbox()) {
-            $urlLink .= 'https://www.sandbox.paypal.com/bizsignup/partner/entry?';
+            $urlLink = 'https://www.sandbox.paypal.com/bizsignup/partner/entry?';
         } else {
-            $urlLink .= 'https://www.paypal.com/bizsignup/partner/entry?';
+            $urlLink = 'https://www.paypal.com/bizsignup/partner/entry?';
         }
 
         $params = [

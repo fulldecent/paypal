@@ -29,6 +29,7 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
 use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
+use PaypalAddons\classes\PUI\PuiFunctionality;
 use PaypalAddons\classes\PUI\SignUpLinkButton;
 use PaypalAddons\classes\PuiMethodInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -165,8 +166,12 @@ class AdminPayPalSetupController extends AdminPayPalController
         $tpl_vars = $method->getTplVars();
         $tpl_vars['method'] = $this->method;
 
-        if ($method instanceof PuiMethodInterface && $method->isConfigured()) {
-            $tpl_vars['SignUpLinkButton'] = $this->initSignUpLinkButton($method);
+        if ($method instanceof PuiMethodInterface) {
+            if ($method->isConfigured()) {
+                $tpl_vars['isPuiAvailable'] = $this->initPuiFunctionality()->isAvailable();
+            } else {
+                $tpl_vars['SignUpLinkButton'] = $this->initSignUpLinkButton($method);
+            }
         }
 
         $this->context->smarty->assign($tpl_vars);
@@ -423,5 +428,10 @@ class AdminPayPalSetupController extends AdminPayPalController
     protected function initSignUpLinkButton(PuiMethodInterface $method)
     {
         return new SignUpLinkButton($method);
+    }
+
+    protected function initPuiFunctionality()
+    {
+        return new PuiFunctionality();
     }
 }
