@@ -47,7 +47,11 @@ class PaypalGetAuthToken
 
     public function __construct($authCode, $sharedId, $sellerNonce, $sandbox)
     {
-        $this->httpClient = new Client(['base_url' => $sandbox ? 'https://api.sandbox.paypal.com' : 'https://api.paypal.com']);
+        // Depending on the guzzle version, Client take 'base_uri' or 'base_url' parameter
+        $this->httpClient = new Client([
+            'base_uri' => $sandbox ? 'https://api.sandbox.paypal.com' : 'https://api.paypal.com',
+            'base_url' => $sandbox ? 'https://api.sandbox.paypal.com' : 'https://api.paypal.com',
+        ]);
         $this->authCode = $authCode;
         $this->sharedId = $sharedId;
         $this->sellerNonce = $sellerNonce;

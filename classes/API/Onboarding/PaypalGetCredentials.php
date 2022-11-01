@@ -44,7 +44,11 @@ class PaypalGetCredentials
 
     public function __construct($authToken, $partnerId, $sandbox)
     {
-        $this->httpClient = new Client(['base_url' => $sandbox ? 'https://api.sandbox.paypal.com' : 'https://api.paypal.com']);
+        // Depending on the guzzle version, Client take 'base_uri' or 'base_url' parameter
+        $this->httpClient = new Client([
+            'base_uri' => $sandbox ? 'https://api.sandbox.paypal.com' : 'https://api.paypal.com',
+            'base_url' => $sandbox ? 'https://api.sandbox.paypal.com' : 'https://api.paypal.com',
+        ]);
         $this->authToken = $authToken;
         $this->partnerId = $partnerId;
     }
