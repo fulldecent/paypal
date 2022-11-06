@@ -67,9 +67,4 @@ class SignUpLinkButton
     {
         return new SignupLink($this->method);
     }
-
-    protected function isPuiAvailable()
-    {
-        return $this->puiFunctionality->isAvailable();
-    }
 }
