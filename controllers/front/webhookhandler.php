@@ -51,7 +51,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     {
         parent::__construct();
 
-        $this->request = file_get_contents('php://input');
+        $this->request = Tools::file_get_contents('php://input');
         $this->webhookEventHandler = new WebhookEventHandler();
     }
 
@@ -65,6 +65,8 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         }
 
         if (false == ($this->module->getWebhookOption()->isEnable() && $this->module->getWebhookOption()->isAvailable())) {
+            header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+
             return;
         }
 

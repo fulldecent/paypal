@@ -774,7 +774,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         $action_text = $this->l('Pay with debit or credit card');
                         $payment_option->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/logo_card.png'));
                         $payment_option->setCallToActionText($action_text);
-                        $payment_option->setModuleName($this->name);
+                        $payment_option->setModuleName('paypal_cb');
                         $payment_option->setAction($this->context->link->getModuleLink($this->name, 'ecInit', ['credit_card' => '1'], true));
                         $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
                         $payments_options[] = $payment_option;
@@ -1008,8 +1008,21 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $this->l('Should use the PayPal wallet button ') // todo: specify message
             )
         );
+        $is_virtual = 0;
+        foreach ($params['cart']->getProducts() as $product) {
+            if ($product['is_virtual']) {
+                $is_virtual = 1;
+                break;
+            }
+        }
+        $additionalInformation = $this->getShortcutPaymentStep()->render();
+
+        if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
+            $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
+        }
+
         $paymentOption->setModuleName($this->name);
-        $paymentOption->setAdditionalInformation($this->getShortcutPaymentStep()->render());
+        $paymentOption->setAdditionalInformation($additionalInformation);
         $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
         return $paymentOption;
@@ -1180,9 +1193,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         $bankDetails = $response->getDepositBankDetails();
-        $tab = $this->l('The bank name') . ' : ' . $bankDetails->getBankName() . '; 
-        ' . $this->l('Account holder name') . ' : ' . $bankDetails->getAccountHolderName() . '; 
-        ' . $this->l('IBAN') . ' : ' . $bankDetails->getIban() . '; 
+        $tab = $this->l('The bank name') . ' : ' . $bankDetails->getBankName() . ';
+        ' . $this->l('Account holder name') . ' : ' . $bankDetails->getAccountHolderName() . ';
+        ' . $this->l('IBAN') . ' : ' . $bankDetails->getIban() . ';
         ' . $this->l('BIC') . ' : ' . $bankDetails->getBic();
 
         return $tab;
@@ -1489,8 +1502,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $currency->iso_code;
     }
 
-    public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown', $message = null, $transaction = [], $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
-    {
+    public function validateOrder(
+        $id_cart, $id_order_state,
+        $amount_paid,
+        $payment_method = 'Unknown',
+        $message = null,
+        $transaction = [],
+        $currency_special = null,
+        $dont_touch_amount = false,
+        $secure_key = false,
+        Shop $shop = null,
+        $order_reference = null
+    ) {
         if ($this->needConvert()) {
             $amount_paid_curr = Tools::ps_round(Tools::convertPrice($amount_paid, new Currency($currency_special), true), 2);
         } else {
@@ -1549,9 +1572,17 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $order = new Order($this->currentOrder);
         $orderState = new OrderState($order->current_state, $adminEmployee->id_lang);
 
+        if (is_string($orderState->name)) {
+            $message = $orderState->name;
+        } elseif (is_array($orderState->name)) {
+            $message = (isset($orderState->name[$order->id_lang]) ? $orderState->name[$order->id_lang] : current($orderState->name));
+        } else {
+            $message = $this->l('Order creation is successful');
+        }
+
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(
-            $orderState->name,
+            $message,
             isset($transaction['transaction_id']) ? $transaction['transaction_id'] : null,
             $this->currentOrder,
             (int) $id_cart,
@@ -3101,11 +3132,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         /** @var $paypalOrder PaypalOrder */
         $paypalOrder = PaypalOrder::loadByOrderId($params['order']->id);
-
-        if ($paypalOrder->payment_tool != 'PAY_UPON_INVOICE') {
-            return;
-        }
-
         $method = AbstractMethodPaypal::load($this->paypal_method);
         $response = $method->addOrderTrackingInfo($paypalOrder);
 

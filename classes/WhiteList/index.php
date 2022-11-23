@@ -23,22 +23,12 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  */
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-namespace PaypalAddons\services;
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-class ContainerService
-{
-    public static function init()
-    {
-        global $kernel;
-
-        if ($kernel) {
-            return $kernel->getContainer();
-        }
-
-        $kernel = new \AppKernel(_PS_MODE_DEV_ ? 'dev' : 'prod', false);
-        $kernel->boot();
-
-        return $kernel->getContainer();
-    }
-}
+header('Location: ../');
+exit;

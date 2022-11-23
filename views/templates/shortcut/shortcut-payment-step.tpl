@@ -42,6 +42,7 @@
       <input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
       <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
       <input type="hidden" id="source_page" name="source_page" value="cart">
+      <input type="hidden" name="isAddAddress" value="1">
     </form>
     <div paypal-button-container></div>
 

@@ -23,31 +23,20 @@
 *
 *}
 
-<!-- Start modules/paypal/views/templates/pui/signUpLinkButton.tpl -->
+<div class="pp__flex" style="max-width: 400px">
+  <input name = "PAYPAL_WHITE_LIST_IP" type="text" value="{$PAYPAL_WHITE_LIST_IP|escape:'html':'utf-8'}">
+  <button style="white-space: nowrap;" current-ip="{$paypal_current_ip}" type="button" class="btn btn-primary" add-ip-btn>{l s='Add my IP' mod='paypal'}</button>
+</div>
 
-{if empty($actionUrl)}
+<script>
+  document.querySelector('[add-ip-btn]').addEventListener('click', function(event) {
+      var input = document.querySelector('[name="PAYPAL_WHITE_LIST_IP"]');
+      var list = input.value.split(';');
 
-  <div class="alert alert-danger">
-      {l s='Error occurred during generating sign-up link. Please, try re-configure the connection with PayPal account' mod='paypal'}
-  </div>
-
-{else}
-
-  <a href="{$actionUrl|addslashes}"
-     target="_blank"
-     data-paypal-button
-     data-paypal-onboard-complete="onboardCallback"
-     class="btn btn-default spinner-button"
-  >
-    <i class="icon-signin"></i>
-    <div class="spinner pp__mr-1"></div>
-      {l s='Connect or create PayPal account' mod='paypal'}
-  </a>
-
-{/if}
-
-{if isset($paypalOnboardingLib)}
-  <script src="{$paypalOnboardingLib|addslashes}"></script>
-{/if}
-
-<!-- End modules/paypal/views/templates/pui/signUpLinkButton.tpl -->
+      list.push(event.target.getAttribute('current-ip'));
+      list = list.filter(function(item) {
+          return item.length > 0;
+      });
+      input.value = list.join(';');
+  });
+</script>

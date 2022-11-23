@@ -43,6 +43,8 @@ const BNPL = {
 
   color: null,
 
+  isAddAddress: null,
+
   init() {
     this.updateInfo();
     BNPL.checkProductAvailability();
@@ -54,11 +56,16 @@ const BNPL = {
   updateInfo() {
     this.page = $('[data-container-bnpl]').data('paypal-bnpl-source-page');
     this.button = document.querySelector('[paypal-bnpl-button-container]');
+    let isAddAddress = document.querySelector('[data-container-bnpl] [name="isAddAddress"]');
 
     if (this.page == 'product') {
       this.productQuantity = $('input[name="qty"]').val();
       this.idProduct = $('[data-paypal-bnpl-id-product]').val();
       this.combination = this.getCombination();
+    }
+
+    if (isAddAddress) {
+      this.isAddAddress = (isAddAddress.value == '1');
     }
   },
 
@@ -141,6 +148,10 @@ const BNPL = {
       data['idProduct'] = this.idProduct;
       data['quantity'] = this.productQuantity;
       data['combination'] = this.combination.join('|');
+    }
+
+    if (this.isAddAddress) {
+      data['addAddress'] = true;
     }
 
     return fetch(url.toString(), {

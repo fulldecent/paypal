@@ -40,7 +40,7 @@ SepaButton.prototype.getIdOrder = function() {
     headers: {
       'content-type': 'application/json;charset=utf-8'
     },
-    body: JSON.stringify({page: 'cart'})
+    body: JSON.stringify({page: 'cart', addAddress: true})
   }).then(function(res) {
     return res.json();
   }).then(function(data) {

@@ -35,20 +35,16 @@ class SignUpLinkButton
 
     protected $method;
 
-    protected $puiFunctionality;
-
     public function __construct(PuiMethodInterface $method)
     {
         $this->context = Context::getContext();
         $this->method = $method;
-        $this->puiFunctionality = new PuiFunctionality();
     }
 
     public function render()
     {
         $this->context->smarty->assign('actionUrl', $this->getActionUrl());
         $this->context->smarty->assign('paypalOnboardingLib', $this->getOnboardingLib());
-        $this->context->smarty->assign('isPuiAvailable', $this->isPuiAvailable());
 
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/pui/signUpLinkButton.tpl');
     }
@@ -70,10 +66,5 @@ class SignUpLinkButton
     protected function initSignupLink()
     {
         return new SignupLink($this->method);
-    }
-
-    protected function isPuiAvailable()
-    {
-        return $this->puiFunctionality->isAvailable();
     }
 }

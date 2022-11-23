@@ -43,6 +43,8 @@ const Shortcut = {
 
   styleSetting: typeof styleSetting === 'undefined' ? null : styleSetting,
 
+  isAddAddress: null,
+
   init() {
     this.updateInfo();
     prestashop.on('updatedProduct', function(e, xhr, settings) {
@@ -53,11 +55,16 @@ const Shortcut = {
   updateInfo() {
     this.page = $('[data-container-express-checkout]').data('paypal-source-page');
     this.button = document.querySelector('[paypal-button-container]');
+    let isAddAddress = document.querySelector('[data-container-express-checkout] [name="isAddAddress"]');
 
     if (this.page == 'product') {
       this.productQuantity = $('input[name="qty"]').val();
       this.idProduct = $('[data-paypal-id-product]').val();
       this.combination = this.getCombination();
+    }
+
+    if (isAddAddress) {
+      this.isAddAddress = (isAddAddress.value == '1');
     }
   },
 
@@ -127,6 +134,10 @@ const Shortcut = {
       data['idProduct'] = this.idProduct;
       data['quantity'] = this.productQuantity;
       data['combination'] = this.combination.join('|');
+    }
+
+    if (this.isAddAddress) {
+      data['addAddress'] = true;
     }
 
     return fetch(url.toString(), {

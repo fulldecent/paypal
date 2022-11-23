@@ -36,6 +36,7 @@ use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\services\ActualizeTotalPaid;
 use PaypalAddons\services\PaymentTotalAmount;
+use PaypalAddons\services\PaypalContext;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
@@ -97,6 +98,7 @@ class WebhookEventHandler
 
         $orders = $this->servicePaypalOrder->getPsOrders($paypalOrder);
         $psOrderStatus = $this->getPsOrderStatus($event);
+        PaypalContext::getContext()->set('skipHandleHookActionOrderStatusUpdate', true);
 
         foreach ($orders as $order) {
             //If there are several shops, then PayPal sends webhook event to each shop. The module should
@@ -162,7 +164,13 @@ class WebhookEventHandler
         $paypalWebhook->event_type = $event->getEventType();
         $paypalWebhook->data = $event->toJSON();
         $paypalWebhook->date_completed = date(PaypalWebhook::DATE_FORMAT);
-        $paypalWebhook->save();
+        // Trying to save a webhook event without field 'data' if there is an error
+        try {
+            $paypalWebhook->save();
+        } catch (\Throwable $e) {
+            $paypalWebhook->data = '';
+            $paypalOrder->save();
+        }
 
         if ($psOrderStatus == $this->getStatusMapping()->getAcceptedStatus()) {
             $this->servicePaypalOrder->setTransactionId($paypalOrder, $event->getResource()->id);

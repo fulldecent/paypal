@@ -92,7 +92,7 @@ ApmButton.prototype.getIdOrder = function() {
     headers: {
       'content-type': 'application/json;charset=utf-8'
     },
-    body: JSON.stringify({page: 'cart', apmMethod: this.method})
+    body: JSON.stringify({page: 'cart', apmMethod: this.method, addAddress: true})
   }).then(function(res) {
     return res.json();
   }).then(function(data) {
