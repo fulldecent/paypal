@@ -571,3 +571,4 @@ $_MODULE['<{paypal}prestashop>fraudnetform_47db1ba441495e69ca49fb97801b3d0b'] = 
 $_MODULE['<{paypal}prestashop>fraudnetform_a4748e9d870cfb912423f022bfe49f8a'] = 'Sie akzeptieren auch PayPal’s  [a @href1@] Datenschutzerklärung [/a].';
 $_MODULE['<{paypal}prestashop>fraudnetform_8e21dd5dca608a0dcedf9423ce106849'] = 'Falls Ihre Transaktion erfolgreich per Kauf auf Rechnung abgewickelt werden kann, wird der Kaufpreis an Ratepay abgetreten und Sie dürfen nur an Ratepay überweisen, nicht an den Händler.';
 $_MODULE['<{paypal}prestashop>signuplinkbutton_e938ac5a88e031ddad5adc00421ec5ce'] = 'Sie haben Ihr PayPal-Konto erfolgreich verknüpft';
+$_MODULE['<{paypal}prestashop>paypal_a5798511a026181ecf457aa003eebbbc'] = 'Später Bezahlen';
