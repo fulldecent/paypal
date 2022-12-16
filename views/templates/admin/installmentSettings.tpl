@@ -301,6 +301,33 @@
             </div>
         </div>
 
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
+            <div class="label">
+                {l s='Enable \'Pay Later\' in your checkout' mod='paypal'}
+            </div>
+
+            <div class="configuration">
+                <div class="pp__switch-field">
+                    <input
+                            class="pp__switch-input"
+                            type="radio"
+                            id="PAYPAL_ENABLE_BNPL_on"
+                            name="PAYPAL_ENABLE_BNPL"
+                            value="1"
+                            {if isset($PAYPAL_ENABLE_BNPL) && $PAYPAL_ENABLE_BNPL == '1'}checked{/if}/>
+                    <label for="PAYPAL_ENABLE_BNPL_on" class="pp__switch-label on">Yes</label>
+                    <input
+                            class="pp__switch-input"
+                            type="radio"
+                            id="PAYPAL_ENABLE_BNPL_off"
+                            name="PAYPAL_ENABLE_BNPL"
+                            value="0"
+                            {if isset($PAYPAL_ENABLE_BNPL) && $PAYPAL_ENABLE_BNPL != '1'}checked{/if}/>
+                    <label for="PAYPAL_ENABLE_BNPL_off" class="pp__switch-label off">No</label>
+                </div>
+            </div>
+        </div>
+
         <div class="pp-panel-footer bootstrap">
             <button
                     type="submit"

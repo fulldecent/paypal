@@ -825,6 +825,7 @@ class PayPal extends PaymentModule
             'showInstallmentPopup' => $this->isShowInstallmentPopup(),
             'showInstallmentSetting' => $this->isShowInstallmentSetting(),
             'isoCountryDefault' => $isoCountryDefault,
+            ConfigurationMap::ENABLE_BNPL => Configuration::get(ConfigurationMap::ENABLE_BNPL),
         ]);
 
         // Tpl vars for Paypal installment banner. End
@@ -2033,6 +2034,7 @@ class PayPal extends PaymentModule
             Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
             Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
             ConfigurationMap::setClientId(Tools::getValue(ConfigurationMap::CLIENT_ID, ''));
+            Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, Tools::getValue(ConfigurationMap::ENABLE_BNPL));
         }
 
         return $this->loadLangDefault();
