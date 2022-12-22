@@ -1137,7 +1137,7 @@ class PayPal extends PaymentModule
         }
 
         if ((int) Configuration::get(ConfigurationMap::ENABLE_BNPL) && ConfigurationMap::getClientId()) {
-            $return_braintree .= (new BnplButton())->render();
+            $return_braintree .= $this->renderBnplPaymentOption($params);
         }
 
         if ($method == HSS) {
@@ -2929,5 +2929,12 @@ class PayPal extends PaymentModule
         }
 
         return $currency->iso_code;
+    }
+
+    protected function renderBnplPaymentOption($params)
+    {
+        $this->context->smarty->assign('bnpl', (new BnplButton())->render());
+        $this->context->smarty->assign('baseURI', $this->context->shop->getBaseURI());
+        return $this->fetchTemplate('bnpl-payment-option.tpl');
     }
 }
