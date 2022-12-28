@@ -8,7 +8,7 @@ use PaypalAddons\services\StatusMapping;
 
 class WebhookTest extends AbstractTest
 {
-    public function testCompleted()
+    public function testCompletedEvent()
     {
         $event = $this->initWebhookEvent('event-completed.json');
         $statusMap = new StatusMapping();
@@ -30,5 +30,39 @@ class WebhookTest extends AbstractTest
         $order = new Order($idOrder);
 
         $this->assertEquals($statusMap->getWaitValidationStatus(), $order->current_state);
+    }
+
+    public function testRefundedEvent()
+    {
+        $event = $this->initWebhookEvent('event-refunded.json');
+        $statusMap = new StatusMapping();
+        $webhookHandler = $this
+            ->getMockBuilder(WebhookEventHandler::class)
+            ->onlyMethods(['getPaymentTotal'])
+            ->getMock();
+        $webhookHandler->method('getPaymentTotal')->willReturn(0);
+
+        $idOrder = $this->createOrderForWebhookEvent($event, $statusMap->getAcceptedStatus());
+        $webhookHandler->handle($event);
+        $order = new Order($idOrder);
+
+        $this->assertEquals($statusMap->getRefundStatus(), $order->current_state);
+    }
+
+    public function testPartialRefundedEvent()
+    {
+        $event = $this->initWebhookEvent('event-partial-refunded.json');
+        $statusMap = new StatusMapping();
+        $webhookHandler = $this
+            ->getMockBuilder(WebhookEventHandler::class)
+            ->onlyMethods(['getPaymentTotal'])
+            ->getMock();
+        $webhookHandler->method('getPaymentTotal')->willReturn(5);
+
+        $idOrder = $this->createOrderForWebhookEvent($event, $statusMap->getAcceptedStatus());
+        $webhookHandler->handle($event);
+        $order = new Order($idOrder);
+
+        $this->assertEquals($statusMap->getAcceptedStatus(), $order->current_state);
     }
 }
