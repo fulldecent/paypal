@@ -44,6 +44,7 @@
         "paypal/rest-api-sdk-php": "1.*"
     },
     "require-dev": {
+        "php": "^7.3",
         "prestashop/php-dev-tools": "^3.4",
         "phpunit/phpunit": "^9.0"
     },
