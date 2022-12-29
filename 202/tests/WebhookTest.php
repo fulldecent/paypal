@@ -65,4 +65,40 @@ class WebhookTest extends AbstractTest
 
         $this->assertEquals($statusMap->getAcceptedStatus(), $order->current_state);
     }
+
+    public function testCaptureDeniedEvent()
+    {
+        $event = $this->initWebhookEvent('event-capture-denied.json');
+        $statusMap = new StatusMapping();
+        $webhookHandler = new WebhookEventHandler();
+        $idOrder = $this->createOrderForWebhookEvent($event, $statusMap->getWaitValidationStatus());
+        $webhookHandler->handle($event);
+        $order = new Order($idOrder);
+
+        $this->assertEquals($statusMap->getCanceledStatus(), $order->current_state);
+    }
+
+    public function testAuthorizationVoidedEvent()
+    {
+        $event = $this->initWebhookEvent('event-authorization-voided.json');
+        $statusMap = new StatusMapping();
+        $webhookHandler = new WebhookEventHandler();
+        $idOrder = $this->createOrderForWebhookEvent($event, $statusMap->getWaitValidationStatus());
+        $webhookHandler->handle($event);
+        $order = new Order($idOrder);
+
+        $this->assertEquals($statusMap->getCanceledStatus(), $order->current_state);
+    }
+
+    public function testCaptureReversedEvent()
+    {
+        $event = $this->initWebhookEvent('event-capture-reversed.json');
+        $statusMap = new StatusMapping();
+        $webhookHandler = new WebhookEventHandler();
+        $idOrder = $this->createOrderForWebhookEvent($event, $statusMap->getWaitValidationStatus());
+        $webhookHandler->handle($event);
+        $order = new Order($idOrder);
+
+        $this->assertEquals($statusMap->getRefundStatus(), $order->current_state);
+    }
 }
