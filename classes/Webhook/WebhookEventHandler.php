@@ -170,10 +170,10 @@ class WebhookEventHandler
             $paypalWebhook->save();
         } catch (Throwable $e) {
             $paypalWebhook->data = '';
-            $paypalOrder->save();
+            $paypalWebhook->save();
         } catch (Exception $e) {
             $paypalWebhook->data = '';
-            $paypalOrder->save();
+            $paypalWebhook->save();
         }
 
         if ($psOrderStatus == $this->getStatusMapping()->getAcceptedStatus()) {
