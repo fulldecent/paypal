@@ -127,7 +127,7 @@ You need a docker container to launch phpstan:
 You need a docker container to launch phpunit
 
 ```
-docker run -tid --rm -v $PWD:/var/www/html/modules/paypal --name temp-paypal-unittest-ps 202ecommerce/prestashop:1.7.8.3
+docker run -tid --rm -v $PWD:/var/www/html/modules/paypal --name temp-paypal-unittest-ps 202ecommerce/prestashop:1.7.8.7
 docker exec -t temp-paypal-unittest-ps sh /var/www/html/modules/paypal/202/docker/run_for_unittest.sh
 ```
 
