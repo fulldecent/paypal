@@ -101,4 +101,16 @@ class WebhookTest extends AbstractTest
 
         $this->assertEquals($statusMap->getRefundStatus(), $order->current_state);
     }
+
+    public function testCompletedEventWhenCurrentStatePsOutOfStock()
+    {
+        $event = $this->initWebhookEvent('event-completed-for-ps-out-of-stock.json');
+        $statusMap = new StatusMapping();
+        $webhookHandler = new WebhookEventHandler();
+        $idOrder = $this->createOrderForWebhookEvent($event, $statusMap->getPsOutOfStock());
+        $webhookHandler->handle($event);
+        $order = new Order($idOrder);
+
+        $this->assertEquals($statusMap->getAcceptedStatus(), $order->current_state);
+    }
 }
