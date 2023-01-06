@@ -1,0 +1,20 @@
+{
+  "id": "test-webhook-event-id-refunded-3",
+  "resource_type": "capture",
+  "event_type": "PAYMENT.CAPTURE.REFUNDED",
+  "resource": {
+  "amount": {
+    "value": "10.80",
+      "currency_code": "EUR"
+  },
+  "supplementary_data": {
+    "related_ids": {
+      "order_id": "test-payment-id-3"
+    }
+  },
+    "id": "test-transaction-id-3",
+    "status": "COMPLETED"
+},
+  "event_version": "1.0",
+  "resource_version": "2.0"
+}
