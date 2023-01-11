@@ -28,7 +28,7 @@ abstract class AbstractTest extends TestCase
             'currency' => $event->getResource()->amount->currency_code,
             'payment_status' => $event->getResource()->status,
             'payment_method' => 'paypal',
-            'id_payment' => $event->getResource()->supplementary_data->related_ids->order_id,
+            'id_payment' => empty($event->getResource()->supplementary_data->related_ids->order_id) ? '' : $event->getResource()->supplementary_data->related_ids->order_id,
             'payment_tool' => '',
             'date_transaction' => (new DateTime())->format('Y-m-d H:i:s'),
             'transaction_id' => $event->getResource()->id,
