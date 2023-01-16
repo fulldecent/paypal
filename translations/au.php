@@ -23,33 +23,6 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  */
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
-
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalPPBTlib\Install\ModuleInstaller;
-
-/**
- * @param $module PayPal
- *
- * @return bool
- */
-function upgrade_module_5_0_0($module)
-{
-    $installer = new ModuleInstaller($module);
-    $installer->registerHooks();
-    $installer->installAdminControllers();
-    $module->renameTabParent();
-    $method = AbstractMethodPaypal::load('EC');
-    $method->checkCredentials();
-    $tabConfiguration = Tab::getInstanceFromClassName('AdminPaypalConfiguration');
-
-    if (Validate::isLoadedObject($tabConfiguration) == false) {
-        return false;
-    }
-
-    $tabConfiguration->active = false;
-
-    return $tabConfiguration->save();
-}
+global $_MODULE;
+$_MODULE = [];
+$_MODULE['<{paypal}prestashop>paypal_a5798511a026181ecf457aa003eebbbc'] = 'Pay in 4';

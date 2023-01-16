@@ -1,24 +1,24 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2023 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2023 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
@@ -31,6 +31,7 @@ use Country;
 use Exception;
 use PaypalAddons\classes\Constants\TrackingParameters as Map;
 use PrestaShopLogger;
+use Throwable;
 
 class TrackingParameters
 {
@@ -96,6 +97,10 @@ class TrackingParameters
     {
         try {
             return Configuration::updateValue(Map::CARRIER_MAP, json_encode($this->carrierMap));
+        } catch (Throwable $e) {
+            PrestaShopLogger::addLog('[paypal][TrackingParameters::updateCarrierMap()] Error: ' . $e->getMessage());
+
+            return false;
         } catch (Exception $e) {
             PrestaShopLogger::addLog('[paypal][TrackingParameters::updateCarrierMap()] Error: ' . $e->getMessage());
 
@@ -147,7 +152,11 @@ class TrackingParameters
     {
         try {
             $this->defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
+            $this->defaultCountry = new Country();
+
+            return false;
+        } catch (Exception $e) {
             $this->defaultCountry = new Country();
 
             return false;
@@ -159,8 +168,10 @@ class TrackingParameters
     protected function initPaypalCarrierList()
     {
         try {
-            $this->paypalCarriers = json_decode(file_get_contents(_PS_MODULE_DIR_ . 'paypal/paypal-carriers.json'), true);
-        } catch (\Throwable $e) {
+            $this->paypalCarriers = json_decode(\Tools::file_get_contents(_PS_MODULE_DIR_ . 'paypal/paypal-carriers.json'), true);
+        } catch (Throwable $e) {
+            return false;
+        } catch (Exception $e) {
             return false;
         }
 
@@ -171,6 +182,10 @@ class TrackingParameters
     {
         try {
             $carrierMap = json_decode(Configuration::get(Map::CARRIER_MAP), true);
+        } catch (Throwable $e) {
+            $this->carrierMap = [];
+
+            return false;
         } catch (Exception $e) {
             $this->carrierMap = [];
 

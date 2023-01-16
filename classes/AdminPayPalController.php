@@ -1,24 +1,24 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2023 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2023 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
@@ -407,9 +407,9 @@ class AdminPayPalController extends \ModuleAdminController
             'sandbox_mode' => \Configuration::get('PAYPAL_SANDBOX') ? 0 : 1,
         ];
         $this->page_header_toolbar_btn['switch_sandbox'] = [
-            'desc' => $this->l('Sandbox mode', 'AdminPayPalController'),
+            'desc' => $this->module->l('Sandbox mode', 'AdminPayPalController'),
             'icon' => 'process-icon-toggle-' . (\Configuration::get('PAYPAL_SANDBOX') ? 'on' : 'off'),
-            'help' => $this->l('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', 'AdminPayPalController'),
+            'help' => $this->module->l('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', 'AdminPayPalController'),
             'href' => self::$currentIndex . '?' . http_build_query($query),
         ];
 
@@ -449,7 +449,7 @@ class AdminPayPalController extends \ModuleAdminController
     {
         $return = [
             'state' => true,
-            'message' => $this->l('PayPal webhooks are enabled with success.', get_class($this)),
+            'message' => $this->module->l('PayPal webhooks are enabled with success.', 'AdminPayPalController'),
         ];
 
         $webhookAvailable = $this->getWebhookAvalability()->check();
@@ -463,7 +463,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         if ($return['state'] && !$this->isWebhookCreated()) {
             $return['state'] = false;
-            $return['message'] = $this->l('PayPal webhooks can not be enabled. The webhook listener was not created. Webhooks are not used by the module until the moment the problem will be fixed. Please try to refresh the page and click on \'check requirements\' again.', get_class($this));
+            $return['message'] = $this->module->l('PayPal webhooks can not be enabled. The webhook listener was not created. Webhooks are not used by the module until the moment the problem will be fixed. Please try to refresh the page and click on \'check requirements\' again.', 'AdminPayPalController');
         }
 
         \Configuration::updateValue(WebHookConf::AVAILABLE, (int) $return['state']);

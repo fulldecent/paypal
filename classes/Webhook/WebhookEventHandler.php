@@ -1,24 +1,24 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2023 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2023 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
@@ -45,6 +45,7 @@ use PaypalOrder;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalWebhook;
 use Shop;
+use Throwable;
 use Tools;
 use Validate;
 
@@ -128,7 +129,7 @@ class WebhookEventHandler
             }
 
             if ($event->getEventType() == WebHookType::CAPTURE_COMPLETED) {
-                if ($order->current_state != $this->getStatusMapping()->getWaitValidationStatus()) {
+                if (false === in_array($order->current_state, [$this->getStatusMapping()->getWaitValidationStatus(), $this->getStatusMapping()->getPsOutOfStock()])) {
                     continue;
                 }
             }
@@ -167,7 +168,10 @@ class WebhookEventHandler
         // Trying to save a webhook event without field 'data' if there is an error
         try {
             $paypalWebhook->save();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
+            $paypalWebhook->data = '';
+            $paypalOrder->save();
+        } catch (Exception $e) {
             $paypalWebhook->data = '';
             $paypalOrder->save();
         }
@@ -188,6 +192,8 @@ class WebhookEventHandler
 
         try {
             return (bool) Db::getInstance()->getValue($query);
+        } catch (Throwable $e) {
+            return false;
         } catch (Exception $e) {
             return false;
         }
@@ -234,11 +240,7 @@ class WebhookEventHandler
      */
     protected function isCaptureAuthorization(WebhookEvent $event)
     {
-        try {
-            return (bool) $this->getAuthorizationId($event);
-        } catch (Exception $e) {
-            return false;
-        }
+        return (bool) $this->getAuthorizationId($event);
     }
 
     /**
@@ -250,6 +252,8 @@ class WebhookEventHandler
     {
         try {
             return $event->getResource()->supplementary_data->related_ids->authorization_id;
+        } catch (Throwable $e) {
+            return '';
         } catch (Exception $e) {
             return '';
         }
@@ -264,6 +268,8 @@ class WebhookEventHandler
     {
         try {
             return (float) $event->getResource()->amount->value;
+        } catch (Throwable $e) {
+            return 0;
         } catch (Exception $e) {
             return 0;
         }
@@ -294,13 +300,11 @@ class WebhookEventHandler
 
         $order = array_shift($orders);
 
-        try {
-            $totalPaid = $webhookEvent->resource->amount->value;
-        } catch (Exception $e) {
+        if (empty($webhookEvent->resource->amount->value)) {
             return;
         }
 
-        $this->getActualizeTotalPaid()->actualize($order, $totalPaid);
+        $this->getActualizeTotalPaid()->actualize($order, $webhookEvent->resource->amount->value);
     }
 
     /**

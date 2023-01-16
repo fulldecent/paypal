@@ -1,24 +1,24 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2023 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2023 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
@@ -33,6 +33,7 @@ use PaypalAddons\classes\API\Response\Error as PaypalError;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\Webhook\WebhookId;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use Throwable;
 
 class ValidateWebhookEventRequest extends RequestAbstract
 {
@@ -93,7 +94,36 @@ class ValidateWebhookEventRequest extends RequestAbstract
                 $this->method->isSandbox()
             );
             ProcessLoggerHandler::closeLogger();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
+            $message = implode(
+                '; ',
+                [
+                    'Message: ' . $e->getMessage(),
+                    'File: ' . $e->getFile(),
+                    'Line: ' . $e->getLine(),
+                    'Correlation-Id: ' . (isset($this->headers['CORRELATION-ID']) ? $this->headers['CORRELATION-ID'] : ''),
+                ]
+            );
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError(
+                '[ValidateWebhookEventRequest::execut()]: ' . $message,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $this->method->isSandbox()
+            );
+            ProcessLoggerHandler::closeLogger();
+            $error = new PaypalError();
+            $error
+                ->setMessage($message)
+                ->setErrorCode($e->getCode());
+
+            $response
+                ->setSuccess(false)
+                ->setError($error);
+        } catch (Exception $e) {
             $message = implode(
                 '; ',
                 [
@@ -136,6 +166,8 @@ class ValidateWebhookEventRequest extends RequestAbstract
     {
         try {
             return (new WebhookId($this->method))->get();
+        } catch (Throwable $e) {
+            return '';
         } catch (Exception $e) {
             return '';
         }
