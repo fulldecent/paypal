@@ -1,4 +1,4 @@
-{*
+{**
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -33,7 +33,7 @@
 {if isset($methodCollection)}
     {foreach from=$methodCollection item=method}
         <div>
-          <div id="paypal-apm-{$method|escape:'htmlall':'utf-8'}"></div>
+          <div id="paypal-apm-{$method|escape:'htmlall':'UTF-8'}"></div>
         </div>
     {/foreach}
 {/if}
