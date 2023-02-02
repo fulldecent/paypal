@@ -131,6 +131,6 @@ class BnplButton
 
     protected function getPartnerId()
     {
-        return 'PRESTASHOP_Cart_SPB';
+        return 'PRESTASHOP_Cart_BNPLforPS16';
     }
 }
