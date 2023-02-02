@@ -1003,6 +1003,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         $paymentOption = new PaymentOption();
         $paymentOption->setCallToActionText($this->l('PayPal'));
+        $additionalInformation = '';
+
         $paymentOption->setAction(
             sprintf(
                 'javascript:alert(\'%s\');',
@@ -1016,7 +1018,22 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
             }
         }
-        $additionalInformation = $this->getShortcutPaymentStep()->render();
+
+        if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
+            $additionalInformation .= $this->getShortcutPaymentStep()->render();
+        } else {
+            $paymentOption->setAction(
+                $this->context->link->getModuleLink(
+                    $this->name,
+                    'ecInit',
+                    [
+                        'credit_card' => '0',
+                        'methodType' => 'PPP',
+                    ],
+                    true
+                )
+            );
+        }
 
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
             $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
