@@ -989,7 +989,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         );
         $paymentOption->setModuleName('paypal_acdc');
         $paymentOption->setAdditionalInformation($this->initAcdcPaymentMethod()->render());
-        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
         return $paymentOption;
     }
@@ -1024,7 +1023,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         $paymentOption->setModuleName($this->name);
         $paymentOption->setAdditionalInformation($additionalInformation);
-        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
         return $paymentOption;
     }
@@ -1050,7 +1048,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
         $paymentOption = new PaymentOption();
         $action_text = $this->l('Pay with Paypal');
-        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
         $paymentOption->setModuleName($this->name);
         if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
             $action_text .= ' | ' . $this->l('It\'s simple, fast and secure');
@@ -1062,6 +1059,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
             $additionalInformation .= $this->getShortcutPaymentStep()->render();
         } else {
+            $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
             $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecInit', ['credit_card' => '0'], true));
         }
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
@@ -2958,7 +2956,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         );
         $paymentOption->setModuleName('paypal_bnpl');
         $paymentOption->setAdditionalInformation($this->renderBnpl(['sourcePage' => ConfigurationMap::PAGE_TYPE_PAYMENT_STEP]));
-        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
         return $paymentOption;
     }
