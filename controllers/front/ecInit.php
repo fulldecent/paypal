@@ -40,7 +40,7 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         $this->values['getToken'] = Tools::getvalue('getToken');
         $this->values['credit_card'] = Tools::getvalue('credit_card');
         $this->values['short_cut'] = 0;
-        $this->setMethod(AbstractMethodPaypal::load('EC'));
+        $this->setMethod(AbstractMethodPaypal::load($this->getMethodType(Tools::getAllValues())));
     }
 
     /**
@@ -50,14 +50,7 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
     {
         try {
             $this->method->setParameters($this->values);
-            $url = $this->method->init()->getApproveLink();
-
-            if ($this->values['getToken']) {
-                $this->jsonValues = ['success' => true, 'token' => $this->method->getPaymentId()];
-            } else {
-                //$this->redirectUrl = $url.'&useraction=commit';
-                $this->redirectUrl = $url;
-            }
+            $this->redirectUrl = $this->method->init()->getApproveLink();
         } catch (PaypalAddons\classes\PaypalException $e) {
             $this->_errors['error_code'] = $e->getCode();
             $this->_errors['error_msg'] = $e->getMessage();
@@ -79,5 +72,14 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
     public function setMethod($method)
     {
         $this->method = $method;
+    }
+
+    protected function getMethodType($requestData)
+    {
+        if (empty($requestData['methodType'])) {
+            return 'EC';
+        } else {
+            return $requestData['methodType'];
+        }
     }
 }
