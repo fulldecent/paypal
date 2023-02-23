@@ -34,13 +34,13 @@ var BNPL = function(conf) {
     this.messages = conf['messages'] === undefined ? [] : conf['messages'];
 }
 
-BNPL.prototype.render = function (container, order) {
+BNPL.prototype.render = function (container, order, onIsNotEligible) {
 
     if (this.paypal === null) {
         return;
     }
 
-    this.paypal.Buttons({
+    var paypalButton = this.paypal.Buttons({
 
         fundingSource: this.paypal.FUNDING.PAYLATER,
 
@@ -54,7 +54,17 @@ BNPL.prototype.render = function (container, order) {
                     this.validateOrder(detail);
                 }.bind(this))
         }.bind(this)
-    }).render(container)
+    });
+
+    if (paypalButton.isEligible() == false) {
+        if (typeof onIsNotEligible == 'function') {
+            onIsNotEligible();
+        }
+
+        return;
+    }
+
+    paypalButton.render(container);
 }
 
 BNPL.prototype.validateOrder = function(detail) {

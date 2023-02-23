@@ -44,6 +44,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/classes/InstallmentBanner/Banner.php';
 require_once _PS_MODULE_DIR_ . 'paypal/express_checkout/ExpressCheckout.php';
 require_once _PS_MODULE_DIR_ . 'paypal/classes/Services/OrderPrice.php';
 require_once _PS_MODULE_DIR_ . 'paypal/classes/InstallmentBanner/BNPL/BnplButton.php';
+require_once _PS_MODULE_DIR_ . 'paypal/classes/InstallmentBanner/BNPL/BnplAvailabilityManager.php';
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -1091,6 +1092,7 @@ class PayPal extends PaymentModule
         $use_mobile = $this->useMobile();
 
         $method = (int) Configuration::get('PAYPAL_PAYMENT_METHOD');
+        $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
 
         if (isset($this->context->cookie->express_checkout)) {
             $this->redirectToConfirmation();
@@ -1136,7 +1138,7 @@ class PayPal extends PaymentModule
             $return_braintree = '';
         }
 
-        if ((int) Configuration::get(ConfigurationMap::ENABLE_BNPL) && ConfigurationMap::getClientId()) {
+        if ((int) Configuration::get(ConfigurationMap::ENABLE_BNPL) && ConfigurationMap::getClientId() && $bnplAvailabilityManager->isEligibleContext() && $bnplAvailabilityManager->isEligibleCountryConfiguration()) {
             $return_braintree .= $this->renderBnplPaymentOption($params);
         }
 
@@ -2936,5 +2938,10 @@ class PayPal extends PaymentModule
         $this->context->smarty->assign('bnpl', (new BnplButton())->render());
         $this->context->smarty->assign('baseURI', $this->context->shop->getBaseURI());
         return $this->fetchTemplate('bnpl-payment-option.tpl');
+    }
+
+    protected function getBnplAvailabilityManager()
+    {
+        return new BnplAvailabilityManager();
     }
 }

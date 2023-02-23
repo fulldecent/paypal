@@ -132,4 +132,39 @@ class ConfigurationMap
             ['en' => 'eur'],
         ];
     }
+
+    public static function getBnplLanguageCurrencyMap()
+    {
+        return [
+            ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
+            ['fr' => 'aud'],
+            ['de' => 'eur'],
+            ['de' => 'gbp'],
+            ['de' => 'aud'],
+            ['de' => 'usd'],
+            ['gb' => 'gbp'],
+            ['gb' => 'usd'],
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
+            ['it' => 'eur'],
+            ['it' => 'gbp'],
+            ['it' => 'usd'],
+            ['it' => 'aud'],
+            ['es' => 'eur'],
+            ['es' => 'gbp'],
+            ['es' => 'usd'],
+            ['es' => 'aud'],
+        ];
+    }
+
+    public static function getBnplAvailableCountries()
+    {
+        return ['fr', 'de', 'gb', 'us', 'au', 'it', 'es'];
+    }
 }

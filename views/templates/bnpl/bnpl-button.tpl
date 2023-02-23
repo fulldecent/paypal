@@ -42,7 +42,13 @@
                 (new BNPL({
                     paypal: window[sdkNamespace],
                     validationController: '{$validationController}'
-                })).render('#paypal-bnpl-container', order);
+                })).render(
+                    '#paypal-bnpl-container',
+                    order,
+                    function() {
+                        document.querySelector('.paypal-button-container').remove();
+                    }
+                );
             }
 
             waitPaypalSDKIsLoaded();
