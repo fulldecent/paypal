@@ -408,3 +408,4 @@ $_MODULE['<{paypal}prestashop>installmentsettings_12cd357e7240fc5d8bd9884dec5c3a
 $_MODULE['<{paypal}prestashop>installmentsettings_2884ea0466e67dd75144a184a3df5054'] = 'REST Client ID Sandbox';
 $_MODULE['<{paypal}prestashop>installmentsettings_ff2be5cf3891e5b5c7e937519c6e3a22'] = 'REST Client ID';
 $_MODULE['<{paypal}prestashop>installmentsettings_b4e962d20b8b7edfe2ce508713d941c0'] = 'Mostreremo messaggi sul tuo sito per promuovere questa funzione per te. Non puoi promuovere le offerte pay later con altri contenuti, marketing o materiali.';
+$_MODULE['<{paypal}prestashop>installmentsettings_a5798511a026181ecf457aa003eebbbc'] = 'Paga in 3 rate';
