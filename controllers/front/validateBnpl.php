@@ -62,7 +62,9 @@ class PayPalValidateBnplModuleFrontController extends ModuleFrontController
         }
 
         $queryParams = [
-            'controller' => 'order-confirmation',
+            'fc' => 'module',
+            'module' => 'paypal',
+            'controller' => 'submit',
             'id_cart' => $cart->id,
             'id_module' => $this->module->id,
             'id_order' => $this->module->currentOrder,
