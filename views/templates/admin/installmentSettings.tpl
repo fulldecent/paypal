@@ -83,6 +83,30 @@
 
         <div class="paypal-form-group pp__flex-align-center pp_mb-20">
             <div class="label">
+                {if isset($PayPal_sandbox_mode) && $PayPal_sandbox_mode}
+                    {l s='REST Client ID Sandbox' mod='paypal'}
+
+                {else}
+                    {l s='REST Client ID' mod='paypal'}
+                {/if}
+            </div>
+
+            <div class="configuration">
+                <div class="bootstrap pp__flex" style="width: 50%">
+                    <input
+                            type="text"
+                            name="PAYPAL_CLIENT_ID_INSTALLMENT"
+                            {if isset($PAYPAL_CLIENT_ID_INSTALLMENT)}value="{$PAYPAL_CLIENT_ID_INSTALLMENT}"{/if}>
+                    <div>
+                        <span class="btn btn-default pp__ml-2" onclick="toggleHint(event)">?</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
+            <div class="label">
                 {l s='Enable \'Pay Later\' in your checkout' mod='paypal'}
             </div>
 
@@ -131,30 +155,6 @@
                             value="0"
                             {if isset($PAYPAL_ENABLE_INSTALLMENT) && $PAYPAL_ENABLE_INSTALLMENT == '0'}checked{/if}/>
                     <label for="PAYPAL_ENABLE_INSTALLMENT_off" class="pp__switch-label off">No</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
-            <div class="label">
-                {if isset($PayPal_sandbox_mode) && $PayPal_sandbox_mode}
-                    {l s='REST Client ID Sandbox' mod='paypal'}
-
-                {else}
-                    {l s='REST Client ID' mod='paypal'}
-                {/if}
-            </div>
-
-            <div class="configuration">
-                <div class="bootstrap pp__flex" style="width: 50%">
-                    <input
-                            type="text"
-                            name="PAYPAL_CLIENT_ID_INSTALLMENT"
-                            {if isset($PAYPAL_CLIENT_ID_INSTALLMENT)}value="{$PAYPAL_CLIENT_ID_INSTALLMENT}"{/if}>
-                    <div>
-                        <span class="btn btn-default pp__ml-2" onclick="toggleHint(event)">?</span>
-                    </div>
-
                 </div>
             </div>
         </div>
