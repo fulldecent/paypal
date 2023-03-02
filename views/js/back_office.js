@@ -506,16 +506,13 @@ var InstallmentSetting = {
         var displayingSettings = document.querySelector('[installment-page-displaying-setting-container]');
         var advancedOptions = document.querySelector('input[name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT"]');
         var colorConf = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]');
-        var clientId = document.querySelector('[name="PAYPAL_CLIENT_ID_INSTALLMENT"]');
 
         if (installmentEnabled.checked) {
             displayingSettings.closest('.paypal-form-group').classList.remove('hidden');
             advancedOptions.closest('.paypal-form-group').classList.remove('hidden');
-            clientId.closest('.paypal-form-group').classList.remove('hidden');
         } else {
             displayingSettings.closest('.paypal-form-group').classList.add('hidden');
             advancedOptions.closest('.paypal-form-group').classList.add('hidden');
-            clientId.closest('.paypal-form-group').classList.add('hidden');
         }
 
         if (advancedOptions.checked === false || installmentEnabled.checked === false) {

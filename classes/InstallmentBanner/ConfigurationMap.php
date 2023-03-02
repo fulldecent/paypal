@@ -25,6 +25,8 @@
  */
 class ConfigurationMap
 {
+    const ENABLE_BNPL = 'PAYPAL_ENABLE_BNPL';
+
     const ENABLE_INSTALLMENT = 'PAYPAL_ENABLE_INSTALLMENT';
 
     const ADVANCED_OPTIONS_INSTALLMENT = 'PAYPAL_ADVANCED_OPTIONS_INSTALLMENT';
@@ -129,5 +131,40 @@ class ConfigurationMap
             ['en' => 'aud'],
             ['en' => 'eur'],
         ];
+    }
+
+    public static function getBnplLanguageCurrencyMap()
+    {
+        return [
+            ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
+            ['fr' => 'aud'],
+            ['de' => 'eur'],
+            ['de' => 'gbp'],
+            ['de' => 'aud'],
+            ['de' => 'usd'],
+            ['gb' => 'gbp'],
+            ['gb' => 'usd'],
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
+            ['it' => 'eur'],
+            ['it' => 'gbp'],
+            ['it' => 'usd'],
+            ['it' => 'aud'],
+            ['es' => 'eur'],
+            ['es' => 'gbp'],
+            ['es' => 'usd'],
+            ['es' => 'aud'],
+        ];
+    }
+
+    public static function getBnplAvailableCountries()
+    {
+        return ['fr', 'de', 'gb', 'us', 'au', 'it', 'es'];
     }
 }

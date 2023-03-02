@@ -43,6 +43,8 @@ require_once _PS_MODULE_DIR_ . 'paypal/classes/InstallmentBanner/BannerManager.p
 require_once _PS_MODULE_DIR_ . 'paypal/classes/InstallmentBanner/Banner.php';
 require_once _PS_MODULE_DIR_ . 'paypal/express_checkout/ExpressCheckout.php';
 require_once _PS_MODULE_DIR_ . 'paypal/classes/Services/OrderPrice.php';
+require_once _PS_MODULE_DIR_ . 'paypal/classes/InstallmentBanner/BNPL/BnplButton.php';
+require_once _PS_MODULE_DIR_ . 'paypal/classes/InstallmentBanner/BNPL/BnplAvailabilityManager.php';
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -825,6 +827,7 @@ class PayPal extends PaymentModule
             'showInstallmentPopup' => $this->isShowInstallmentPopup(),
             'showInstallmentSetting' => $this->isShowInstallmentSetting(),
             'isoCountryDefault' => $isoCountryDefault,
+            ConfigurationMap::ENABLE_BNPL => Configuration::get(ConfigurationMap::ENABLE_BNPL),
         ]);
 
         // Tpl vars for Paypal installment banner. End
@@ -1089,6 +1092,7 @@ class PayPal extends PaymentModule
         $use_mobile = $this->useMobile();
 
         $method = (int) Configuration::get('PAYPAL_PAYMENT_METHOD');
+        $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
 
         if (isset($this->context->cookie->express_checkout)) {
             $this->redirectToConfirmation();
@@ -1132,6 +1136,10 @@ class PayPal extends PaymentModule
             }
         } else {
             $return_braintree = '';
+        }
+
+        if ((int) Configuration::get(ConfigurationMap::ENABLE_BNPL) && ConfigurationMap::getClientId() && $bnplAvailabilityManager->isEligibleContext() && $bnplAvailabilityManager->isEligibleCountryConfiguration()) {
+            $return_braintree .= $this->renderBnplPaymentOption($params);
         }
 
         if ($method == HSS) {
@@ -1833,7 +1841,7 @@ class PayPal extends PaymentModule
             FROM `' . _DB_PREFIX_ . 'paypal_order`
             WHERE `id_order` = ' . (int) $id_order);
 
-        return $paypal_order && in_array($paypal_order['payment_status'], ['Completed', 'approved', 'settled', 'submitted_for_settlement']) && $paypal_order['capture'] == 0;
+        return $paypal_order && in_array($paypal_order['payment_status'], ['Completed', 'approved', 'settled', 'submitted_for_settlement', 'COMPLETED']) && $paypal_order['capture'] == 0;
     }
 
     private function _needValidation($id_order)
@@ -2033,6 +2041,7 @@ class PayPal extends PaymentModule
             Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
             Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
             ConfigurationMap::setClientId(Tools::getValue(ConfigurationMap::CLIENT_ID, ''));
+            Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, Tools::getValue(ConfigurationMap::ENABLE_BNPL));
         }
 
         return $this->loadLangDefault();
@@ -2600,9 +2609,6 @@ class PayPal extends PaymentModule
             }
 
             if (count($transaction) > 0) {
-                /*var_dump($transaction);
-                die();*/
-
                 PayPalOrder::saveOrder((int) $this->currentOrder, $transaction);
             }
 
@@ -2890,5 +2896,52 @@ class PayPal extends PaymentModule
         Configuration::updateValue('PAYPAL_SHOW_INSTALLMENT_POPUP', 0, false, null, $this->context->shop->id);
 
         return true;
+    }
+
+    public function isSandbox()
+    {
+        return (int) Configuration::get('PAYPAL_SANDBOX');
+    }
+
+    public function needConvert()
+    {
+        $currency_mode = Currency::getPaymentCurrenciesSpecial($this->id);
+        $mode_id = $currency_mode['id_currency'];
+        if ($mode_id == -2) {
+            return (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        } elseif ($mode_id == -1) {
+            return false;
+        } elseif ($mode_id != $this->context->currency->id) {
+            return (int) $mode_id;
+        } else {
+            return false;
+        }
+    }
+
+    public function getPaymentCurrencyIso()
+    {
+        if ($id_currency = $this->needConvert()) {
+            $currency = new Currency((int) $id_currency);
+        } else {
+            if (Validate::isLoadedObject(Context::getContext()->currency)) {
+                $currency = Context::getContext()->currency;
+            } else {
+                $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            }
+        }
+
+        return $currency->iso_code;
+    }
+
+    protected function renderBnplPaymentOption($params)
+    {
+        $this->context->smarty->assign('bnpl', (new BnplButton())->render());
+        $this->context->smarty->assign('baseURI', $this->context->shop->getBaseURI());
+        return $this->fetchTemplate('bnpl-payment-option.tpl');
+    }
+
+    protected function getBnplAvailabilityManager()
+    {
+        return new BnplAvailabilityManager();
     }
 }
