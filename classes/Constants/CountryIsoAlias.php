@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -25,37 +25,18 @@
  *
  */
 
-namespace PayPalTest;
+namespace PaypalAddons\classes\Constants;
 
-require_once dirname(__FILE__) . '/TotTestCase.php';
-require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
-require_once _PS_MODULE_DIR_.'paypal/classes/PaypalLog.php';
-
-class PaypalLogTest extends \TotTestCase
+class CountryIsoAlias
 {
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
     /**
-     * @dataProvider getDataForGetLinkToTransaction
+     * PrestaShop and PayPal can use different ISO code for some countries
+     * This method returns map <PrestaShop iso> => <PayPal iso>
      */
-    public function testGetLinkToTransaction($idPayPalLog)
+    public static function getAliasList()
     {
-        $payPalLog = new \PaypalLog($idPayPalLog);
-        $this->assertTrue(is_string($payPalLog->getLinkToTransaction()));
-    }
-
-    public function getDataForGetLinkToTransaction()
-    {
-        $data = array(
-            array(1),
-            array(0),
-            array('string'),
-            array(00),
-            array(null),
-        );
-        return $data;
+        return [
+            'GB' => 'UK',
+        ];
     }
 }

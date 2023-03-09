@@ -68,17 +68,37 @@
     });
 
     if (typeof BNPL != "undefined") {
+        BNPL.addMarkTo(
+          document.querySelector('[data-module-name="paypal_bnpl"]').closest('.payment-option'),
+          {
+            display: "table-cell"
+          }
+        );
         BNPL.disableTillConsenting();
         BNPL.hideElementTillPaymentOptionChecked(
             '[data-module-name="paypal_bnpl"]',
             '#payment-confirmation'
         );
+        BNPL.showElementIfPaymentOptionChecked(
+          '[data-module-name="paypal_bnpl"]',
+          '[paypal-bnpl-button-container]'
+        );
     } else {
         document.addEventListener('paypal-after-init-bnpl-button', function (event) {
+            BNPL.addMarkTo(
+              document.querySelector('[data-module-name="paypal_bnpl"]').closest('.payment-option'),
+              {
+                display: "table-cell"
+              }
+            );
             BNPL.disableTillConsenting();
             BNPL.hideElementTillPaymentOptionChecked(
                 '[data-module-name="paypal_bnpl"]',
                 '#payment-confirmation'
+            );
+            BNPL.showElementIfPaymentOptionChecked(
+              '[data-module-name="paypal_bnpl"]',
+              '[paypal-bnpl-button-container]'
             );
         })
     }
