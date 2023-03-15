@@ -43,6 +43,11 @@
           }
 
           Shortcut.init();
+
+          if (typeof PAYPAL_MOVE_BUTTON_AT_END != 'undefined') {
+            Shortcut.isMoveButtonAtEnd = PAYPAL_MOVE_BUTTON_AT_END;
+          }
+
           Shortcut.initButton();
       }
 
