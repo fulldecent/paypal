@@ -969,6 +969,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         true
                     )
                 );
+
+                if (isset($optionMap['logo'])) {
+                    $paymentOption->setLogo($optionMap['logo']);
+                }
             }
 
             $paymentOptions[] = $paymentOption;
@@ -3060,11 +3064,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $map[] = [
                 'method' => APM::GIROPAY,
                 'label' => $this->l('giropay'),
+                'logo' => Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/giropay.svg'),
             ];
 
             $map[] = [
                 'method' => APM::SOFORT,
                 'label' => $this->l('Sofort'),
+                'logo' => Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/sofort.svg'),
             ];
         }
 
