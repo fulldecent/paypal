@@ -25,10 +25,6 @@
  *
  */
 
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
-
 return [
     [
         'name' => 'paypal',
@@ -43,7 +39,6 @@ return [
             PaypalPPBTlib\Extensions\Diagnostic\Stubs\Concrete\DatabaseStub::class => [
                 'optimize' => false,
                 'integrity' => false,
-                'fix' => true,
             ],
             PaypalPPBTlib\Extensions\Diagnostic\Stubs\Concrete\ConfigurationStub::class => [],
             PaypalPPBTlib\Extensions\Diagnostic\Stubs\Concrete\OrderStateStub::class => [
