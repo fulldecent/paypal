@@ -68,6 +68,7 @@ use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\AbstractModuleExtension;
+use PaypalPPBTlib\Extensions\Diagnostic\DiagnosticExtension;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalPPBTlib\Install\ModuleInstaller;
@@ -94,6 +95,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
     const PAYPAL_PARTNER_ID_SANDBOX = 'J7Q7R6V9MQZUG';
 
     const NEED_INSTALL_MODELS = 'PAYPAL_NEED_INSTALL_MODELS';
+
+    const NEED_INSTALL_EXTENSIONS = 'PAYPAL_NEED_INSTALL_EXTENSIONS';
 
     public static $dev = true;
     public $express_checkout;
@@ -210,6 +213,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
      */
     public $extensions = [
         ProcessLoggerExtension::class,
+        DiagnosticExtension::class,
     ];
 
     /**
@@ -459,6 +463,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         $this->moduleConfigs[ShortcutConfiguration::CART_PAGE_HOOK] = ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT;
+
+        foreach ($this->extensions as $extensionName) {
+            if (false === class_exists($extensionName)) {
+                continue;
+            }
+
+            $extension = new $extensionName($this);
+            $extension->initExtension();
+            $this->hooks = array_merge($this->hooks, $extension->hooks);
+        }
     }
 
     public function install()
@@ -475,7 +489,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (($isPhpVersionCompliant && parent::install() && $installer->install()) == false) {
             return false;
         }
-
         // Registration order status
         if (!$this->installOrderState()) {
             return false;
@@ -3191,6 +3204,23 @@ class PayPal extends \PaymentModule implements WidgetInterface
             );
             ProcessLoggerHandler::closeLogger();
         }
+    }
+
+    public function hookActionPaypalGetConflicts()
+    {
+        $conflicts = [];
+
+        if (Module::isEnabled('pricerounding')) {
+            $conflicts[] = $this->l('Using the module \'pricerounding\' can lead to an incorrect work.');
+        }
+
+        if (\Configuration::get('PS_ROUND_TYPE') != \Order::ROUND_ITEM
+            || \Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP
+            || \Configuration::get('PS_PRICE_DISPLAY_PRECISION') != 2) {
+            $conflicts[] = $this->l('Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode.');
+        }
+
+        return $conflicts;
     }
 
     protected function isMobile()
