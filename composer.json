@@ -27,6 +27,11 @@
             "paypal.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "PaypalTests\\": "202/tests/"
+        }
+    },
     "scripts": {
         "pre-autoload-dump": [
             "if [ ${PPBTCLASSLIB_DEV_PATH} ]; then php ${PPBTCLASSLIB_DEV_PATH}/PPBTlib/refresh.php .; fi"
@@ -46,3 +51,4 @@
     "type": "prestashop-module",
     "author": "PrestaShop"
 }
+
