@@ -1864,6 +1864,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookActionBeforeCartUpdateQty($params)
     {
+        $this->resetCookiePaymentInfo();
+    }
+
+    public function resetCookiePaymentInfo()
+    {
         if (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_ecs_payerid)) {
             //unset cookie of payment init if it's no more same cart
             Context::getContext()->cookie->__unset('paypal_ecs');
@@ -3176,6 +3181,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         /** @var $paypalOrder PaypalOrder */
         $paypalOrder = PaypalOrder::loadByOrderId($params['order']->id);
+
+        if (false === Validate::isLoadedObject($paypalOrder)) {
+            return;
+        }
+
         $method = AbstractMethodPaypal::load($this->paypal_method);
         $response = $method->addOrderTrackingInfo($paypalOrder);
 
