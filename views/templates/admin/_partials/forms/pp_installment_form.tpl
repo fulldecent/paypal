@@ -23,60 +23,76 @@
  *  @copyright PayPal
  *
  *}
-{extends file="./form.tpl"}
 
-{block name='form_content'}
+{assign var="fieldsInstallmentBNPL" value=['PAYPAL_BNPL_PRODUCT_PAGE', 'PAYPAL_BNPL_PAYMENT_STEP_PAGE', 'PAYPAL_BNPL_CART_PAGE', 'PAYPAL_BNPL_CHECKOUT_PAGE']}
+{assign var="fieldsInstallment" value=['PAYPAL_INSTALLMENT_PRODUCT_PAGE', 'PAYPAL_INSTALLMENT_HOME_PAGE', 'PAYPAL_INSTALLMENT_CATEGORY_PAGE', 'PAYPAL_INSTALLMENT_CART_PAGE', 'PAYPAL_INSTALLMENT_CHECKOUT_PAGE']}
+{assign var="dynamicField" value=$form.fields.PAYPAL_ENABLE_BNPL|default:false}
+{assign var="dynamicFieldBanner" value=$form.fields.PAYPAL_ENABLE_INSTALLMENT|default:false}
 
-  {assign var="fieldsInstallmentBNPL" value=['PAYPAL_BNPL_PRODUCT_PAGE', 'PAYPAL_BNPL_PAYMENT_STEP_PAGE', 'PAYPAL_BNPL_CART_PAGE', 'PAYPAL_BNPL_CHECKOUT_PAGE']}
-  {assign var="fieldsInstallment" value=['PAYPAL_INSTALLMENT_PRODUCT_PAGE', 'PAYPAL_INSTALLMENT_HOME_PAGE', 'PAYPAL_INSTALLMENT_CATEGORY_PAGE', 'PAYPAL_INSTALLMENT_CART_PAGE', 'PAYPAL_INSTALLMENT_CHECKOUT_PAGE']}
-  {assign var="dynamicField" value=$form.fields.PAYPAL_ENABLE_BNPL|default:false}
-  {assign var="dynamicFieldBanner" value=$form.fields.PAYPAL_ENABLE_INSTALLMENT|default:false}
-  {if $dynamicField}
-    {include file="../form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_BNPL dynamicField=$dynamicField}
-  {/if}
+<form id="{$form.id_form}" class="mt-4 {[
+  'form-modal' => $isModal
+]|classnames}" data-form-configuration {block name='form_attributes'}{/block}
+onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
 
-  <div class="form-group row {[
-    'd-none' => $dynamicField && !$dynamicField.value
-  ]|classnames}" {if $dynamicField.name|default:false}group-name="{$dynamicField.name}"{/if}>
-    <label class="form-control-label form-control-label-check col-2" for="PAYPAL_BNPL">{l s='Active on' mod='paypal'}</label>
-    <div class="col-10">
-      <div class="row no-gutters">
-        {foreach from=$form.fields item=field}
-          {if $field.name|in_array:$fieldsInstallmentBNPL}
-            {include file="../form-fields.tpl" field=$field}
-          {/if}
-        {/foreach}
-      </div>
+{if $dynamicField}
+  {include file="../form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_BNPL dynamicField=$dynamicField}
+{/if}
+
+<div class="form-group row {[
+  'd-none' => $dynamicField && !$dynamicField.value
+]|classnames}" {if $dynamicField.name|default:false}group-name="{$dynamicField.name}"{/if}>
+  <label class="form-control-label form-control-label-check col-2" for="PAYPAL_BNPL">{l s='Active on' mod='paypal'}</label>
+  <div class="col-10">
+    <div class="row no-gutters">
+      {foreach from=$form.fields item=field}
+        {if $field.name|in_array:$fieldsInstallmentBNPL}
+          {include file="../form-fields.tpl" field=$field}
+        {/if}
+      {/foreach}
     </div>
   </div>
+</div>
 
-  {include file="../form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_INSTALLMENT dynamicField=$dynamicFieldBanner}
+{include file="../form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_INSTALLMENT dynamicField=$dynamicFieldBanner}
+
+{include file="../form-fields.tpl" field=$form.fields.PAYPAL_INSTALLMENT_MESSAGING_CONFIG dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}
+
+</form>
+<div id="messaging-installments">
+  <div class="{[
+    'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
+    ]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="{$dynamicFieldBanner.name}"{/if}>
+        {if isset($form.fields.widget_code)}
+            {include file="../form-fields.tpl" field=$form.fields.widget_code dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}
+        {/if}
+  </div>
 
   <div class="form-group row {[
     'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
   ]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="{$dynamicFieldBanner.name}"{/if}>
-    <label class="form-control-label form-control-label-check col-2" for="PAYPAL_INSTALLMENT">{l s='Active on' mod='paypal'}</label>
-    <div class="col-10 pr-0">
+
+    <div class="col-1"></div>
+    <div class="col-11 pr-0">
       <div class="row no-gutters">
-        {foreach from=$form.fields item=field}
-          {if $field.name|in_array:$fieldsInstallment}
-            {include file="../form-fields.tpl" field=$field}
-          {/if}
-        {/foreach}
+
+          <div class="form-group row {[
+            'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
+          ]|classnames}" group-name="PAYPAL_ENABLE_INSTALLMENT">
+            <div id="messaging-configurator"></div>
+          </div>
       </div>
     </div>
   </div>
+</div>
 
-    <div class="{[
-    'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
-    ]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="{$dynamicFieldBanner.name}"{/if}>
-        {include file="../form-fields.tpl" field=$form.fields.PAYPAL_ADVANCED_OPTIONS_INSTALLMENT dynamicField=$form.fields.PAYPAL_ADVANCED_OPTIONS_INSTALLMENT}
-
-        {include file="../form-fields.tpl" field=$form.fields.PAYPAL_INSTALLMENT_COLOR withColor=true dynamicField=$form.fields.PAYPAL_ADVANCED_OPTIONS_INSTALLMENT}
-
-        {if isset($form.fields.widget_code)}
-            {include file="../form-fields.tpl" field=$form.fields.widget_code dynamicField=$form.fields.PAYPAL_ADVANCED_OPTIONS_INSTALLMENT}
-        {/if}
-    </div>
-
-{/block}
+<div class="form-group mb-0 d-flex justify-content-between pt-3 mt-auto">
+  {block name='form_footer_buttons'}
+    {if $isModal}
+      <div class="d-flex justify-content-between flex-fill mr-3">
+        <button data-btn-action="prev" class="btn btn-secondary">{l s='Back' mod='paypal'}</button>
+        <button data-btn-action="next" class="btn btn-outline-primary">{l s='Skip this step' mod='paypal'}</button>
+      </div>
+    {/if}
+    <button data-form-installment class="btn btn-secondary ml-auto" name={$form.submit.name}>{$form.submit.title}</button>
+  {/block}
+</div>

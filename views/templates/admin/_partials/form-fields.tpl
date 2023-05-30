@@ -75,6 +75,8 @@
             <span class="input-group-text" id="basic-addon2"><i class="icon-copy"></i></span>
           </div>
         </div>
+      {elseif $field.type === 'hidden'}
+        <input type="hidden" id="{$field.name}" name="{$field.name}" value="{$field.value}" />
       {elseif $field.type === 'select'}
         {* Type select *}
         <select

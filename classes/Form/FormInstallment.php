@@ -130,71 +130,12 @@ class FormInstallment implements FormInterface
             ],
             'value' => (int) Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
         ];
-        $fields[ConfigurationMap::PRODUCT_PAGE] = [
-            'type' => 'checkbox',
-            'value' => 1,
-            'checked' => (bool) Configuration::get(ConfigurationMap::PRODUCT_PAGE),
-            'name' => ConfigurationMap::PRODUCT_PAGE,
-            'label' => $this->module->l('Product Page', $this->className),
-            'image' => _MODULE_DIR_ . $this->module->name . '/views/img/product_page_button.png',
-        ];
-        $fields[ConfigurationMap::HOME_PAGE] = [
-            'type' => 'checkbox',
-            'value' => 1,
-            'checked' => (bool) Configuration::get(ConfigurationMap::HOME_PAGE),
-            'name' => ConfigurationMap::HOME_PAGE,
-            'label' => $this->module->l('Home Page', $this->className),
-            'image' => _MODULE_DIR_ . $this->module->name . '/views/img/location.png',
-        ];
-        $fields[ConfigurationMap::CATEGORY_PAGE] = [
-            'type' => 'checkbox',
-            'value' => 1,
-            'checked' => (bool) Configuration::get(ConfigurationMap::CATEGORY_PAGE),
-            'name' => ConfigurationMap::CATEGORY_PAGE,
-            'label' => $this->module->l('Category Page', $this->className),
-            'image' => _MODULE_DIR_ . $this->module->name . '/views/img/location.png',
-        ];
-        $fields[ConfigurationMap::CART_PAGE] = [
-            'type' => 'checkbox',
-            'value' => 1,
-            'checked' => (bool) Configuration::get(ConfigurationMap::CART_PAGE),
-            'name' => ConfigurationMap::CART_PAGE,
-            'label' => $this->module->l('Cart', $this->className),
-            'image' => _MODULE_DIR_ . $this->module->name . '/views/img/cart_page_button.png',
-        ];
-        $fields[ConfigurationMap::CHECKOUT_PAGE] = [
-            'type' => 'checkbox',
-            'value' => 1,
-            'checked' => (bool) Configuration::get(ConfigurationMap::CHECKOUT_PAGE),
-            'name' => ConfigurationMap::CHECKOUT_PAGE,
-            'label' => $this->module->l('Checkout', $this->className),
-            'image' => _MODULE_DIR_ . $this->module->name . '/views/img/location.png',
-        ];
-        $fields[ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT] = [
-            'type' => 'switch',
-            'label' => $this->module->l('Advanced settings', $this->className),
-            'name' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT,
-            'values' => [
-                [
-                    'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_on',
-                    'value' => 1,
-                    'label' => $this->module->l('Enabled', $this->className),
-                ],
-                [
-                    'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_off',
-                    'value' => 0,
-                    'label' => $this->module->l('Disabled', $this->className),
-                ],
-            ],
-            'value' => Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT),
-        ];
 
-        $fields[ConfigurationMap::COLOR] = [
-            'type' => 'select',
-            'options' => $this->getColorListOptions(),
-            'name' => ConfigurationMap::COLOR,
-            'label' => $this->module->l('Messaging color', $this->className),
-            'value' => Configuration::get(ConfigurationMap::COLOR),
+        $fields[ConfigurationMap::MESSENGING_CONFIG] = [
+            'type' => 'hidden',
+            'label' => '',
+            'value' => Configuration::get(ConfigurationMap::MESSENGING_CONFIG),
+            'name' => ConfigurationMap::MESSENGING_CONFIG,
         ];
 
         $fields['widget_code'] = [
@@ -215,7 +156,7 @@ class FormInstallment implements FormInterface
                 'name' => 'installmentForm',
             ],
             'id_form' => 'pp_installment_form',
-            'help' => $this->getHelpInfo(),
+            'help' => '',
         ];
 
         return $description;
@@ -241,32 +182,8 @@ class FormInstallment implements FormInterface
             (isset($data[ConfigurationMap::ENABLE_INSTALLMENT]) ? (int) $data[ConfigurationMap::ENABLE_INSTALLMENT] : 0)
         );
         $return &= Configuration::updateValue(
-            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT,
-            (isset($data[ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT]) ? (int) $data[ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT] : 0)
-        );
-        $return &= Configuration::updateValue(
-            ConfigurationMap::PRODUCT_PAGE,
-            (isset($data[ConfigurationMap::PRODUCT_PAGE]) ? (int) $data[ConfigurationMap::PRODUCT_PAGE] : 0)
-        );
-        $return &= Configuration::updateValue(
-            ConfigurationMap::CART_PAGE,
-            (isset($data[ConfigurationMap::CART_PAGE]) ? (int) $data[ConfigurationMap::CART_PAGE] : 0)
-        );
-        $return &= Configuration::updateValue(
-            ConfigurationMap::CHECKOUT_PAGE,
-            (isset($data[ConfigurationMap::CHECKOUT_PAGE]) ? (int) $data[ConfigurationMap::CHECKOUT_PAGE] : 0)
-        );
-        $return &= Configuration::updateValue(
-            ConfigurationMap::HOME_PAGE,
-            (isset($data[ConfigurationMap::HOME_PAGE]) ? (int) $data[ConfigurationMap::HOME_PAGE] : 0)
-        );
-        $return &= Configuration::updateValue(
-            ConfigurationMap::CATEGORY_PAGE,
-            (isset($data[ConfigurationMap::CATEGORY_PAGE]) ? (int) $data[ConfigurationMap::CATEGORY_PAGE] : 0)
-        );
-        $return &= Configuration::updateValue(
-            ConfigurationMap::COLOR,
-            (isset($data[ConfigurationMap::COLOR]) ? pSQL($data[ConfigurationMap::COLOR]) : '')
+            ConfigurationMap::MESSENGING_CONFIG,
+            (isset($data[ConfigurationMap::MESSENGING_CONFIG]) ? pSQL($data[ConfigurationMap::MESSENGING_CONFIG]) : '{}')
         );
 
         // BNPL configurations

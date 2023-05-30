@@ -31,7 +31,7 @@
 <section class="row{$sectionRowClasses} {[
   'd-none' => !$isModal
 ]|classnames}" data-section-configuration>
- <div class="col col-12 col-md-8{$sectionColFormClasses}">
+<div class="col col-12 {if $form.help && $form.help != ''}col-md-8{else}col-md-12{/if}{$sectionColFormClasses}">
    <div class="card">
    {if !$isModal}
       <div class="card-header">
@@ -55,9 +55,11 @@
    </div>
  </div>
 
- <div class="col col-12 col-md-4{$sectionColInfoClasses}">
-   <div class="card-body">
-     {$form.help|default:''}
-   </div>
- </div>
+ {if $form.help && $form.help != ''}
+  <div class="col col-12 col-md-4{$sectionColInfoClasses}">
+    <div class="card-body">
+      {$form.help|default:''}
+    </div>
+  </div>
+ {/if}
 </section>

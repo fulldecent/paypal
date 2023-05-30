@@ -80,8 +80,15 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         parent::setMedia($isNewTheme);
         \Media::addJsDef([
             'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name),
+            'paypal' => [
+                'merchantId' => $this->method->getClientId($this->method->isSandbox()),
+                'partnerName' => $this->getPartnerId(false),
+                'partnerClientId' => $this->getPartnerId(true),
+                'messagingConfig' => Configuration::get(ConfigurationMap::MESSENGING_CONFIG),
+            ],
         ]);
         $this->addJS(_PS_MODULE_DIR_ . 'paypal/views/js/admin.js');
+        $this->addJS('https://www.paypalobjects.com/merchant-library/preview/merchant-configurator.js', false);
         $this->addCSS(_PS_MODULE_DIR_ . 'paypal/views/css/paypal_bo.css');
     }
 
@@ -111,6 +118,20 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         ]);
 
         return $tpl->fetch();
+    }
+
+    protected function getPartnerId($clientId = false)
+    {
+        $isSandBox = $this->method->isSandbox();
+        if ($clientId === true) {
+            return $isSandBox === true
+                ? PayPal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX
+                : PayPal::PAYPAL_PARTNER_CLIENT_ID_LIVE;
+        }
+
+        return $isSandBox === true
+            ? PayPal::PAYPAL_PARTNER_ID_SANDBOX
+            : PayPal::PAYPAL_PARTNER_ID_LIVE;
     }
 
     public function ajaxProcessSaveForm()

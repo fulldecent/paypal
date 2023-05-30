@@ -9,6 +9,11 @@ class Form {
   }
 
   init() {
+    paypal.refreshMessenging = this.refreshMessenging;
+    paypal.saveDataMessengingConfigurator = this.saveDataMessengingConfigurator;
+    paypal.saveProcessInstallment = this.saveProcessInstallment;
+    paypal.submitInstallmentForm = this.submitInstallmentForm;
+    paypal.refreshForms = this.refreshForms;
     this.registerEvents();
   }
 
@@ -18,8 +23,16 @@ class Form {
       const $formGroups = $(e.currentTarget).closest(this.formGroupDynamicSelector).siblings(`[group-name="${groupName}"]`);
       if ($(e.currentTarget).prop('checked')) {
         $formGroups.removeClass('d-none');
+        console.log(groupName);
+        if (groupName == 'PAYPAL_ENABLE_INSTALLMENT') {
+          $('#messaging-installments [group-name="PAYPAL_ENABLE_INSTALLMENT"]').removeClass('d-none');
+          paypal.refreshMessenging();
+        }
       } else {
         $formGroups.addClass('d-none');
+        if (groupName == 'PAYPAL_ENABLE_INSTALLMENT') {
+          $('#messaging-installments [group-name="PAYPAL_ENABLE_INSTALLMENT"]').addClass('d-none');
+        }
       }
     });
 
@@ -51,6 +64,15 @@ class Form {
       if (event.target.hasAttribute('refresh-feature-checklist')) {
         this.refreshFeatureChecklist();
       }
+    });
+
+    $(document).on('readystatechange', function() {
+      paypal.refreshMessenging();
+    });
+
+    $(document).on('click', '[data-form-installment]', (e) => {
+      paypal.event = e;
+      $('#configurator-eligibleContainer').find('button')[0].click();
     });
 
     $(document).on('click', '[save-form]', (e) => {
@@ -270,6 +292,29 @@ class Form {
     }
   }
 
+  saveProcessInstallment(event) {
+    return new Promise((resolve, reject) => {
+      event.target.disabled = true;
+      const formData = new FormData(document.getElementById('pp_installment_form'));
+      const url = new URL(this.controller);
+      formData.append(event.currentTarget.getAttribute('name'), 1);
+      url.searchParams.append('ajax', 1);
+      url.searchParams.append('action', 'saveForm');
+
+      fetch(url.toString(), {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => {
+          event.target.disabled = false;
+          return response.json();
+        })
+        .then((response) => {
+          resolve(response.success == true);
+        });
+    });
+  }
+
   saveProcess(event) {
     return new Promise((resolve, reject) => {
       event.target.disabled = true;
@@ -420,6 +465,48 @@ class Form {
         return ['0','1','2','3','4','5','6','7','8','9','.',','].indexOf(symbol) >= 0;
       })
       .join('');
+  }
+
+  submitInstallmentForm() {
+    const formElement = document.getElementById('pp_installment_form');
+    const e = paypal.event;
+    paypal.saveProcessInstallment(e)
+      .then((result) => {
+        if (result) {
+          paypal.refreshForms(formElement.classList.contains('form-modal'));
+          document.dispatchEvent(
+            (new CustomEvent(
+              'afterFormSaved',
+              {
+                bubbles: true,
+                detail: {
+                  form: formElement,
+                }
+              }
+            ))
+          );
+          paypal.refreshMessenging();
+        }
+      });
+  }
+
+  saveDataMessengingConfigurator(data) {
+    console.log(data);
+    $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(data);
+    paypal.submitInstallmentForm();
+  }
+
+  refreshMessenging() {
+    window.merchantConfigurators.Messaging({
+      config: paypal.messagingConfig,
+      locale: paypal.locale,
+      merchantClientId: paypal.merchantId,
+      partnerClientId: paypal.partnerClientId,
+      partnerName: paypal.partnerName,
+      bnCode: 'PRESTASHOP_Cart_SPB',
+      onSave: paypal.saveDataMessengingConfigurator,
+      placements: ['product', 'homepage','category', 'cart', 'checkout']
+      });
   }
 }
 

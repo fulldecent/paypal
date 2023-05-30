@@ -51,6 +51,8 @@ class ConfigurationMap
 
     const COLOR = 'PAYPAL_INSTALLMENT_COLOR';
 
+    const MESSENGING_CONFIG = 'PAYPAL_INSTALLMENT_MESSAGING_CONFIG';
+
     const COLOR_BLUE = 'blue';
 
     const COLOR_GRAY = 'gray';
