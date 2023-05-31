@@ -648,6 +648,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable()) {
+                if ($this->context->controller instanceof CategoryController) {
+                    return $bannerManager->renderBanner('category');
+                }
                 return $bannerManager->renderForHomePage();
             }
         }

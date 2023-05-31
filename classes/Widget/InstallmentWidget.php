@@ -55,7 +55,7 @@ class InstallmentWidget extends AbstractWidget
         }
 
         if ($this->context->controller instanceof CategoryController) {
-            return $bannerMaganager->renderForHomePage();
+            return $bannerMaganager->renderBanner('category');
         }
 
         if ($this->context->controller instanceof CartController) {
