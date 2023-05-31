@@ -117,15 +117,40 @@ class FormInstallmentMessaging implements FormInterface
             return $return;
         }
 
+        $config = isset($data[ConfigurationMap::MESSENGING_CONFIG]) ? $data[ConfigurationMap::MESSENGING_CONFIG] : '{}';
+        $return &= $this->saveDecodedConf($config);
+
         $return &= Configuration::updateValue(
             ConfigurationMap::ENABLE_INSTALLMENT,
             (isset($data[ConfigurationMap::ENABLE_INSTALLMENT]) ? (int) $data[ConfigurationMap::ENABLE_INSTALLMENT] : 0)
         );
-        $return &= Configuration::updateValue(
-            ConfigurationMap::MESSENGING_CONFIG,
-            (isset($data[ConfigurationMap::MESSENGING_CONFIG]) ? pSQL($data[ConfigurationMap::MESSENGING_CONFIG]) : '{}')
-        );
+        $return &= Configuration::updateValue(ConfigurationMap::MESSENGING_CONFIG, $config);
 
+        return $return;
+    }
+
+    /**
+     * Save decoded configuration returned by messenging configuration
+     * Will save if placements are enabled (for retro compatibility with previous version)
+     * 
+     * @param string $config JSON string returned by configurator
+     * 
+     * @return string same string if not an error on decoding part
+     */
+    private function saveDecodedConf($config)
+    {
+        $decodedConfig = json_decode($config, true);
+        $return = true;
+        if ($decodedConfig !== false && empty($decodedConfig) === false) {
+            foreach($decodedConfig as $key => $values) {
+                $allConfigMap = ConfigurationMap::getParameterConfMap();
+                if (isset($allConfigMap[$key])) {
+                    $enabled = isset($values['status']) && $values['status'] == 'enabled';
+                    $return &= Configuration::updateValue($allConfigMap[$key], $enabled);
+                }
+            }
+        }
+        
         return $return;
     }
 }

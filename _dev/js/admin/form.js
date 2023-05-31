@@ -71,7 +71,19 @@ class Form {
 
     $(document).on('click', '[data-form-installment]', (e) => {
       paypal.event = e;
-      $('#configurator-eligibleContainer').find('button')[0].click();
+      try {
+        paypal.configuratorsaved = false;
+        $('#configurator-eligibleContainer').find('button')[0].click();
+        setTimeout(function() {
+          console.log('Error on saving messengin configuration, continue.');
+          if (paypal.configuratorsaved !== true) {
+            paypal.submitInstallmentForm();
+          }
+        }, 500);
+      } catch (error) {
+        paypal.submitInstallmentForm();
+        console.log(error);
+      }
     });
 
     $(document).on('click', '[save-form]', (e) => {
@@ -80,7 +92,10 @@ class Form {
       this.saveProcess(e)
         .then((result) => {
           if (result) {
-            this.refreshForms(e.target.closest('form').classList.contains('form-modal'));
+            this.refreshForms(
+              e.target.closest('form').classList.contains('form-modal'),
+              new URL(this.controller)
+            );
             document.dispatchEvent(
               (new CustomEvent(
                 'afterFormSaved',
@@ -294,9 +309,9 @@ class Form {
   saveProcessInstallment(event) {
     return new Promise((resolve, reject) => {
       event.target.disabled = true;
-      const formData = new FormData(document.getElementById('pp_installment_form'));
-      const url = new URL(this.controller);
-      formData.append(event.currentTarget.getAttribute('name'), 1);
+      const formData = new FormData(document.getElementById('pp_installment_messenging_form'));
+      const url = new URL(document.location);
+      formData.append('installmentMessengingForm', 1);
       url.searchParams.append('ajax', 1);
       url.searchParams.append('action', 'saveForm');
 
@@ -428,8 +443,8 @@ class Form {
       });
   }
 
-  refreshForms(isModal=false) {
-    const url = new URL(this.controller);
+  refreshForms(isModal=false, url) {
+    
     url.searchParams.append('ajax', 1);
     url.searchParams.append('action', 'getForms');
     url.searchParams.append('isModal', (isModal ? '1' : '0'));
@@ -454,6 +469,7 @@ class Form {
 
           container.html(response.forms[idForm]);
         }
+        paypal.refreshMessenging();
       });
   }
 
@@ -467,12 +483,15 @@ class Form {
   }
 
   submitInstallmentForm() {
-    const formElement = document.getElementById('pp_installment_form');
+    const formElement = document.getElementById('pp_installment_messenging_form');
     const e = paypal.event;
     paypal.saveProcessInstallment(e)
       .then((result) => {
         if (result) {
-          paypal.refreshForms(formElement.classList.contains('form-modal'));
+          paypal.refreshForms(
+            formElement.classList.contains('form-modal'),
+            new URL(document.location)
+          );
           document.dispatchEvent(
             (new CustomEvent(
               'afterFormSaved',
@@ -491,6 +510,7 @@ class Form {
 
   saveDataMessengingConfigurator(data) {
     console.log(data);
+    paypal.configuratorsaved = true;
     $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(data);
     paypal.submitInstallmentForm();
   }
@@ -504,8 +524,8 @@ class Form {
       partnerName: paypal.partnerName,
       bnCode: 'PRESTASHOP_Cart_SPB',
       onSave: paypal.saveDataMessengingConfigurator,
-      placements: ['product', 'homepage', 'cart', 'checkout', 'category']
-      });
+      placements: ['product', 'homepage', 'cart', 'checkout', 'category'],
+    });
   }
 }
 

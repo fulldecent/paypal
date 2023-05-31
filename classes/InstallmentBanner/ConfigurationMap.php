@@ -187,6 +187,21 @@ class ConfigurationMap
         ];
     }
 
+    /**
+     * Return mapping of key attributes returned by configurator and configuration to display or not
+     * the section in front office
+     */
+    public static function getParameterConfMap()
+    {
+        return [
+            'checkout' => self::CHECKOUT_PAGE,
+            'cart' => self::CART_PAGE,
+            'product' => self::PRODUCT_PAGE,
+            'homepage' => self::HOME_PAGE,
+            'category' => self::CATEGORY_PAGE,
+        ];
+    }
+
     public static function getBnplColorMapping()
     {
         //todo: validate mapping
