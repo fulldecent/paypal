@@ -1,3 +1,7 @@
 #configurator-eligibleContainer > div:first-of-type > button {
     display:none;
 }
+
+#modal-configuration-steps #configurator-eligibleContainer {
+    padding-top: 0!important;
+} 

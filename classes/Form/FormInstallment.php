@@ -111,44 +111,9 @@ class FormInstallment implements FormInterface
             ];
         }
 
-        $fields[ConfigurationMap::ENABLE_INSTALLMENT] = [
-            'type' => 'switch',
-            'label' => $this->module->l('Display Pay Later Messaging on your site', $this->className),
-            'name' => ConfigurationMap::ENABLE_INSTALLMENT,
-            'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
-            'values' => [
-                [
-                    'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
-                    'value' => 1,
-                    'label' => $this->module->l('Enabled', $this->className),
-                ],
-                [
-                    'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
-                    'value' => 0,
-                    'label' => $this->module->l('Disabled', $this->className),
-                ],
-            ],
-            'value' => (int) Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
-        ];
-
-        $fields[ConfigurationMap::MESSENGING_CONFIG] = [
-            'type' => 'hidden',
-            'label' => '',
-            'value' => Configuration::get(ConfigurationMap::MESSENGING_CONFIG),
-            'name' => ConfigurationMap::MESSENGING_CONFIG,
-        ];
-
-        $fields['widget_code'] = [
-            'type' => 'widget-code',
-            'code' => '{widget name=\'paypal\' action=\'banner4x\'}',
-            'name' => 'banner-widget-code',
-            'label' => $this->module->l('Widget code', $this->className),
-            'hint' => $this->module->l('By default, PayPal 4x banner is displayed on your web site via PrestaShop native hook. If you choose to use widgets, you will be able to copy widget code and insert it wherever you want in the web site template.', $this->className),
-        ];
-
         $description = [
             'legend' => [
-                'title' => $this->module->l('Buy Now Pay Later', $this->className),
+                'title' => $this->module->l('Buy Now Pay Later Button', $this->className),
             ],
             'fields' => $fields,
             'submit' => [
@@ -156,7 +121,7 @@ class FormInstallment implements FormInterface
                 'name' => 'installmentForm',
             ],
             'id_form' => 'pp_installment_form',
-            'help' => '',
+            'help' => $this->getHelpInfo(),
         ];
 
         return $description;
@@ -176,15 +141,6 @@ class FormInstallment implements FormInterface
         if (empty($data['installmentForm'])) {
             return $return;
         }
-
-        $return &= Configuration::updateValue(
-            ConfigurationMap::ENABLE_INSTALLMENT,
-            (isset($data[ConfigurationMap::ENABLE_INSTALLMENT]) ? (int) $data[ConfigurationMap::ENABLE_INSTALLMENT] : 0)
-        );
-        $return &= Configuration::updateValue(
-            ConfigurationMap::MESSENGING_CONFIG,
-            (isset($data[ConfigurationMap::MESSENGING_CONFIG]) ? pSQL($data[ConfigurationMap::MESSENGING_CONFIG]) : '{}')
-        );
 
         // BNPL configurations
         $return &= Configuration::updateValue(
@@ -209,48 +165,6 @@ class FormInstallment implements FormInterface
         );
 
         return $return;
-    }
-
-    protected function getColorListOptions()
-    {
-        $isoCountryDefault = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
-        $colorOptions = [
-            [
-                'value' => ConfigurationMap::COLOR_GRAY,
-                'title' => $this->module->l('gray', $this->className),
-                'color' => '#808080',
-            ],
-            [
-                'value' => ConfigurationMap::COLOR_BLUE,
-                'title' => $this->module->l('blue', $this->className),
-                'color' => '#0070ba',
-            ],
-            [
-                'value' => ConfigurationMap::COLOR_BLACK,
-                'title' => $this->module->l('black', $this->className),
-                'color' => '#2c2e2f',
-            ],
-            [
-                'value' => ConfigurationMap::COLOR_WHITE,
-                'title' => $this->module->l('white', $this->className),
-                'color' => '#fff',
-            ],
-        ];
-
-        if ($isoCountryDefault !== 'de') {
-            $colorOptions[] = [
-                'value' => ConfigurationMap::COLOR_MONOCHROME,
-                'title' => $this->module->l('monochrome', $this->className),
-                'color' => '#808080',
-            ];
-            $colorOptions[] = [
-                'value' => ConfigurationMap::COLOR_GRAYSCALE,
-                'title' => $this->module->l('grayscale', $this->className),
-                'color' => '#808080',
-            ];
-        }
-
-        return $colorOptions;
     }
 
     protected function getHelpInfo()

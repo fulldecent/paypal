@@ -24,7 +24,7 @@
  *
  *}
 <div class="modal fade" id="modal-configuration" tabindex="-1" aria-hidden="true">
- <div class="modal-dialog modal-lg modal-dialog-centered">
+ <div class="modal-dialog modal-lg modal-dialog-centered" data-modal-dialog-configuration>
    <div class="modal-content">
 
      <div class="modal-body" id="modal-configuration-steps">
@@ -56,17 +56,24 @@
             isModal=true
           }
         </div>
-        {if isset($formInstallment)}
-          <div class="d-none" data-step-content>
-            {include
-              file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-              form=$formInstallment
-              sectionColFormClasses=' '
-              sectionColInfoClasses=' '
-              isModal=true
-            }
-          </div>
-        {/if}
+        <div class="d-none" data-step-content>
+          {include
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+            form=$formInstallment
+            sectionColFormClasses=' '
+            sectionColInfoClasses=' '
+            isModal=true
+          }
+        </div>
+        <div class="d-none" data-step-content>
+          {include
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+            form=$formInstallmentMessaging
+            sectionColFormClasses=' '
+            sectionColInfoClasses=' '
+            isModal=true
+          }
+        </div>
         <div class="d-none" data-step-content>
           {include
             file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"

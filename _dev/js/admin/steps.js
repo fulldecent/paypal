@@ -5,7 +5,8 @@ class Steps {
     this.content = '[data-step-content]';
     this.currentStepBadge = '[data-badge-current-step]';
     this.stepsProgress = '[data-steps-progress]';
-    this.controller = document.location.href;
+    this.modalConfiguration = '[data-modal-dialog-configuration]';
+    this.controller = document.location;
   }
 
   init() {
@@ -32,6 +33,7 @@ class Steps {
       this.setAction($(e.currentTarget).data('btn-action'));
       this.updateCurrentBadgeStep();
       this.updateStepsProgress();
+      this.updateFormStep();
 
       if ($(e.currentTarget).attr('data-dismiss') === 'modal') {
         $(e.currentTarget).closest('.modal').modal('hide');
@@ -82,6 +84,15 @@ class Steps {
     }
 
     this.setActiveStep(currentStepIndex, nextStepIndex);
+  }
+
+  updateFormStep() {
+    if (this.getCurrentStepIndex() + 1 == 4) {
+      $(this.modalConfiguration).css('max-width', '1280px');
+      setTimeout(paypal.refreshMessenging, 200);
+    } else {
+      $(this.modalConfiguration).css('max-width', '');
+    }
   }
 
   updateButtons() {

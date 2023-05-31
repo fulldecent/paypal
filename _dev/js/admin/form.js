@@ -23,15 +23,14 @@ class Form {
       const $formGroups = $(e.currentTarget).closest(this.formGroupDynamicSelector).siblings(`[group-name="${groupName}"]`);
       if ($(e.currentTarget).prop('checked')) {
         $formGroups.removeClass('d-none');
-        console.log(groupName);
         if (groupName == 'PAYPAL_ENABLE_INSTALLMENT') {
-          $('#messaging-installments [group-name="PAYPAL_ENABLE_INSTALLMENT"]').removeClass('d-none');
+          $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').removeClass('d-none');
           paypal.refreshMessenging();
         }
       } else {
         $formGroups.addClass('d-none');
         if (groupName == 'PAYPAL_ENABLE_INSTALLMENT') {
-          $('#messaging-installments [group-name="PAYPAL_ENABLE_INSTALLMENT"]').addClass('d-none');
+          $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').addClass('d-none');
         }
       }
     });
@@ -505,7 +504,7 @@ class Form {
       partnerName: paypal.partnerName,
       bnCode: 'PRESTASHOP_Cart_SPB',
       onSave: paypal.saveDataMessengingConfigurator,
-      placements: ['product', 'homepage','category', 'cart', 'checkout']
+      placements: ['product', 'homepage', 'cart', 'checkout']
       });
   }
 }

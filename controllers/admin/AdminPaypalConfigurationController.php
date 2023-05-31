@@ -67,6 +67,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             $this->forms['formInstallment'] = new FormInstallment();
         }
 
+        $this->forms['formInstallmentMessaging'] = new FormInstallmentMessaging();
         $this->forms['whiteListForm'] = new WhiteListForm();
         $this->forms['accountForm'] = new AccountForm();
         $this->forms['orderStatusForm'] = new OrderStatusForm();
@@ -81,6 +82,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         \Media::addJsDef([
             'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name),
             'paypal' => [
+                'locale' => str_replace('-', '_', Context::getContext()->language->locale),
                 'merchantId' => $this->method->getClientId($this->method->isSandbox()),
                 'partnerName' => $this->getPartnerId(false),
                 'partnerClientId' => $this->getPartnerId(true),
@@ -106,10 +108,15 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             $tpl->assign($formName, $form->getDescription());
         }
 
+        $isShownModal = (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION);
+        if (Tools::getValue('forcemodal') !== false) {
+            $isShownModal = 1;
+        }
+
         $tpl->assign([
             'moduleDir' => _MODULE_DIR_ . $this->module->name,
             'moduleFullDir' => _PS_MODULE_DIR_ . $this->module->name,
-            'isShowModalConfiguration' => (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION),
+            'isShowModalConfiguration' => $isShownModal,
             'diagnosticPage' => $this->context->link->getAdminLink('AdminPaypalDiagnostic'),
             'loggerPage' => $this->context->link->getAdminLink('AdminPaypalProcessLogger'),
             'isConfigured' => $this->method->isConfigured(),
