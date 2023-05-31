@@ -504,7 +504,7 @@ class Form {
       partnerName: paypal.partnerName,
       bnCode: 'PRESTASHOP_Cart_SPB',
       onSave: paypal.saveDataMessengingConfigurator,
-      placements: ['product', 'homepage', 'cart', 'checkout']
+      placements: ['product', 'homepage', 'cart', 'checkout', 'category']
       });
   }
 }

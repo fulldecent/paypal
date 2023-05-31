@@ -34,14 +34,13 @@ onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
 
   {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.PAYPAL_INSTALLMENT_MESSAGING_CONFIG dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}
 
-  <div class="{[
-    'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
-    ]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="PAYPAL_ENABLE_INSTALLMENTG"{/if}>
-        {if isset($form.fields.widget_code) && !$isModal }
-            {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.widget_code dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}
-        {/if}
-  </div>
-
+  {if isset($form.fields.widget_code) && !$isModal }
+    <div class="{[
+      'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
+      ]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="PAYPAL_ENABLE_INSTALLMENTG"{/if}>
+              {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.widget_code dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}          
+    </div>
+  {/if}
 </form>
 
 <div class="form-group row {[
@@ -54,9 +53,7 @@ onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
         <div class="row no-gutters">
   {/if}
 
-        <div class="form-group row {[
-          'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
-        ]|classnames}" group-name="PAYPAL_ENABLE_INSTALLMENT">
+        <div class="form-group row" group-name="PAYPAL_ENABLE_INSTALLMENT">
           <div id="messaging-configurator"></div>
         </div>  
   {if !$isModal}

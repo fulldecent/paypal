@@ -86,7 +86,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
                 'merchantId' => $this->method->getClientId($this->method->isSandbox()),
                 'partnerName' => $this->getPartnerId(false),
                 'partnerClientId' => $this->getPartnerId(true),
-                'messagingConfig' => Configuration::get(ConfigurationMap::MESSENGING_CONFIG),
+                'messagingConfig' => Configuration::get(ConfigurationMap::MESSENGING_CONFIG, null, null, null, '{}'),
             ],
         ]);
         $this->addJS(_PS_MODULE_DIR_ . 'paypal/views/js/admin.js');
@@ -108,15 +108,10 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             $tpl->assign($formName, $form->getDescription());
         }
 
-        $isShownModal = (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION);
-        if (Tools::getValue('forcemodal') !== false) {
-            $isShownModal = 1;
-        }
-
         $tpl->assign([
             'moduleDir' => _MODULE_DIR_ . $this->module->name,
             'moduleFullDir' => _PS_MODULE_DIR_ . $this->module->name,
-            'isShowModalConfiguration' => $isShownModal,
+            'isShowModalConfiguration' => (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION);,
             'diagnosticPage' => $this->context->link->getAdminLink('AdminPaypalDiagnostic'),
             'loggerPage' => $this->context->link->getAdminLink('AdminPaypalProcessLogger'),
             'isConfigured' => $this->method->isConfigured(),
