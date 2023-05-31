@@ -77,6 +77,9 @@ class Form {
         setTimeout(function() {
           console.log('Error on saving messengin configuration, continue.');
           if (paypal.configuratorsaved !== true) {
+            const newConfig = JSON.stringify(paypal.messagingConfig);
+            $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(newConfig);
+            paypal.messagingConfig = newConfig;
             paypal.submitInstallmentForm();
           }
         }, 500);
@@ -511,13 +514,16 @@ class Form {
   saveDataMessengingConfigurator(data) {
     console.log(data);
     paypal.configuratorsaved = true;
-    $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(data);
+    const newConfig = JSON.stringify(data);
+    $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(newConfig);
+    paypal.messagingConfig = newConfig;
     paypal.submitInstallmentForm();
   }
 
   refreshMessenging() {
+    const configObject = JSON.parse(paypal.messagingConfig);
     window.merchantConfigurators.Messaging({
-      config: paypal.messagingConfig,
+      config: configObject,
       locale: paypal.locale,
       merchantClientId: paypal.merchantId,
       partnerClientId: paypal.partnerClientId,
