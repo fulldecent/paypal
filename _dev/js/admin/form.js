@@ -514,7 +514,7 @@ class Form {
   saveDataMessengingConfigurator(data) {
     console.log(data);
     paypal.configuratorsaved = true;
-    const newConfig = JSON.stringify(data);
+    const newConfig = JSON.stringify(data.config);
     $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(newConfig);
     paypal.messagingConfig = newConfig;
     paypal.submitInstallmentForm();
