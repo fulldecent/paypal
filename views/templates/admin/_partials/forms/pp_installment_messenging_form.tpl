@@ -28,7 +28,7 @@
 <form id="{$form.id_form}" class="mt-4 {[
   'form-modal' => $isModal
 ]|classnames}" data-form-configuration {block name='form_attributes'}{/block}
-  {if $isModal}style="min-height:125px;"{/if} 
+  {if $isModal}style="min-height:auto;"{/if} 
 onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
   {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_INSTALLMENT dynamicField=$dynamicFieldBanner}
 
@@ -48,9 +48,7 @@ onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
 ]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="PAYPAL_ENABLE_INSTALLMENTG"{/if}>
 
   {if !$isModal}
-    <div class="col-1"></div>
-      <div class="col-11 pr-0">
-        <div class="row no-gutters">
+      <div class="col-12 pr-0">
   {/if}
 
         <div class="form-group row" group-name="PAYPAL_ENABLE_INSTALLMENT">
@@ -58,7 +56,6 @@ onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
         </div>  
   {if !$isModal}
       </div>
-  </div>
   {/if}
 </div>
 

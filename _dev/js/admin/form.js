@@ -78,6 +78,8 @@ class Form {
           console.log('Error on saving messengin configuration, continue.');
           if (paypal.configuratorsaved !== true) {
             const newConfig = JSON.stringify(paypal.messagingConfig);
+            console.log(paypal.messagingConfig);
+            console.log(newConfig);
             $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(newConfig);
             paypal.messagingConfig = newConfig;
             paypal.submitInstallmentForm();
@@ -382,6 +384,7 @@ class Form {
             document.querySelector('[name="paypal_secret_live"]').value = response.secret;
             document.querySelector('[name="merchant_id_live"]').value = response.merchantId;
           }
+          paypal.merchantId = response.clientid;
         }
 
         this.updateButtonSection();

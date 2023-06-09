@@ -39,14 +39,14 @@
   >
     <label class="form-control-label {[
       'form-control-label-check' => $field.type == 'switch',
-      'col-3' => $form.id_form !== 'pp_installment_form',
-      'col-2' => $form.id_form === 'pp_installment_form'
+      'col-3' => strpos($form.id_form, 'pp_installment_') === false,
+      'col-2' => strpos($form.id_form, 'pp_installment_') !== false
     ]|classnames}" for="{$field.name}">{$field.label}</label>
 
     <div class="{[
       'col-9' => $withColor || $isModal,
-      'col-7' => $form.id_form !== 'pp_installment_form',
-      'col-10' => $form.id_form === 'pp_installment_form'
+      'col-7' => strpos($form.id_form, 'pp_installment_') === false,
+      'col-10' => strpos($form.id_form, 'pp_installment_') !== false
     ]|classnames}">
       <div>
 {/if}

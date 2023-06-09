@@ -1,7 +1,15 @@
+#messaging-configurator > div:first-of-type {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 #configurator-eligibleContainer > div:first-of-type > button {
     display:none;
 }
 
 #configurator-eligibleContainer {
     padding-top: 0!important;
+}
+
+[for="dark-mode-toggle"] {
+    width: 3rem!important;
 }
