@@ -106,7 +106,7 @@ class Steps {
     }
 
     if (this.getCurrentStepIndex() === this.getLastStepIndex()) {
-      $nextBtn.attr('data-dismiss', 'modal')
+      $nextBtn.attr('data-dismiss', 'modal');
     } else {
       $nextBtn.removeAttr('data-dismiss');
     }

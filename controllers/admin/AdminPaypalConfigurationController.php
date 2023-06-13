@@ -49,10 +49,12 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
 
     protected $method;
 
+    private $is_shown_modal;
+
     public function __construct()
     {
         parent::__construct();
-
+        $this->is_shown_modal = (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION);
         $this->initForms();
         $this->method = AbstractMethodPaypal::load();
     }
@@ -64,10 +66,12 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $this->forms['trackingForm'] = new TrackingParametersForm();
 
         if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {
-            $this->forms['formInstallment'] = new FormInstallment();
+            $this->forms['formInstallment'] = new FormInstallment((bool) $this->is_shown_modal);
         }
 
-        $this->forms['formInstallmentMessaging'] = new FormInstallmentMessaging();
+        if ((bool) $this->is_shown_modal === false) {
+            $this->forms['formInstallmentMessaging'] = new FormInstallmentMessaging();
+        }
         $this->forms['whiteListForm'] = new WhiteListForm();
         $this->forms['accountForm'] = new AccountForm();
         $this->forms['orderStatusForm'] = new OrderStatusForm();
@@ -111,7 +115,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $tpl->assign([
             'moduleDir' => _MODULE_DIR_ . $this->module->name,
             'moduleFullDir' => _PS_MODULE_DIR_ . $this->module->name,
-            'isShowModalConfiguration' => (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION),
+            'isShowModalConfiguration' => $this->is_shown_modal,
             'diagnosticPage' => $this->context->link->getAdminLink('AdminPaypalDiagnostic'),
             'loggerPage' => $this->context->link->getAdminLink('AdminPaypalProcessLogger'),
             'isConfigured' => $this->method->isConfigured(),

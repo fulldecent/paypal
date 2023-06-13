@@ -23,13 +23,13 @@ class Form {
       const $formGroups = $(e.currentTarget).closest(this.formGroupDynamicSelector).siblings(`[group-name="${groupName}"]`);
       if ($(e.currentTarget).prop('checked')) {
         $formGroups.removeClass('d-none');
-        if (groupName == 'PAYPAL_ENABLE_INSTALLMENT') {
+        if (groupName == 'PAYPAL_ENABLE_INSTALLMENT' && $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').length) {
           $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').removeClass('d-none');
           paypal.refreshMessenging();
         }
       } else {
         $formGroups.addClass('d-none');
-        if (groupName == 'PAYPAL_ENABLE_INSTALLMENT') {
+        if (groupName == 'PAYPAL_ENABLE_INSTALLMENT' && $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').length) {
           $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').addClass('d-none');
         }
       }
@@ -515,7 +515,6 @@ class Form {
   }
 
   saveDataMessengingConfigurator(data) {
-    console.log(data);
     paypal.configuratorsaved = true;
     const newConfig = JSON.stringify(data.config);
     $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(newConfig);
@@ -524,6 +523,9 @@ class Form {
   }
 
   refreshMessenging() {
+    if (!$('#messaging-configurator').length) {
+      return;
+    }
     const configObject = JSON.parse(paypal.messagingConfig);
     window.merchantConfigurators.Messaging({
       config: configObject,

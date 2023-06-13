@@ -38,7 +38,7 @@ onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
     <div class="{[
       'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
       ]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="PAYPAL_ENABLE_INSTALLMENTG"{/if}>
-              {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.widget_code dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}          
+              {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.widget_code dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}     
     </div>
   {/if}
 </form>

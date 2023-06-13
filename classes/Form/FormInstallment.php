@@ -44,10 +44,13 @@ class FormInstallment implements FormInterface
 
     protected $className;
 
-    public function __construct()
+    private $is_shown_modal;
+
+    public function __construct($is_shown_modal = false)
     {
         $this->module = Module::getInstanceByName('paypal');
         $this->className = 'FormInstallment';
+        $this->is_shown_modal = $is_shown_modal;
     }
 
     /**
@@ -111,6 +114,28 @@ class FormInstallment implements FormInterface
             ];
         }
 
+        if ((bool) $this->is_shown_modal !== false) {
+            $fields[ConfigurationMap::ENABLE_INSTALLMENT] = [
+                'type' => 'switch',
+                'label' => $this->module->l('Pay later messaging', $this->className),
+                'name' => ConfigurationMap::ENABLE_INSTALLMENT,
+                'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
+                'values' => [
+                    [
+                        'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
+                        'value' => 1,
+                        'label' => $this->module->l('Enabled', $this->className),
+                    ],
+                    [
+                        'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
+                        'value' => 0,
+                        'label' => $this->module->l('Disabled', $this->className),
+                    ],
+                ],
+                'value' => (int) Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
+            ];
+        }
+
         $description = [
             'legend' => [
                 'title' => $this->module->l('Buy Now Pay Later Button', $this->className),
@@ -145,24 +170,30 @@ class FormInstallment implements FormInterface
         // BNPL configurations
         $return &= Configuration::updateValue(
             ConfigurationMap::ENABLE_BNPL,
-            (isset($data[ConfigurationMap::ENABLE_BNPL]) ? (int) $data[ConfigurationMap::ENABLE_BNPL] : 0)
+            isset($data[ConfigurationMap::ENABLE_BNPL]) ? (int) $data[ConfigurationMap::ENABLE_BNPL] : 0
         );
         $return &= Configuration::updateValue(
             ConfigurationMap::BNPL_CHECKOUT_PAGE,
-            (isset($data[ConfigurationMap::BNPL_CHECKOUT_PAGE]) ? (int) $data[ConfigurationMap::BNPL_CHECKOUT_PAGE] : 0)
+            isset($data[ConfigurationMap::BNPL_CHECKOUT_PAGE]) ? (int) $data[ConfigurationMap::BNPL_CHECKOUT_PAGE] : 0
         );
         $return &= Configuration::updateValue(
             ConfigurationMap::BNPL_CART_PAGE,
-            (isset($data[ConfigurationMap::BNPL_CART_PAGE]) ? (int) $data[ConfigurationMap::BNPL_CART_PAGE] : 0)
+            isset($data[ConfigurationMap::BNPL_CART_PAGE]) ? (int) $data[ConfigurationMap::BNPL_CART_PAGE] : 0
         );
         $return &= Configuration::updateValue(
             ConfigurationMap::BNPL_PRODUCT_PAGE,
-            (isset($data[ConfigurationMap::BNPL_PRODUCT_PAGE]) ? (int) $data[ConfigurationMap::BNPL_PRODUCT_PAGE] : 0)
+            isset($data[ConfigurationMap::BNPL_PRODUCT_PAGE]) ? (int) $data[ConfigurationMap::BNPL_PRODUCT_PAGE] : 0
         );
         $return &= Configuration::updateValue(
             ConfigurationMap::BNPL_PAYMENT_STEP_PAGE,
-            (isset($data[ConfigurationMap::BNPL_PAYMENT_STEP_PAGE]) ? (int) $data[ConfigurationMap::BNPL_PAYMENT_STEP_PAGE] : 0)
+            isset($data[ConfigurationMap::BNPL_PAYMENT_STEP_PAGE]) ? (int) $data[ConfigurationMap::BNPL_PAYMENT_STEP_PAGE] : 0
         );
+        if (isset($data[ConfigurationMap::ENABLE_INSTALLMENT])) {
+            $return &= Configuration::updateValue(
+                ConfigurationMap::ENABLE_INSTALLMENT,
+                (int) $data[ConfigurationMap::ENABLE_INSTALLMENT]
+            );
+        }
 
         return $return;
     }
