@@ -30,7 +30,7 @@
     <property name="src-dir" value="${basedir}" />
     <property name="TARGETNAME" value="paypal" />
     <property name="TARGETBRANCH" value="${env.GIT_BRANCH}" />
-    <property name="TARGETVERSION" value="5.8.1" />
+    <property name="TARGETVERSION" value="6.0.0" />
     <property name="PHPVERSION" value="5.6" />
     <property name="PSVERSION" value="1.7.5.2" />
 
@@ -107,7 +107,7 @@
     </target>
 
     <!-- start composer -->
-    <target name="composer" depends="clean-composer,composer-install,composer-update" description="Install or update dependencies" />
+    <target name="composer" depends="clean-composer,composer-update" description="Install or update dependencies" />
     <target name="clean-composer" depends="composer.check" if="composer.lock.exist.in.gitignore" description="Cleanup composer artifacts">
         <delete file="${basedir}/composer.lock" />
     </target>
@@ -116,16 +116,12 @@
             <resourcecontains resource="${basedir}/.gitignore" substring="composer.lock" />
         </condition>
     </target>
-    <target name="composer-install" depends="composer.check" unless="composer.lock.exist.in.gitignore" description="Installing dependencies">
-        <echo>Installing dependencies</echo>
-        <exec executable="composer" failonerror="true">
-            <arg value="install" />
-        </exec>
-    </target>
+
     <target name="composer-update" depends="composer.check" if="composer.lock.exist.in.gitignore" description="Updating dependencies">
         <echo>Updating dependencies</echo>
         <exec executable="composer" failonerror="true">
             <arg value="update" />
+            <arg value="--no-dev" />
         </exec>
     </target>
     <!-- end composer -->
