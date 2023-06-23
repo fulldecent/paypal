@@ -55,6 +55,9 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
     {
         parent::__construct();
         $this->is_shown_modal = (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION);
+        if ((bool) Tools::getValue('isModal') === true) {
+            $this->is_shown_modal = 1;
+        }
         $this->initForms();
         $this->method = AbstractMethodPaypal::load();
     }
