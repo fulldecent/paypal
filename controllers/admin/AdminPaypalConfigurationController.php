@@ -41,10 +41,6 @@ use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
-
 class AdminPaypalConfigurationController extends \ModuleAdminController
 {
     public $bootstrap = false;
