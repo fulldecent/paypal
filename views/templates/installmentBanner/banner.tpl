@@ -27,7 +27,7 @@
 
 <div paypal-messaging-banner 
  data-pp-message 
- {if $paypalmessenging.placement != 'homepage' && $paypalmessenging.placement != 'category'}
+ {if $paypalmessenging.placement != 'home' && $paypalmessenging.placement != 'category'}
     data-pp-style-layout="{$paypalmessenging.layout|escape:'htmlall':'UTF-8'}"
     data-pp-style-logo-type="{$paypalmessenging.logo_type|escape:'htmlall':'UTF-8'}"
     data-pp-style-logo-position="{$paypalmessenging.logo_position|escape:'htmlall':'UTF-8'}"

@@ -140,7 +140,7 @@ class BannerManager
      * @param string $placement Placement expected for the message
      * @return string
      */
-    public function renderBanner($placement = 'homepage')
+    public function renderBanner($placement = 'home')
     {
         $banner =  $this->banner
             ->setPlacement($placement)
@@ -155,7 +155,7 @@ class BannerManager
             }
         }
 
-        if ($placement == 'cart' || $placement == 'checkout') {
+        if ($placement == 'cart' || $placement == 'payment') {
             $banner->setAmount($this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true)));
         }
             
@@ -167,7 +167,7 @@ class BannerManager
      */
     public function renderForHomePage()
     {
-        return $this->renderBanner('homepage');
+        return $this->renderBanner('home');
     }
 
     /**
@@ -189,7 +189,7 @@ class BannerManager
      */
     public function renderForCheckoutPage()
     {
-        return $this->renderBanner('checkout');
+        return $this->renderBanner('payment');
     }
 
     /**

@@ -85,12 +85,12 @@ class Banner
     public function getConfig()
     {
         $config = json_decode(str_replace('-', '_', Configuration::get(ConfigurationMap::MESSENGING_CONFIG)), true);
-        $placement = $this->getPlacement() === 'home' ? 'homepage' : $this->getPlacement();
+        $placement = $this->getPlacement();
         if (isset($config[$placement]) === false) {
             switch ($placement) {
                 case 'cart':
                 case 'product':
-                case 'checkout':
+                case 'payment':
                     $config[$placement] = [
                         'layout' => 'text',
                         'logo_type' => 'inline',
