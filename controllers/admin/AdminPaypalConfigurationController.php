@@ -1,22 +1,4 @@
 <?php
-
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
-use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
-use PaypalAddons\classes\Constants\PaypalConfigurations;
-use PaypalAddons\classes\Form\AccountForm;
-use PaypalAddons\classes\Form\CheckoutForm;
-use PaypalAddons\classes\Form\FeatureChecklistForm;
-use PaypalAddons\classes\Form\FormInstallment;
-use PaypalAddons\classes\Form\OrderStatusForm;
-use PaypalAddons\classes\Form\ShortcutConfigurationForm;
-use PaypalAddons\classes\Form\TechnicalChecklistForm;
-use PaypalAddons\classes\Form\TrackingParametersForm;
-use PaypalAddons\classes\Form\WhiteListForm;
-use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
-use PaypalAddons\classes\Shortcut\ShortcutPreview;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
 /**
  * 2007-2023 PayPal
  *
@@ -41,6 +23,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  */
+
+use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
+use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
+use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\Form\AccountForm;
+use PaypalAddons\classes\Form\CheckoutForm;
+use PaypalAddons\classes\Form\FeatureChecklistForm;
+use PaypalAddons\classes\Form\FormInstallment;
+use PaypalAddons\classes\Form\OrderStatusForm;
+use PaypalAddons\classes\Form\ShortcutConfigurationForm;
+use PaypalAddons\classes\Form\TechnicalChecklistForm;
+use PaypalAddons\classes\Form\TrackingParametersForm;
+use PaypalAddons\classes\Form\WhiteListForm;
+use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
+use PaypalAddons\classes\Shortcut\ShortcutPreview;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 class AdminPaypalConfigurationController extends \ModuleAdminController
 {
     public $bootstrap = false;
