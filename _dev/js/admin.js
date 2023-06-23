@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:202/_dev/scss/diagnostic/diagnostic.scss
-/*
-========
 /**
->>>>>>>> 65176acc (Release 6.0.0 (#211)):_dev/scss/admin/components/_card.scss
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -27,14 +23,40 @@
  *  @copyright PayPal
  *
  */
-<<<<<<<< HEAD:202/_dev/scss/diagnostic/diagnostic.scss
-@import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
-@import "admin/global";
-========
-.card {
-  &-header {
-    padding: $card-header-spacer-y $card-header-spacer-x;
-    font-size: $card-header-font-size;
+
+import '~/bootstrap';
+import Steps from './admin/steps';
+import Form from './admin/form';
+import Section from './admin/section';
+
+$(() => {
+  $(window).on('load', () => {
+    $('#modal-configuration').modal('show');
+  })
+
+  const steps = new Steps('#modal-configuration-steps');
+  steps.init();
+
+  const form = new Form();
+  form.init();
+
+  const section = new Section();
+  section.init();
+
+  if (document.location.hash.slice(1,)) {
+    document.dispatchEvent(
+      (new CustomEvent(
+        'showSection',
+        {
+          bubbles: true,
+          detail: {
+            section: document.location.hash.slice(1,)
+          }
+        }
+      ))
+    );
   }
-}
->>>>>>>> 65176acc (Release 6.0.0 (#211)):_dev/scss/admin/components/_card.scss
+
+});
+
+

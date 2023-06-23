@@ -564,7 +564,11 @@ $_MODULE['<{paypal}prestashop>paypal_21c4b1502c6b5653bd908e6bde0a8729'] = 'This 
 $_MODULE['<{paypal}prestashop>paypal_9770ceb350b2a7ec629d7fd3849f0bcb'] = 'The order should be refunded before the cancellation. Please select the status \"Refunded\".';
 $_MODULE['<{paypal}prestashop>paypal_31582bd958d93c1f4742166601086979'] = 'You can cancel the order after. If you don\'t want to generate a refund automatically on PayPal when you change the status, you can disable it via the module settings: \"Experience -> Advanced settings - Customize order status\", select \"no action\".';
 $_MODULE['<{paypal}prestashop>paypal_d9477f0fb4bf73e4e174c1b8591cc9ef'] = 'Should use the button \"Pay Later\"';
+<<<<<<< HEAD
 $_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode.';
+=======
+$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode in [a @href1@] Preferences > General[/a] to:';
+>>>>>>> 65176acc (Release 6.0.0 (#211))
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Save';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'Accept PayPal payments';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Enabled';

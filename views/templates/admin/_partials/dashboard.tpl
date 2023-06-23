@@ -24,7 +24,11 @@
  *
  *}
 <div class="row" data-dashboard>
+<<<<<<< HEAD
     {include file=$moduleFullDir|cat:"/views/templates/admin/_partials/welcome-board.tpl"}
+=======
+    {include file="module:paypal/views/templates/admin/_partials/welcome-board.tpl"}
+>>>>>>> 65176acc (Release 6.0.0 (#211))
   <div class="col col-md-6 mt-4">
     <div class="card h-100">
       <div class="card-header">
@@ -32,7 +36,11 @@
       </div>
       <div class="card-body" technical-checklist-container>
         {include
+<<<<<<< HEAD
           file=$moduleFullDir|cat:"/views/templates/admin/_partials/statusBlock.tpl"
+=======
+          file="module:paypal/views/templates/admin/_partials/statusBlock.tpl"
+>>>>>>> 65176acc (Release 6.0.0 (#211))
           vars=$technicalChecklistForm.fields.technicalChecklist.set
         }
       </div>
@@ -45,7 +53,11 @@
       </div>
       <div class="card-body" feature-checklist-container>
         {include
+<<<<<<< HEAD
           file=$moduleFullDir|cat:"/views/templates/admin/_partials/featureChecklist.tpl"
+=======
+          file="module:paypal/views/templates/admin/_partials/featureChecklist.tpl"
+>>>>>>> 65176acc (Release 6.0.0 (#211))
           vars=$featureChecklistForm.fields.featureChecklist.set
         }
       </div>
