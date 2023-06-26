@@ -354,6 +354,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::HOME_PAGE => 0,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::CHECKOUT_PAGE => 1,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::CART_PAGE => 1,
+            ConfigurationMap::ENABLE_INSTALLMENT => 1,
             ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE => 1,
             ShortcutConfiguration::SHOW_ON_CART_PAGE => 1,
             ShortcutConfiguration::SHOW_ON_SIGNUP_STEP => 1,

@@ -39,8 +39,10 @@ if (!defined('_PS_VERSION_')) {
 function upgrade_module_6_0_0($module)
 {
     $installer = new ModuleInstaller($module);
+    $installer->uninstallExtensions();
     $installer->uninstallModuleAdminControllers();
     $installer->installAdminControllers();
+    $installer->installExtensions();
 
     return true;
 }
