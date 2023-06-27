@@ -1912,13 +1912,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         $installmentTab->name[$language['id_lang']] = 'Pay in 4';
                         break;
                     case 'uk':
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                     case 'us':
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                     default:
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                 }
             }

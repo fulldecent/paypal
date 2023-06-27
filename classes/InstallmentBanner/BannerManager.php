@@ -87,10 +87,6 @@ class BannerManager
      */
     public function isEligibleConf()
     {
-        if (false === (bool) Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT)) {
-            return false;
-        }
-
         if (false === $this->isEligibleCountry()) {
             return false;
         }

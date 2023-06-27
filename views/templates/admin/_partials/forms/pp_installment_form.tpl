@@ -47,8 +47,4 @@
        </div>
      </div>
    </div>
-
-   {if $isModal}
-      {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_INSTALLMENT}
-   {/if}
  {/block}

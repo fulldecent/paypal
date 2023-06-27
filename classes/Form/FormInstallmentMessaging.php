@@ -51,26 +51,6 @@ class FormInstallmentMessaging implements FormInterface
     {
         $fields = [];
 
-        $fields[ConfigurationMap::ENABLE_INSTALLMENT] = [
-            'type' => 'switch',
-            'label' => $this->module->l('Pay later messaging', $this->className),
-            'name' => ConfigurationMap::ENABLE_INSTALLMENT,
-            'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
-            'values' => [
-                [
-                    'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
-                    'value' => 1,
-                    'label' => $this->module->l('Enabled', $this->className),
-                ],
-                [
-                    'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
-                    'value' => 0,
-                    'label' => $this->module->l('Disabled', $this->className),
-                ],
-            ],
-            'value' => (int) Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
-        ];
-
         $fields[ConfigurationMap::MESSENGING_CONFIG] = [
             'type' => 'hidden',
             'label' => '',
@@ -78,17 +58,9 @@ class FormInstallmentMessaging implements FormInterface
             'name' => ConfigurationMap::MESSENGING_CONFIG,
         ];
 
-        $fields['widget_code'] = [
-            'type' => 'widget-code',
-            'code' => '{widget name=\'paypal\' action=\'banner4x\'}',
-            'name' => 'banner-widget-code',
-            'label' => $this->module->l('Widget code', $this->className),
-            'hint' => $this->module->l('By default, PayPal 4x banner is displayed on your web site via PrestaShop native hook. If you choose to use widgets, you will be able to copy widget code and insert it wherever you want in the web site template.', $this->className),
-        ];
-
         $description = [
             'legend' => [
-                'title' => $this->module->l('Buy Now Pay Later Banner', $this->className),
+                'title' => $this->module->l('PayPal Pay Later Messaging', $this->className),
             ],
             'fields' => $fields,
             'submit' => [
@@ -120,10 +92,6 @@ class FormInstallmentMessaging implements FormInterface
         $config = isset($data[ConfigurationMap::MESSENGING_CONFIG]) ? $data[ConfigurationMap::MESSENGING_CONFIG] : '{}';
         $return &= $this->saveDecodedConf($config);
 
-        $return &= Configuration::updateValue(
-            ConfigurationMap::ENABLE_INSTALLMENT,
-            (isset($data[ConfigurationMap::ENABLE_INSTALLMENT]) ? (int) $data[ConfigurationMap::ENABLE_INSTALLMENT] : 0)
-        );
         $return &= Configuration::updateValue(ConfigurationMap::MESSENGING_CONFIG, $config);
 
         return $return;

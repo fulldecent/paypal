@@ -23,41 +23,13 @@
  *  @copyright PayPal
  *
  *}
-{assign var="dynamicFieldBanner" value=$form.fields.PAYPAL_ENABLE_INSTALLMENT|default:false}
 
-<form id="{$form.id_form}" class="mt-4 {[
-  'form-modal' => $isModal
-]|classnames}" data-form-configuration {block name='form_attributes'}{/block}
-  {if $isModal}style="min-height:auto;"{/if} 
+<form id="{$form.id_form}" class="mt-4" data-form-configuration {block name='form_attributes'}{/block}
 onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
-  {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_INSTALLMENT dynamicField=$dynamicFieldBanner}
-
-  {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.PAYPAL_INSTALLMENT_MESSAGING_CONFIG dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}
-
-  {if isset($form.fields.widget_code) && !$isModal }
-    <div class="{[
-      'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
-      ]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="PAYPAL_ENABLE_INSTALLMENTG"{/if}>
-              {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.widget_code dynamicField=$form.fields.PAYPAL_ENABLE_INSTALLMENT}     
-    </div>
-  {/if}
+  {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.PAYPAL_INSTALLMENT_MESSAGING_CONFIG}
 </form>
 
-<div class="form-group row {[
-  'd-none' => $dynamicFieldBanner && !$dynamicFieldBanner.value
-]|classnames}" {if $dynamicFieldBanner.name|default:false}group-name="PAYPAL_ENABLE_INSTALLMENTG"{/if}>
-
-  {if !$isModal}
-      <div class="col-12 pr-0">
-  {/if}
-
-        <div class="form-group row" group-name="PAYPAL_ENABLE_INSTALLMENT">
-          <div id="messaging-configurator"></div>
-        </div>  
-  {if !$isModal}
-      </div>
-  {/if}
-</div>
+<div id="messaging-configurator"></div>
 
 <div class="form-group mb-0 d-flex justify-content-between pt-3 mt-auto">
   {block name='form_footer_buttons'}

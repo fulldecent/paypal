@@ -1,6 +1,8 @@
 #messaging-configurator > div:first-of-type {
     margin-top: 0;
     margin-bottom: 0;
+    justify-content: left;
+    margin-left:0;
 }
 #configurator-eligibleContainer > div:first-of-type > button {
     display:none;
@@ -8,6 +10,9 @@
 
 #configurator-eligibleContainer {
     padding-top: 0!important;
+    width: 1296px;
+    max-width: 100%;
+    padding-left: 35px;
 }
 
 [for="dark-mode-toggle"] {

@@ -78,8 +78,6 @@ class Form {
           console.log('Error on saving messengin configuration, continue.');
           if (paypal.configuratorsaved !== true) {
             const newConfig = JSON.stringify(paypal.messagingConfig);
-            console.log(paypal.messagingConfig);
-            console.log(newConfig);
             $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(newConfig);
             paypal.messagingConfig = newConfig;
             paypal.submitInstallmentForm();
