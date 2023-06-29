@@ -106,7 +106,7 @@
 
               {if $merchantId|default:false}
                 <div class="alert alert-warning d-flex align-items-center mt-5 mb-0">
-                    {l s='You are connected with the accound:' mod='paypal'} <b>{$merchantId}</b>
+                    {l s='You are connected with the account:' mod='paypal'} <b>{$merchantId}</b>
                 </div>
               {/if}
 
