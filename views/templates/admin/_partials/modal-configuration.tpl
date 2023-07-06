@@ -31,7 +31,7 @@
       <div class="card-body pb-0">
         <div class="row">
           <div class="col-6">
-            <img src="{$moduleDir|addslashes}/views/img/paypal.svg"  alt="paypal">
+            <img src="{$moduleFullDir|addslashes}/views/img/paypal.svg"  alt="paypal">
           </div>
           <div class="col-6 d-flex flex-column">
             <div class="progress">
@@ -44,21 +44,21 @@
       <div>
         <div data-step-content>
           {include
-            file="module:paypal/views/templates/admin/_partials/section.tpl"
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
             form=$accountForm
             isModal=true
           }
         </div>
         <div class="d-none" data-step-content>
           {include
-            file="module:paypal/views/templates/admin/_partials/section.tpl"
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
             form=$checkoutForm
             isModal=true
           }
         </div>
         <div class="d-none" data-step-content>
           {include
-            file="module:paypal/views/templates/admin/_partials/section.tpl"
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
             form=$formInstallment
             sectionColFormClasses=' '
             sectionColInfoClasses=' '
@@ -67,21 +67,21 @@
         </div>
         <div class="d-none" data-step-content>
           {include
-            file="module:paypal/views/templates/admin/_partials/section.tpl"
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
             form=$shortcutConfigurationForm
             isModal=true
           }
         </div>
         <div class="d-none" data-step-content>
           {include
-            file="module:paypal/views/templates/admin/_partials/section.tpl"
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
             form=$orderStatusForm
             isModal=true
           }
         </div>
         <div class="d-none" data-step-content>
           {include
-            file="module:paypal/views/templates/admin/_partials/section.tpl"
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
             form=$whiteListForm
             isModal=true
           }
