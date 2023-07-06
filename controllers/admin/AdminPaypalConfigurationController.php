@@ -32,6 +32,7 @@ use PaypalAddons\classes\Form\AccountForm;
 use PaypalAddons\classes\Form\CheckoutForm;
 use PaypalAddons\classes\Form\FeatureChecklistForm;
 use PaypalAddons\classes\Form\FormInstallment;
+use PaypalAddons\classes\Form\FormInstallmentMessaging;
 use PaypalAddons\classes\Form\OrderStatusForm;
 use PaypalAddons\classes\Form\ShortcutConfigurationForm;
 use PaypalAddons\classes\Form\TechnicalChecklistForm;

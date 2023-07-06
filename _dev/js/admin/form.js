@@ -524,7 +524,13 @@ class Form {
     if (!$('#messaging-configurator').length) {
       return;
     }
-    const configObject = JSON.parse(paypal.messagingConfig);
+    let configObject = {};
+    try {
+      configObject = JSON.parse(paypal.messagingConfig);
+    } catch (error) {
+      console.log(error);
+      $.growl.notice({title: 'Information', message: 'Messenging configurator :<br />Default parameters loaded.'});
+    }
     window.merchantConfigurators.Messaging({
       config: configObject,
       locale: paypal.locale,

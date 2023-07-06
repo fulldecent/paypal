@@ -24,11 +24,11 @@
  *
  *}
  {extends file="../forms/form.tpl"}
- {assign var="fieldsInstallmentBNPL" value=['PAYPAL_BNPL_PRODUCT_PAGE', 'PAYPAL_BNPL_PAYMENT_STEP_PAGE', 'PAYPAL_BNPL_CART_PAGE', 'PAYPAL_BNPL_CHECKOUT_PAGE']}
- {assign var="dynamicField" value=$form.fields.PAYPAL_ENABLE_BNPL|default:false}
  
  
  {block name='form_content'}
+  {assign var="fieldsInstallmentBNPL" value=['PAYPAL_BNPL_PRODUCT_PAGE', 'PAYPAL_BNPL_PAYMENT_STEP_PAGE', 'PAYPAL_BNPL_CART_PAGE', 'PAYPAL_BNPL_CHECKOUT_PAGE']}
+  {assign var="dynamicField" value=$form.fields.PAYPAL_ENABLE_BNPL|default:false}
    {if $dynamicField}
      {include file="../form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_BNPL dynamicField=$dynamicField}
    {/if}
