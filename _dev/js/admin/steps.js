@@ -23,7 +23,7 @@ class Steps {
       this.updateStepsProgress();
 
       if (this.getCurrentStepIndex() == -1) {
-        $(e.detail.form).closest('.modal').modal('hide');
+        $(e.originalEvent.detail.form).closest('.modal').modal('hide');
         document.location.reload();
       }
     });
