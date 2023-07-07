@@ -14,7 +14,7 @@ class Steps {
 
   registerEvents() {
     $(document).on('afterFormSaved', (e) => {
-      if (e.detail.form.classList.contains('form-modal') == false) {
+      if (e.originalEvent.detail.form.classList.contains('form-modal') == false) {
         return;
       }
 
