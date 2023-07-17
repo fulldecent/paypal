@@ -86,6 +86,9 @@ class Banner
     {
         $config = json_decode(str_replace('-', '_', Configuration::get(ConfigurationMap::MESSENGING_CONFIG)), true);
         $placement = $this->getPlacement();
+        if (isset($config['homepage'])) {
+            $config['home'] = $config['homepage'];
+        }
         if (isset($config[$placement]) === false) {
             switch ($placement) {
                 case 'cart':
