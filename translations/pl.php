@@ -569,7 +569,7 @@ $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Lista adresów IP';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Zapisz';
 $_MODULE['<{paypal}prestashop>statusblock_32d5facdc889dd6e687606994a04bce9'] = 'Rozszerzenie PHP cURL jest włączone na twoim serwerze';
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Twoje ustawienia zaokrąglania nie są w pełni zgodne z wymaganiami PayPal. Aby uniknąć niepowodzenia niektórych transakcji, proszę zmienić tryb zaokrąglania PrestaShop w [a @href1@] Preferencje > Ogólne[/a]';
+$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Twoje ustawienia zaokrąglania nie są w pełni zgodne z wymaganiami PayPal. Aby uniknąć niepowodzenia niektórych transakcji, proszę zmienić tryb zaokrąglania PrestaShop.';
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Zapisz';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'Akceptuj płatności PayPal';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Włączono';

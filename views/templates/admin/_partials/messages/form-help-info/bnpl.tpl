@@ -25,13 +25,13 @@
  *}
 
 <p>
-    {l s='Buy Now Pay Later allows consumers to pay in multiple installments (3x or 4x).' mod='paypal'}
+    {{l s='[b]Pay Later[/b] allows consumers to pay in multiple installments (3x or 4x).' mod='paypal'}|paypalreplace:[]}
 </p>
 <p>
-    {l s='Buy Now Pay Later is one of PayPal’s Pay Later offers included in PayPal Checkout. By offering Pay several times, you’re empowering your customers with more flexibility to make purchases. You can find more information on the PayPal official website.' mod='paypal'}
+    {{l s='[b]Pay Later[/b] is one of PayPal\'s offers included in PayPal Checkout. By offering Buy now Pay later, you’re empowering your customers with more flexibility to make purchases and pay overtime while you get paid upfront. You can find more information on the PayPal official website.' mod='paypal'}|paypalreplace:[]}
 </p>
 <p>
-    {l s='By default, the banners are enabled for all recommended pages. You can choose the types of pages for promoting Buy Now Pay Later Payment on your site.' mod='paypal'}
+    {l s='By default, the banners and Pay later button are enabled for all recommended pages. You can choose the types of pages for promoting Pay Later Messaging on your site.' mod='paypal'}
 </p>
 
 

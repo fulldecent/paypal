@@ -565,7 +565,7 @@ $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Lista de IPs';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{paypal}prestashop>statusblock_32d5facdc889dd6e687606994a04bce9'] = 'La extensión PHP cURL está habilitada en su servidor';
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'La configuración de redondeo no es totalmente compatible con los requisitos de PayPal. Para evitar que algunas de las transacciones fallen, cambie el modo de redondeo de PrestaShop en [a @href1@] Preferencias > General[/a] a:';
+$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'La configuración de redondeo no es totalmente compatible con los requisitos de PayPal. Para evitar que algunas de las transacciones fallen, cambie el modo de redondeo de PrestaShop.';
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'Aceptar pagos con PayPal';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activado';
