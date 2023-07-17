@@ -564,7 +564,7 @@ $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Lijst van IP\'s';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Opslaan';
 $_MODULE['<{paypal}prestashop>statusblock_32d5facdc889dd6e687606994a04bce9'] = 'De PHP cURL-extensie is ingeschakeld op uw server';
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Uw afrondingsinstellingen zijn niet volledig compatibel met de PayPal-vereisten. Om te voorkomen dat sommige transacties mislukken, kunt u de PrestaShop-afrondingsmodus in [a @href1@] Voorkeuren > Algemeen[/a] wijzigen in:';
+$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Uw afrondingsinstellingen zijn niet volledig compatibel met de PayPal-vereisten. Om te voorkomen dat sommige transacties mislukken, kunt u de PrestaShop-afrondingsmodus.';
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Opslaan';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'PayPal-betalingen accepteren';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Ingeschakeld';

@@ -113,7 +113,7 @@ class FormInstallment implements FormInterface
 
         $fields[ConfigurationMap::ENABLE_INSTALLMENT] = [
             'type' => 'switch',
-            'label' => $this->module->l('Pay later messaging', $this->className),
+            'label' => $this->module->l('Display Pay Later Messaging on your site', $this->className),
             'name' => ConfigurationMap::ENABLE_INSTALLMENT,
             'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
             'values' => [
