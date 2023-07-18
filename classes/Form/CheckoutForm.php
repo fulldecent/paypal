@@ -118,7 +118,7 @@ class CheckoutForm implements FormInterface
             'label' => $this->module->l('Brand name', 'CheckoutForm'),
             'name' => PaypalConfigurations::BRAND_NAME,
             'value' => Configuration::get(PaypalConfigurations::BRAND_NAME),
-            'placeholder' => $this->module->l('Leave it empty to use your Shop name setup on your PayPal account', 'AdminPayPalCustomizeCheckoutController'),
+            'placeholder' => $this->module->l('Leave it empty to use your shop name', 'AdminPayPalCustomizeCheckoutController'),
             'hint' => $this->module->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', 'AdminPayPalCustomizeCheckoutController'),
         ];
 
