@@ -36,7 +36,7 @@
   {{l s='[b]Sandbox[/b] mode allows you a mock link to test the flow between Prestashop and PayPal. You can test as long as needed. If you want to create an account, please use the button "Connect or create your PayPal account".' mod='paypal'}|paypalreplace:[]}
 </p>
 <p>
-    {{l s='[b]Production[/b] mode allows you to sell our products online and be paid by customers.If you want to create an account, please click usethe button "Connect or create your PayPal account".' mod='paypal'}|paypalreplace:[]}
+    {{l s='[b]Production[/b] mode allows you to sell our products online and be paid by customers. If you want to create an account, please click use the button "Connect or create your PayPal account".' mod='paypal'}|paypalreplace:[]}
 </p>
 <p>
   {{l s='[b]Note:[/b] You need to switch to the “Production” mode to activate your payment solution.' mod='paypal'}|paypalreplace:[]}

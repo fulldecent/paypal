@@ -558,7 +558,7 @@ $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Lista de IPs';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{paypal}prestashop>statusblock_32d5facdc889dd6e687606994a04bce9'] = 'A extensão cURL do PHP está ativada no seu servidor';
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'As suas configurações de arredondamento não são totalmente compatíveis com os requisitos do PayPal. A fim de evitar que algumas das transacções falhem, por favor mude o modo de arredondamento PrestaShop em [a @href1@] Preferências > Geral[/a] para:';
+$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'As suas configurações de arredondamento não são totalmente compatíveis com os requisitos do PayPal. A fim de evitar que algumas das transacções falhem, por favor mude o modo de arredondamento PrestaShop.';
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'Aceitar pagamentos PayPal';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Ativado';

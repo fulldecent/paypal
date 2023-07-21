@@ -37,7 +37,7 @@
     <ul class="list-unstyled mb-0">
       <li class="d-flex mb-1">
         {include
-          file="module:paypal/views/templates/admin/_partials/icon-status.tpl"
+          file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
           isSuccess=$vars.sslActivated|default:false
         }
         {if $vars.sslActivated|default:false}
@@ -50,12 +50,12 @@
       {if $vars.tlsVersion|default:false}
         <li class="d-flex mb-1">
           {include
-            file="module:paypal/views/templates/admin/_partials/icon-status.tpl"
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
             isSuccess=($vars.tlsVersion|default:false && $vars.tlsVersion['status'])
           }
           {if $vars.tlsVersion|default:false && $vars.tlsVersion['status']}
             {l s='The PHP cURL extension must be enabled on your server.' mod='paypal'}
-          {else $vars.tlsVersion|default:false}
+          {elseif $vars.tlsVersion|default:false}
             {l s='The PHP cURL extension must be enabled on your server. Please contact your hosting provider for more information.' mod='paypal'}
             {$vars.tlsVersion['error_message']}
           {/if}
@@ -63,13 +63,23 @@
       {/if}
 
       {if $vars.showWebhookState|default:false}
-        <li class="d-flex">
-          {include
-            file="module:paypal/views/templates/admin/_partials/icon-status.tpl"
-            isSuccess=$vars.webhookState|default:false
-          }
-          {if isset($vars.webhookStateMsg)}{$vars.webhookStateMsg nofilter}{/if}
-        </li>
+        {if $vars.isWebhookEnabled}
+          <li class="d-flex">
+              {include
+              file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+              isSuccess=$vars.webhookState|default:false
+              }
+              {if isset($vars.webhookStateMsg)}{$vars.webhookStateMsg nofilter}{/if}
+          </li>
+        {else}
+          <li class="d-flex">
+              {include
+              file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+              isSuccess=false
+              }
+              {l s='Webhook is disabled' mod='paypal'}
+          </li>
+        {/if}
       {/if}
     </ul>
   </div>

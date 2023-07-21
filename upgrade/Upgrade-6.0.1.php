@@ -1,4 +1,5 @@
-{**
+<?php
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,12 +23,22 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  *
- *}
+ */
 
-<p>
-  {{l s='[b]PayPal Express checkout advanced settings[/b] are added to the module in order to provide the most customizable solution possible. You can customize the display options and styles of the PayPal shortcuts. They can be changed for each button separately depending on their location. These customization options will be shown only if the shortcuts are enabled at least for one location (Cart Page / Product pages/ Sign up step in checkout)' mod='paypal'}|paypalreplace:[]}
-</p>
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-<p>
-  {l s='If some elements added via other modules are displayed on the same hook, you can manage the position of the PayPal Official module via « Design - Positions ». By default, PayPal shortcuts are displayed on your website via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy the widget code and insert it wherever you want in the product template.' mod='paypal'}
-</p>
+/**
+ * @param $module PayPal
+ *
+ * @return bool
+ */
+function upgrade_module_6_0_1($module)
+{
+    $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
+    $installer->installObjectModels();
+    $module->resetHooks();
+
+    return true;
+}

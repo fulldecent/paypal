@@ -105,6 +105,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
 
         $tpl->assign([
             'moduleDir' => _MODULE_DIR_ . $this->module->name,
+            'moduleFullDir' => _PS_MODULE_DIR_ . $this->module->name,
             'isShowModalConfiguration' => (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION),
             'diagnosticPage' => $this->context->link->getAdminLink('AdminPaypalDiagnostic'),
             'loggerPage' => $this->context->link->getAdminLink('AdminPaypalProcessLogger'),
@@ -224,6 +225,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $response = new JsonResponse();
         $template = $this->context->smarty->createTemplate($this->getTemplatePath() . '_partials/statusBlock.tpl');
         $template->assign('vars', $this->forms['technicalChecklistForm']->getDescription()['fields']['technicalChecklist']['set']);
+        $template->assign('moduleFullDir', _PS_MODULE_DIR_ . $this->module->name);
         $response->setData([
             'success' => true,
             'content' => $template->fetch(),
@@ -237,6 +239,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $response = new JsonResponse();
         $template = $this->context->smarty->createTemplate($this->getTemplatePath() . '_partials/featureChecklist.tpl');
         $template->assign('vars', $this->forms['featureChecklistForm']->getDescription()['fields']['featureChecklist']['set']);
+        $template->assign('moduleFullDir', _PS_MODULE_DIR_ . $this->module->name);
         $response->setData([
             'success' => true,
             'content' => $template->fetch(),
@@ -271,6 +274,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             }
 
             $template = $this->context->smarty->createTemplate($tmpPath);
+            $template->assign('moduleFullDir', _PS_MODULE_DIR_ . $this->module->name);
             $template->assign('form', $desc);
             $template->assign('isModal', (int) Tools::getValue('isModal'));
             $responseBody['forms'][$desc['id_form']] = $template->fetch();
@@ -291,6 +295,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             'isConfigured' => $this->method->isConfigured(),
             'isSandbox' => $this->method->isSandbox(),
             'merchantId' => $this->method->getMerchantId(),
+            'moduleFullDir' => _PS_MODULE_DIR_ . $this->module->name,
         ]);
         $response->setData([
             'success' => true,
