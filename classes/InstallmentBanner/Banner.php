@@ -116,6 +116,7 @@ class Banner
         $configReturn = $config[$placement];
         $configReturn['amount'] = $this->amount;
         $configReturn['locale'] = str_replace('-', '_', \Context::getContext()->language->locale);
+
         return $configReturn;
     }
 

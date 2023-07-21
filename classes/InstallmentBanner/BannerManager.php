@@ -30,7 +30,6 @@ use Configuration;
 use Context;
 use Country;
 use PaypalAddons\services\CurrencyConverter;
-use ProductController;
 use Validate;
 
 if (!defined('_PS_VERSION_')) {
@@ -134,6 +133,7 @@ class BannerManager
 
     /**
      * @param string $placement Placement expected for the message
+     *
      * @return string
      */
     public function renderBanner($placement = 'home')
