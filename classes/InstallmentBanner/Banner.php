@@ -73,7 +73,7 @@ class Banner
 
     public function render()
     {
-        $render =  Context::getContext()->smarty
+        $render = Context::getContext()->smarty
             ->assign('paypalmessenging', $this->getConfig())
             ->assign($this->getTplVars())
             ->assign('JSscripts', $this->getJS())
@@ -104,12 +104,12 @@ class Banner
                     ];
                     break;
                 default:
-                $config[$placement] = [
-                    'layout' => 'flex',
-                    'color' => 'white-no-border',
-                    'placement' => $placement,
-                    'ratio' => '20x1',
-                ];
+                    $config[$placement] = [
+                        'layout' => 'flex',
+                        'color' => 'white-no-border',
+                        'placement' => $placement,
+                        'ratio' => '20x1',
+                    ];
             }
         }
 

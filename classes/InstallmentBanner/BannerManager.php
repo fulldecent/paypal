@@ -138,7 +138,7 @@ class BannerManager
      */
     public function renderBanner($placement = 'home')
     {
-        $banner =  $this->banner
+        $banner = $this->banner
             ->setPlacement($placement)
             ->setTemplate('module:paypal/views/templates/installmentBanner/banner.tpl');
 
@@ -154,7 +154,7 @@ class BannerManager
         if ($placement == 'cart' || $placement == 'payment') {
             $banner->setAmount($this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true)));
         }
-            
+
         return $banner->render();
     }
 
