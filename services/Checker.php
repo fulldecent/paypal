@@ -33,13 +33,10 @@ use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Webhook\CreateWebhook;
 use PaypalAddons\classes\Webhook\WebhookAvailability;
 
-<<<<<<< HEAD
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-=======
->>>>>>> 65176acc (Release 6.0.0 (#211))
 class Checker
 {
     protected $context;

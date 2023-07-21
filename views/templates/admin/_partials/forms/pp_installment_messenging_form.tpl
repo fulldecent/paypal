@@ -26,7 +26,7 @@
 
 <form id="{$form.id_form}" class="mt-4" data-form-configuration {block name='form_attributes'}{/block}
 onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
-  {include file="module:paypal/views/templates/admin/_partials/form-fields.tpl" field=$form.fields.PAYPAL_INSTALLMENT_MESSAGING_CONFIG}
+  {include file="../form-fields.tpl" field=$form.fields.PAYPAL_INSTALLMENT_MESSAGING_CONFIG}
 </form>
 
 <div id="messaging-configurator"></div>

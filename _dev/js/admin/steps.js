@@ -11,6 +11,7 @@ class Steps {
 
   init() {
     this.registerEvents();
+    this.$stepsContainer.find(this.maxStepBadge).html($(this.content).length);
   }
 
   registerEvents() {

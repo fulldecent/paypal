@@ -31,7 +31,7 @@
       <div class="card-body pb-0">
         <div class="row">
           <div class="col-6">
-            <img src="{$moduleFullDir|addslashes}/views/img/paypal.svg"  alt="paypal">
+            <img src="{$moduleDir|addslashes}/views/img/paypal.svg"  alt="paypal">
           </div>
           <div class="col-6 d-flex flex-column">
             <div class="progress">
@@ -60,15 +60,6 @@
           {include
             file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
             form=$formInstallment
-            sectionColFormClasses=' '
-            sectionColInfoClasses=' '
-            isModal=true
-          }
-        </div>
-        <div class="d-none" data-step-content>
-          {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-            form=$formInstallmentMessaging
             sectionColFormClasses=' '
             sectionColInfoClasses=' '
             isModal=true

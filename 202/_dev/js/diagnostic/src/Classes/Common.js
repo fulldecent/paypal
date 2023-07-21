@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:202/_dev/js/diagnostic/src/Classes/Common.js
 /*
-========
-/**
->>>>>>>> 65176acc (Release 6.0.0 (#211)):_dev/scss/admin/components/_icon.scss
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -27,7 +23,6 @@
  *  @copyright PayPal
  *
  */
-<<<<<<<< HEAD:202/_dev/js/diagnostic/src/Classes/Common.js
 
 export default class Common {
   init() {
@@ -45,26 +40,5 @@ export default class Common {
       $card.find('.form-wrapper').toggleClass('d-none');
       $card.find('.card-footer').toggleClass('d-none');
     })
-========
-.icon {
-  width: $icon-container-base-size;
-  height: $icon-container-base-size;
-
-  @at-root .btn & {
-    vertical-align: middle;
-  }
-
-  > i {
-    font-size: $icon-base-font-size;
-  }
-
-  &-lg {
-    width: $icon-container-lg-size;
-    height: $icon-container-lg-size;
-
-    > i {
-      font-size: $icon-lg-font-size;
-    }
->>>>>>>> 65176acc (Release 6.0.0 (#211)):_dev/scss/admin/components/_icon.scss
   }
 }

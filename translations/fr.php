@@ -567,11 +567,7 @@ $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Liste des IPs autorisées';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{paypal}prestashop>statusblock_32d5facdc889dd6e687606994a04bce9'] = 'L\'extention PHP cURL est activé sur votre serveur';
-<<<<<<< HEAD
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Vos paramètres d\'arrondi ne sont pas entièrement compatibles avec les exigences de PayPal. Afin d\'éviter que certaines transactions échouent, veuillez changer le mode d\'arrondi de PrestaShop.';
-=======
 $_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Vos paramètres d\'arrondi ne sont pas entièrement compatibles avec les exigences de PayPal. Afin d\'éviter que certaines transactions échouent, veuillez changer le mode d\'arrondi de PrestaShop dans [a @href1@] Préférences > Général [/a] en :';
->>>>>>> 65176acc (Release 6.0.0 (#211))
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'Accepter les paiements PayPal';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';

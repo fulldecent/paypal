@@ -6,6 +6,7 @@ class Steps {
     this.currentStepBadge = '[data-badge-current-step]';
     this.maxStepBadge = '[data-badge-max-step]';
     this.stepsProgress = '[data-steps-progress]';
+    this.modalConfiguration = '[data-modal-dialog-configuration]';
     this.controller = document.location.href;
   }
 
@@ -34,6 +35,7 @@ class Steps {
       this.setAction($(e.currentTarget).data('btn-action'));
       this.updateCurrentBadgeStep();
       this.updateStepsProgress();
+      this.updateFormStep();
 
       if ($(e.currentTarget).attr('data-dismiss') === 'modal') {
         $(e.currentTarget).closest('.modal').modal('hide');
@@ -97,7 +99,7 @@ class Steps {
     }
 
     if (this.getCurrentStepIndex() === this.getLastStepIndex()) {
-      $nextBtn.attr('data-dismiss', 'modal')
+      $nextBtn.attr('data-dismiss', 'modal');
     } else {
       $nextBtn.removeAttr('data-dismiss');
     }
