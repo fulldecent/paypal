@@ -28,13 +28,10 @@ namespace PaypalAddons\classes\PUI;
 
 use PayPal;
 use PaypalAddons\classes\AbstractMethodPaypal;
-<<<<<<< HEAD
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-=======
->>>>>>> 65176acc (Release 6.0.0 (#211))
 
 class SignupLink
 {

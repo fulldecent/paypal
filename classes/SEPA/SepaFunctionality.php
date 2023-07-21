@@ -29,13 +29,10 @@ namespace PaypalAddons\classes\SEPA;
 use Configuration;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 
-<<<<<<< HEAD
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-=======
->>>>>>> 65176acc (Release 6.0.0 (#211))
 class SepaFunctionality
 {
     public function isEnabled()

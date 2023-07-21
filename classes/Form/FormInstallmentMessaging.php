@@ -100,9 +100,9 @@ class FormInstallmentMessaging implements FormInterface
     /**
      * Save decoded configuration returned by messenging configuration
      * Will save if placements are enabled (for retro compatibility with previous version)
-     * 
+     *
      * @param string $config JSON string returned by configurator
-     * 
+     *
      * @return string same string if not an error on decoding part
      */
     private function saveDecodedConf($config)
@@ -110,7 +110,7 @@ class FormInstallmentMessaging implements FormInterface
         $decodedConfig = json_decode($config, true);
         $return = true;
         if ($decodedConfig !== false && empty($decodedConfig) === false) {
-            foreach($decodedConfig as $key => $values) {
+            foreach ($decodedConfig as $key => $values) {
                 $allConfigMap = ConfigurationMap::getParameterConfMap();
                 if (isset($allConfigMap[$key])) {
                     $enabled = isset($values['status']) && $values['status'] == 'enabled';
@@ -118,7 +118,7 @@ class FormInstallmentMessaging implements FormInterface
                 }
             }
         }
-        
+
         return $return;
     }
 }

@@ -651,6 +651,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 if ($this->context->controller instanceof CategoryController) {
                     return $bannerManager->renderBanner('category');
                 }
+
                 return $bannerManager->renderForHomePage();
             }
         }
@@ -1456,7 +1457,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
     }
 
     public function validateOrder(
-        $id_cart, $id_order_state,
+        $id_cart,
+        $id_order_state,
         $amount_paid,
         $payment_method = 'Unknown',
         $message = null,

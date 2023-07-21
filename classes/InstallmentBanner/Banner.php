@@ -78,7 +78,7 @@ class Banner
             ->assign($this->getTplVars())
             ->assign('JSscripts', $this->getJS())
             ->fetch($this->getTemplate());
-    
+
         return $render;
     }
 

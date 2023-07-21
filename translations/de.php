@@ -498,11 +498,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_09a74d0b7e593735e8f2ed96
 $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Liste der IPs';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
-<<<<<<< HEAD
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Ihre Rundungseinstellungen sind nicht vollständig kompatibel mit den PayPal-Anforderungen. Um zu vermeiden, dass einige der Transaktionen fehlschlagen, ändern Sie bitte den PrestaShop-Rundungsmodus.';
-=======
 $_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Ihre Rundungseinstellungen sind nicht vollständig kompatibel mit den PayPal-Anforderungen. Um zu vermeiden, dass einige der Transaktionen fehlschlagen, ändern Sie bitte den PrestaShop-Rundungsmodus in [a @href1@] Einstellungen > Allgemein[/a] auf:';
->>>>>>> 65176acc (Release 6.0.0 (#211))
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'PayPal-Zahlungen akzeptieren';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Aktiviert';
