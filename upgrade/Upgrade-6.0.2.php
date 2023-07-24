@@ -41,6 +41,7 @@ function upgrade_module_6_0_2($module)
     $installer->uninstallModuleAdminControllers();
     $installer->installAdminControllers();
     $installer->installExtensions();
+    $installer->installObjectModels();
 
     return true;
 }
