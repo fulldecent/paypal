@@ -102,6 +102,8 @@ class StatusMapping
             } else {
                 $idStatus = (int) Configuration::get('PAYPAL_OS_REFUNDED');
             }
+        } else {
+            $idStatus = (int) Configuration::get('PS_OS_REFUND');
         }
 
         if ($idStatus) {
@@ -142,6 +144,8 @@ class StatusMapping
                     $idStatus = (int) Configuration::get('PAYPAL_OS_CAPTURE_CANCELED');
                 }
             }
+        } else {
+            $idStatus = (int) Configuration::get('PS_OS_CANCELED');
         }
 
         if ($idStatus) {
