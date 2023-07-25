@@ -107,8 +107,8 @@ class StatusMapping
         if ($idStatus) {
             return $idStatus;
         }
-
-        return (int) Configuration::get('PS_OS_REFUND');
+        //no action
+        return -1;
     }
 
     public function getFailedStatus()
@@ -147,8 +147,8 @@ class StatusMapping
         if ($idStatus) {
             return $idStatus;
         }
-
-        return (int) Configuration::get('PS_OS_CANCELED');
+        //no action
+        return -1;
     }
 
     public function getWaitValidationStatus()
