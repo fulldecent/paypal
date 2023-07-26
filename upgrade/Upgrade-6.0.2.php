@@ -37,6 +37,10 @@ if (!defined('_PS_VERSION_')) {
 function upgrade_module_6_0_2($module)
 {
     $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
+    $installer->uninstallExtensions();
+    $installer->uninstallModuleAdminControllers();
+    $installer->installAdminControllers();
+    $installer->installExtensions();
     $installer->installObjectModels();
 
     return true;
