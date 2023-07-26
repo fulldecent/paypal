@@ -224,9 +224,6 @@
     }
 
     window.addEventListener('load', function() {
-      var script = document.createElement('script');
-      script.src = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
-      document.body.appendChild(script);
 
       var event = new CustomEvent(
         '{if $isShowCredentials}updateCredentials{else}updateButtonSection{/if}',
@@ -246,6 +243,7 @@
 
 
   </script>
+  <script src="https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js"></script>
 {/block}
 
 {block name='form_footer_buttons'}
