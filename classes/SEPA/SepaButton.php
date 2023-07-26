@@ -72,7 +72,7 @@ class SepaButton
     protected function getJSvars()
     {
         return [
-            $vars[PaypalConfigurations::MOVE_BUTTON_AT_END] = (int) Configuration::get(PaypalConfigurations::MOVE_BUTTON_AT_END),
+            PaypalConfigurations::MOVE_BUTTON_AT_END => (int) Configuration::get(PaypalConfigurations::MOVE_BUTTON_AT_END),
         ];
     }
 
