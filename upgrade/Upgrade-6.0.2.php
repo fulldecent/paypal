@@ -1,4 +1,5 @@
-/**
+<?php
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -24,35 +25,23 @@
  *
  */
 
-import '~/bootstrap';
-import Steps from './admin/steps';
-import Form from './admin/form';
-import Section from './admin/section';
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-window.addEventListener('load', () => {
-  $('#modal-configuration').modal('show');
+/**
+ * @param $module PayPal
+ *
+ * @return bool
+ */
+function upgrade_module_6_0_2($module)
+{
+    $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
+    $installer->uninstallExtensions();
+    $installer->uninstallModuleAdminControllers();
+    $installer->installAdminControllers();
+    $installer->installExtensions();
+    $installer->installObjectModels();
 
-  const steps = new Steps('#modal-configuration-steps');
-  steps.init();
-
-  const form = new Form();
-  form.init();
-
-  const section = new Section();
-  section.init();
-
-  if (document.location.hash.slice(1,)) {
-    document.dispatchEvent(
-      (new CustomEvent(
-        'showSection',
-        {
-          bubbles: true,
-          detail: {
-            section: document.location.hash.slice(1,)
-          }
-        }
-      ))
-    );
-  }
-});
-
+    return true;
+}

@@ -10,6 +10,7 @@ php /var/www/html/bin/console prestashop:module install paypal -e prod
 mysql -h localhost -u root prestashop -e "
 TRUNCATE ps_paypal_webhook;
 TRUNCATE ps_paypal_order;
+UPDATE ps_configuration SET value = '0' WHERE name = 'PAYPAL_CUSTOMIZE_ORDER_STATUS';
 "
 
 cd /var/www/html/modules/paypal/
