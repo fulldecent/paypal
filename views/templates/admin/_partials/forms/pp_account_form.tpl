@@ -135,11 +135,9 @@
                   </a>
                 </div>
               </div>
-
             </div>
 
             <div sandbox-section style="display: none">
-
               <div class="form-group row">
                 <div class="offset-3 {[
                 'col-7' => !$isModal,
@@ -161,7 +159,6 @@
                   </a>
                 </div>
               </div>
-
             </div>
 
             <div logout-section style="display: none">
@@ -254,6 +251,7 @@
 
   </script>
   <script src="https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js"></script>
+
 {/block}
 
 {block name='form_footer_buttons'}
