@@ -164,9 +164,19 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $paypalOnboarding = new PaypalGetAuthToken($authCode, $sharedId, $sellerNonce, $isSandbox);
         $result = $paypalOnboarding->execute();
 
+        $locale = \Context::getContext()->language->locale;
+        $errorMessages = [
+            $this->module->l(
+                'An error occured while trying to link your PayPal\'s account',
+                'AdminPaypalConfigurationController',
+                $locale
+            ),
+        ];
+        $errorMessages[] = $this->module->l('More details: ', 'AdminPaypalConfigurationController', $locale);
+
         if ($result->isSuccess() == false) {
-            $response->setData(['success' => false, 'message' => $result->getError()->getMessage()])->send();
-            exit;
+            $errorMessages[] = $result->getError()->getMessage();
+            $this->errorTemplate($response, $errorMessages);
         }
 
         $authToken = $result->getAuthToken();
@@ -176,8 +186,8 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $result = $paypalGetCredentials->execute();
 
         if ($result->isSuccess() == false) {
-            $response->setData(['success' => false, 'messeage' => $result->getError()->getMessage()])->send();
-            exit;
+            $errorMessage[] = $result->getError()->getMessage();
+            $this->errorTemplate($response, $errorMessages);
         }
 
         $params = [
@@ -194,6 +204,26 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             'secret' => $result->getSecret(),
             'merchantId' => $result->getMerchantId(),
             'isSandbox' => $isSandbox,
+        ])->send();
+        exit;
+    }
+
+    /**
+     * Send Error message
+     *
+     * @param JsonResponse $response
+     * @param mixed $messages
+     */
+    private function errorTemplate($response, $messages)
+    {
+        $template = $this->context->smarty->createTemplate(
+            $this->getTemplatePath() . '_partials/alert_ajax.tpl'
+        );
+        $template->assign('messages', $messages);
+
+        $response->setData([
+            'success' => false,
+            'message' => $template->fetch(),
         ])->send();
         exit;
     }

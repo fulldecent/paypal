@@ -264,6 +264,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public $moduleAdminControllers = [
         [
             'name' => [
+                'en' => 'PayPal',
+            ],
+            'class_name' => 'paypal',
+            'parent_class_name' => 'IMPROVE',
+            'visible' => false,
+        ],
+        [
+            'name' => [
                 'en' => 'Configuration',
                 'fr' => 'Configuration',
             ],

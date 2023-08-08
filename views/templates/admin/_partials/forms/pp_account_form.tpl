@@ -135,11 +135,9 @@
                   </a>
                 </div>
               </div>
-
             </div>
 
             <div sandbox-section style="display: none">
-
               <div class="form-group row">
                 <div class="offset-3 {[
                 'col-7' => !$isModal,
@@ -161,15 +159,24 @@
                   </a>
                 </div>
               </div>
-
             </div>
 
             <div logout-section style="display: none">
 
               <div class="form-group row">
-                <div class="offset-3 {[
+                {if !$isModal}
+                  <label class="form-control-label col-3">
+                      {include
+                      file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+                      isSuccess=true
+                      }
+                  </label>
+                {/if}
+
+                <div class="{[
                 'col-7' => !$isModal,
-                'col-9' => $isModal
+                'col-9' => $isModal,
+                'offset-3' => $isModal
                 ]|classnames}">
               <span class="btn btn-secondary btn-block" logout-button>
               <span class="icon mr-2">
@@ -224,9 +231,6 @@
     }
 
     window.addEventListener('load', function() {
-      var script = document.createElement('script');
-      script.src = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
-      document.body.appendChild(script);
 
       var event = new CustomEvent(
         '{if $isShowCredentials}updateCredentials{else}updateButtonSection{/if}',
@@ -246,6 +250,8 @@
 
 
   </script>
+  <script src="https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js"></script>
+
 {/block}
 
 {block name='form_footer_buttons'}
