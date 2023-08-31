@@ -39,6 +39,7 @@ use PaypalAddons\classes\Form\TrackingParametersForm;
 use PaypalAddons\classes\Form\WhiteListForm;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 if (!defined('_PS_VERSION_')) {
@@ -53,12 +54,16 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
 
     protected $method;
 
+    /** @var VaultingFunctionality */
+    protected $vaultingFunctionality;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->initForms();
         $this->method = AbstractMethodPaypal::load();
+        $this->vaultingFunctionality = new VaultingFunctionality();
     }
 
     protected function initForms()
@@ -91,6 +96,12 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
 
     public function initContent()
     {
+        if ($this->vaultingFunctionality->isAvailable() && $this->vaultingFunctionality->isEnabled()) {
+            if (false == $this->vaultingFunctionality->isCapabilityAvailable(true)) {
+                $this->errors[] = $this->module->l('You enabled vault functionality but capability is missing. Please, reset connection', 'AdminPaypalConfigurationController');
+            }
+        }
+
         $this->content .= $this->renderConfiguration();
         parent::initContent();
     }

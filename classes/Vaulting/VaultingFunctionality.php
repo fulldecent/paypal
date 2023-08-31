@@ -29,7 +29,9 @@ namespace PaypalAddons\classes\Vaulting;
 
 use Configuration;
 use Country;
+use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\Constants\Vaulting;
 use Tools;
 
 if (!defined('_PS_VERSION_')) {
@@ -38,6 +40,14 @@ if (!defined('_PS_VERSION_')) {
 
 class VaultingFunctionality
 {
+    /** @var \MethodEC */
+    protected $method;
+
+    public function __construct()
+    {
+        $this->method = AbstractMethodPaypal::load('EC');
+    }
+
     public function isAvailable()
     {
         $iso = Country::getIsoById((int) Configuration::get('PS_COUNTRY_DEFAULT'));
@@ -55,5 +65,40 @@ class VaultingFunctionality
         Configuration::updateValue(PaypalConfigurations::ACCOUNT_VAULTING, (int) $state);
 
         return $this;
+    }
+
+    public function isCapabilityAvailable($refresh = true)
+    {
+        $isAvailable = (int) Configuration::get(Vaulting::ACCOUNT_VAULTING_STATE);
+
+        if ($refresh == false && in_array($isAvailable, [Vaulting::IS_AVAILABLE, Vaulting::IS_UNAVAILABLE])) {
+            return $isAvailable == Vaulting::IS_AVAILABLE;
+        }
+
+        $sellerStatus = $this->method->getSellerStatus();
+
+        if ($sellerStatus->isSuccess() == false) {
+            Configuration::updateValue(Vaulting::ACCOUNT_VAULTING_STATE, Vaulting::IS_UNAVAILABLE);
+
+            return false;
+        }
+
+        if (empty($sellerStatus->getCapabilities())) {
+            Configuration::updateValue(Vaulting::ACCOUNT_VAULTING_STATE, Vaulting::IS_UNAVAILABLE);
+
+            return false;
+        }
+
+        foreach ($sellerStatus->getCapabilities() as $capability) {
+            if (Tools::strtoupper($capability) == Vaulting::CAPABILITY) {
+                Configuration::updateValue(Vaulting::ACCOUNT_VAULTING_STATE, Vaulting::IS_AVAILABLE);
+
+                return true;
+            }
+        }
+
+        Configuration::updateValue(Vaulting::ACCOUNT_VAULTING_STATE, Vaulting::IS_UNAVAILABLE);
+
+        return false;
     }
 }
