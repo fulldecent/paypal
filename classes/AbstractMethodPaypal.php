@@ -47,6 +47,7 @@ use PaypalAddons\classes\Shortcut\ShortcutCart;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutProduct;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalAddons\services\Order\RefundAmountCalculator;
 use PaypalAddons\services\PaypalContext;
@@ -402,6 +403,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
 
         $urlLink = '';
+        $vaultingFunctionality = $this->initVaultingFunctionality();
 
         if ($sandbox) {
             $urlLink .= 'https://www.sandbox.paypal.com/merchantsignup/partner/onboardingentry?';
@@ -417,6 +419,12 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'displayMode' => 'minibrowser',
             'sellerNonce' => $this->getSellerNonce($sandbox),
         ];
+
+        if ($vaultingFunctionality->isAvailable()) {
+            $params['features'] = 'PAYMENT,REFUND,VAULT,BILLING_AGREEMENT';
+            $params['products'] = 'EXPRESS_CHECKOUT,ADVANCED_VAULTING';
+            $params['capabilities'] = 'PAYPAL_WALLET_VAULTING_ADVANCED';
+        }
 
         return $urlLink . http_build_query($params);
     }
@@ -702,6 +710,11 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
 
         $this->checkCredentials();
+    }
+
+    protected function initVaultingFunctionality()
+    {
+        return new VaultingFunctionality();
     }
 
     /** @return  string*/
