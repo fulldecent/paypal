@@ -8,6 +8,7 @@ use Country;
 use Module;
 use PaypalAddons\classes\ACDC\AcdcFunctionality;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use Tools;
@@ -373,16 +374,16 @@ class CheckoutForm implements FormInterface
                 'values' => [
                     [
                         'id' => PaypalConfigurations::ACCOUNT_VAULTING . '_on',
-                        'value' => 1,
+                        'value' => Vaulting::ENABLED,
                         'label' => $this->module->l('Enabled', 'AdminPayPalCustomizeCheckoutController'),
                     ],
                     [
                         'id' => PaypalConfigurations::ACCOUNT_VAULTING . '_off',
-                        'value' => 0,
+                        'value' => Vaulting::DISABLED,
                         'label' => $this->module->l('Disabled', 'AdminPayPalCustomizeCheckoutController'),
                     ],
                 ],
-                'value' => (int) $this->vaultingFunctionality->isEnabled(),
+                'value' => $this->vaultingFunctionality->isEnabled() ? Vaulting::ENABLED : Vaulting::DISABLED,
             ];
         }
 

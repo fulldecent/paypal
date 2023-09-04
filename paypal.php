@@ -57,6 +57,7 @@ use PaypalAddons\classes\SEPA\SepaFunctionality;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\classes\Venmo\VenmoButton;
 use PaypalAddons\classes\Venmo\VenmoFunctionality;
 use PaypalAddons\classes\Webhook\WebhookOption;
@@ -999,6 +1000,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paymentOptions = [];
         $is_virtual = 0;
         $additionalInformation = '';
+        $vaultingFunctionality = $this->initVaultingFunctionality();
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
                 $is_virtual = 1;
@@ -1023,6 +1025,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
             $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
+        }
+        if ($vaultingFunctionality->isAvailable()) {
+            if ($vaultingFunctionality->isEnabled()) {
+                if ($vaultingFunctionality->isCapabilityAvailable(false)) {
+                    $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
+                }
+            }
         }
 
         $paymentOption->setAdditionalInformation($additionalInformation);
@@ -3022,5 +3031,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initSepaFunctionality()
     {
         return new SepaFunctionality();
+    }
+
+    protected function initVaultingFunctionality()
+    {
+        return new VaultingFunctionality();
     }
 }

@@ -36,4 +36,14 @@ class Vaulting
     const IS_UNAVAILABLE = 2;
 
     const CAPABILITY = 'PAYPAL_WALLET_VAULTING_ADVANCED';
+
+    const STORE_IN_VAULT_ON_SUCCESS = 'ON_SUCCESS';
+
+    const USAGE_TYPE_MERCHANT = 'MERCHANT';
+
+    const CUSTOMER_TYPE_CONSUMER = 'CONSUMER';
+
+    const ENABLED = 1;
+
+    const DISABLED = 0;
 }
