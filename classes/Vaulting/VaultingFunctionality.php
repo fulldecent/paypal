@@ -57,7 +57,7 @@ class VaultingFunctionality
 
     public function isEnabled()
     {
-        return Vaulting::ENABLED === (int) Configuration::get(PaypalConfigurations::ACCOUNT_VAULTING);
+        return Vaulting::ENABLED === (int) Configuration::get(PaypalConfigurations::ACCOUNT_VAULTING) && (int) Configuration::get(PaypalConfigurations::EXPRESS_CHECKOUT_IN_CONTEXT);
     }
 
     public function enable($state)
