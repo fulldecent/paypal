@@ -149,7 +149,7 @@ class MethodMB extends AbstractMethodPaypal
         $customer = new Customer($cart->id_customer);
 
         if (Validate::isLoadedObject($customer) && $this->getRememberedCards()) {
-            $this->servicePaypalVaulting->createOrUpdatePaypalVaulting($customer->id, $this->getRememberedCards());
+            $this->servicePaypalVaulting->saveRememberedCards($customer->id, $this->getRememberedCards());
         }
 
         parent::validation();

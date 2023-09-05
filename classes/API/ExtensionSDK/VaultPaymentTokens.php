@@ -25,31 +25,30 @@
  *
  */
 
-namespace PaypalAddons\classes\Constants;
+namespace PaypalAddons\classes\API\ExtensionSDK;
 
-class Vaulting
+use PayPalHttp\HttpRequest;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+class VaultPaymentTokens extends HttpRequest
 {
-    const ACCOUNT_VAULTING_STATE = 'PAYPAL_ACCOUNT_VAULTING_STATE';
-
-    const IS_AVAILABLE = 1;
-
-    const IS_UNAVAILABLE = 2;
-
-    const CAPABILITY = 'PAYPAL_WALLET_VAULTING_ADVANCED';
-
-    const STORE_IN_VAULT_ON_SUCCESS = 'ON_SUCCESS';
-
-    const USAGE_TYPE_MERCHANT = 'MERCHANT';
-
-    const CUSTOMER_TYPE_CONSUMER = 'CONSUMER';
-
-    const ENABLED = 1;
-
-    const DISABLED = 0;
-
-    const PAYMENT_SOURCE_PAYPAL = 'paypal';
-
-    const STATUS_VAULTED = 'VAULTED';
-
-    const STATUS_APPROVED = 'APPROVED';
+    public function __construct($tokenId)
+    {
+        parent::__construct(
+            '/v3/vault/payment-tokens',
+            'POST'
+        );
+        $this->headers['Content-Type'] = 'application/json';
+        $this->body = [
+            'payment_source' => [
+                'token' => [
+                    'id' => (string) $tokenId,
+                    'type' => 'SETUP_TOKEN',
+                ],
+            ],
+        ];
+    }
 }

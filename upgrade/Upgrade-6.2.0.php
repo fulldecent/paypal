@@ -25,31 +25,19 @@
  *
  */
 
-namespace PaypalAddons\classes\Constants;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-class Vaulting
+/**
+ * @param $module PayPal
+ *
+ * @return bool
+ */
+function upgrade_module_6_2_0($module)
 {
-    const ACCOUNT_VAULTING_STATE = 'PAYPAL_ACCOUNT_VAULTING_STATE';
+    $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
+    $installer->installObjectModels();
 
-    const IS_AVAILABLE = 1;
-
-    const IS_UNAVAILABLE = 2;
-
-    const CAPABILITY = 'PAYPAL_WALLET_VAULTING_ADVANCED';
-
-    const STORE_IN_VAULT_ON_SUCCESS = 'ON_SUCCESS';
-
-    const USAGE_TYPE_MERCHANT = 'MERCHANT';
-
-    const CUSTOMER_TYPE_CONSUMER = 'CONSUMER';
-
-    const ENABLED = 1;
-
-    const DISABLED = 0;
-
-    const PAYMENT_SOURCE_PAYPAL = 'paypal';
-
-    const STATUS_VAULTED = 'VAULTED';
-
-    const STATUS_APPROVED = 'APPROVED';
+    return true;
 }

@@ -36,12 +36,16 @@ use Exception;
 use MethodMB;
 use Module;
 use PayPal;
+use PaypalAddons\classes\API\Model\VaultInfo;
 use PaypalAddons\classes\API\PaypalApiManagerInterface;
+use PaypalAddons\classes\API\PaypalVaultApiManagerInterface;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\API\Response\ResponseOrderCapture;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
+use PaypalAddons\classes\API\Response\ResponseVaultPaymentToken;
+use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\PUI\SignupLink;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
@@ -51,6 +55,7 @@ use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalAddons\services\Order\RefundAmountCalculator;
 use PaypalAddons\services\PaypalContext;
+use PaypalAddons\services\ServicePaypalVaulting;
 use PaypalAddons\services\StatusMapping;
 use PaypalPPBTlib\AbstractMethod;
 use PrestaShopLogger;
@@ -179,6 +184,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $context = Context::getContext();
         $cart = $context->cart;
         $customer = new Customer($cart->id_customer);
+        $vaultingFunctionality = $this->initVaultingFunctionality();
 
         if (!Validate::isLoadedObject($customer)) {
             throw new Exception('Customer is not loaded object');
@@ -196,6 +202,12 @@ abstract class AbstractMethodPaypal extends AbstractMethod
 
         if ($response->isSuccess() == false) {
             throw new Exception($response->getError()->getMessage());
+        }
+
+        if ($vaultingFunctionality->isAvailable() && $vaultingFunctionality->isEnabled()) {
+            if ($response->getVaultInfo()) {
+                $this->saveVault((int) $customer->id, $response->getVaultInfo());
+            }
         }
 
         $this->setDetailsTransaction($response);
@@ -715,6 +727,38 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     protected function initVaultingFunctionality()
     {
         return new VaultingFunctionality();
+    }
+
+    protected function initPaypalVaultingService()
+    {
+        return new ServicePaypalVaulting();
+    }
+
+    /**
+     * @return \PaypalVaulting|null
+     */
+    protected function saveVault(int $idCustomer, VaultInfo $vaultInfo)
+    {
+        $paypalVaultingService = $this->initPaypalVaultingService();
+
+        if ($vaultInfo->getStatus() === Vaulting::STATUS_VAULTED) {
+            return $paypalVaultingService->addVault($idCustomer, $vaultInfo);
+        }
+
+        if ($vaultInfo->getStatus() !== Vaulting::STATUS_APPROVED) {
+            return null;
+        }
+
+        if ($this->paypalApiManager instanceof PaypalVaultApiManagerInterface) {
+            /** @var ResponseVaultPaymentToken $response */
+            $response = $this->paypalApiManager->getGenerateVaultPaymentTokenRequest($vaultInfo->getSetupToken())->execute();
+
+            if ($response->getVaultInfo() instanceof VaultInfo) {
+                return $paypalVaultingService->addVault($idCustomer, $response->getVaultInfo());
+            }
+        }
+
+        return null;
     }
 
     /** @return  string*/

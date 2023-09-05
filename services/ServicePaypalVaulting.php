@@ -27,6 +27,7 @@
 namespace PaypalAddons\services;
 
 use Exception;
+use PaypalAddons\classes\API\Model\VaultInfo;
 use Throwable;
 
 require_once dirname(__FILE__) . '/../classes/PaypalVaulting.php';
@@ -44,7 +45,7 @@ class ServicePaypalVaulting
      *
      * @return bool
      */
-    public function createOrUpdatePaypalVaulting($idCustomer, $rememberedCards, $mode = null)
+    public function saveRememberedCards($idCustomer, $rememberedCards, $mode = null)
     {
         if ($mode === null) {
             $mode = (int) \Configuration::get('PAYPAL_SANDBOX');
@@ -56,14 +57,7 @@ class ServicePaypalVaulting
             $paypalVaultingObject = new \PaypalVaulting();
             $paypalVaultingObject->id_customer = $idCustomer;
             $paypalVaultingObject->sandbox = (int) $mode;
-
-            if ((int) $mode) {
-                $profileKey = md5(\Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'));
-            } else {
-                $profileKey = md5(\Configuration::get('PAYPAL_MB_LIVE_CLIENTID'));
-            }
-
-            $paypalVaultingObject->profile_key = $profileKey;
+            $paypalVaultingObject->profile_key = $this->getProfileKey((int) $mode);
         }
 
         $paypalVaultingObject->rememberedCards = $rememberedCards;
@@ -74,6 +68,34 @@ class ServicePaypalVaulting
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * @return \PaypalVaulting|null
+     */
+    public function addVault(int $idCustomer, VaultInfo $vaultInfo, $mode = null)
+    {
+        if ($mode === null) {
+            $mode = (int) \Configuration::get('PAYPAL_SANDBOX');
+        }
+
+        $paypalVaultingObject = new \PaypalVaulting();
+        $paypalVaultingObject->id_customer = $idCustomer;
+        $paypalVaultingObject->sandbox = (int) $mode;
+        $paypalVaultingObject->profile_key = $this->getProfileKey((int) $mode);
+        $paypalVaultingObject->vault_id = $vaultInfo->getVaultId();
+        $paypalVaultingObject->paypal_customer_id = $vaultInfo->getCustomerId();
+        $paypalVaultingObject->payment_source = $vaultInfo->getPaymentSource();
+
+        try {
+            $paypalVaultingObject->save();
+        } catch (Throwable $e) {
+            return null;
+        } catch (Exception $e) {
+            return null;
+        }
+
+        return $paypalVaultingObject;
     }
 
     /**
@@ -109,17 +131,20 @@ class ServicePaypalVaulting
             $mode = (int) \Configuration::get('PAYPAL_SANDBOX');
         }
 
-        if ((int) $mode) {
-            $profileKey = md5(\Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'));
-        } else {
-            $profileKey = md5(\Configuration::get('PAYPAL_MB_LIVE_CLIENTID'));
-        }
-
         $collection = new \PrestaShopCollection(\PaypalVaulting::class);
         $collection->where('id_customer', '=', (int) $idCustomer);
         $collection->where('sandbox', '=', (int) $mode);
-        $collection->where('profile_key', '=', $profileKey);
+        $collection->where('profile_key', '=', $this->getProfileKey((int) $mode));
 
         return $collection->getFirst();
+    }
+
+    protected function getProfileKey($mode)
+    {
+        if ((int) $mode) {
+            return md5(\Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'));
+        } else {
+            return md5(\Configuration::get('PAYPAL_MB_LIVE_CLIENTID'));
+        }
     }
 }
