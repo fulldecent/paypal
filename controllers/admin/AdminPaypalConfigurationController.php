@@ -98,7 +98,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             ],
         ]);
         $this->addJS(_PS_MODULE_DIR_ . 'paypal/views/js/admin.js');
-        $this->addJS('https://www.paypalobjects.com/merchant-library/preview/merchant-configurator.js', false);
+        $this->addJS('https://www.paypalobjects.com/merchant-library/merchant-configurator.js', false);
         $this->addCSS(_PS_MODULE_DIR_ . 'paypal/views/css/paypal_bo.css');
     }
 
