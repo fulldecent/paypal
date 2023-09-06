@@ -27,12 +27,16 @@
 
 namespace PaypalAddons\classes\API\Response;
 
+use PaypalAddons\classes\API\Model\PaymentSourceInfo;
 use PaypalAddons\classes\API\Model\VaultInfo;
 
 class ResponseVaultPaymentToken extends Response
 {
     /** @var VaultInfo|null */
     protected $vaultInfo;
+
+    /** @var PaymentSourceInfo|null */
+    protected $paymentSourceInfo;
 
     /**
      * @return VaultInfo|null
@@ -45,6 +49,21 @@ class ResponseVaultPaymentToken extends Response
     public function setVaultInfo(VaultInfo $vaultInfo)
     {
         $this->vaultInfo = $vaultInfo;
+
+        return $this;
+    }
+
+    /**
+     * @return PaymentSourceInfo|null
+     */
+    public function getPaymentSourceInfo()
+    {
+        return $this->paymentSourceInfo;
+    }
+
+    public function setPaymentSourceInfo(PaymentSourceInfo $paymentSourceInfo)
+    {
+        $this->paymentSourceInfo = $paymentSourceInfo;
 
         return $this;
     }

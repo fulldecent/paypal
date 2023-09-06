@@ -23,6 +23,10 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  */
+
+use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\services\ServicePaypalVaulting;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -32,14 +36,45 @@ if (!defined('_PS_VERSION_')) {
  */
 class PaypalVaultListModuleFrontController extends ModuleFrontController
 {
+    public $auth = true;
+
+    protected $paypalVaultingService;
+
+    protected $method;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->paypalVaultingService = new ServicePaypalVaulting();
+        $this->method = AbstractMethodPaypal::load();
     }
 
     public function initContent()
     {
+        $this->context->smarty->assign('vaultList', $this->prepareVaultList());
         $this->setTemplate('module:paypal/views/templates/front/vaulting-list.tpl');
         parent::initContent();
+    }
+
+    protected function prepareVaultList()
+    {
+        $paypalVaultingList = $this->paypalVaultingService->getVaultListByCustomer((int) $this->context->customer->id);
+        $preparedVaultList = [];
+        /** @var PaypalVaulting $paypalVaulting */
+        foreach ($paypalVaultingList as $paypalVaulting) {
+            $response = $this->method->getVaultPaymentToken($paypalVaulting->vault_id);
+
+            if (!$response) {
+                continue;
+            }
+
+            $preparedVaultList[] = [
+                'id' => $paypalVaulting->vault_id,
+                'paymentSource' => $response->getPaymentSourceInfo(),
+            ];
+        }
+
+        return $preparedVaultList;
     }
 }

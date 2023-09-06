@@ -174,6 +174,21 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return $confirmation;
     }
 
+    public function getVaultPaymentToken($vaultId)
+    {
+        if (false === $this->paypalApiManager instanceof PaypalVaultApiManagerInterface) {
+            return null;
+        }
+        /** @var ResponseVaultPaymentToken $response */
+        $response = $this->paypalApiManager->getVaultPaymentTokenRequest($vaultId)->execute();
+
+        if (false === $response->isSuccess()) {
+            return null;
+        }
+
+        return $response;
+    }
+
     /**
      * @see AbstractMethodPaypal::validation()
      *

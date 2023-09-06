@@ -24,12 +24,18 @@
  *
  *}
 
-{extends file='page.tpl'}
+<div style="display: flex; align-items: center">
+  <div payment-source vault-id="{$vault.id|default:''}" style="max-width: 400px; border: solid; margin: 20px; padding: 10px">
+      {if $vault.paymentSource->getType() === 'paypal'}
+        <div><b>{$vault.paymentSource->getEmail()|escape:'htmlall':'UTF-8'}</b></div>
+        <div>{$vault.paymentSource->getAddress()|escape:'htmlall':'UTF-8'}</div>
+        <div>{$vault.paymentSource->getPostcode()|escape:'htmlall':'UTF-8'}</div>
+        <div>{$vault.paymentSource->getCity()|escape:'htmlall':'UTF-8'}</div>
+        <div>{$vault.paymentSource->getCountry()|escape:'htmlall':'UTF-8'}</div>
+      {/if}
+  </div>
+  <div>
+    <button class="btn btn-danger">Remove</button>
+  </div>
+</div>
 
-{block name='page_content'}
-  {if false === empty($vaultList)}
-      {foreach from=$vaultList item=vault}
-          {include file = "module:paypal/views/templates/front/_partials/vault-payment-source.tpl" vault=$vault}
-      {/foreach}
-  {/if}
-{/block}

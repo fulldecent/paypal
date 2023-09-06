@@ -35,6 +35,7 @@ use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalConfirmPaymentSourceRequest;
 use PaypalAddons\classes\API\Request\PaypalGenerateVaultPaymentTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGetSellerStatusRequest;
+use PaypalAddons\classes\API\Request\PaypalGetVaultPaymentTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
@@ -152,5 +153,10 @@ class PaypalApiManager implements PaypalApiManagerInterface, PaypalVaultApiManag
     public function getGenerateVaultPaymentTokenRequest($tokenId)
     {
         return new PaypalGenerateVaultPaymentTokenRequest($this->client, $this->method, $tokenId);
+    }
+
+    public function getVaultPaymentTokenRequest($vaultId)
+    {
+        return new PaypalGetVaultPaymentTokenRequest($this->client, $this->method, $vaultId);
     }
 }

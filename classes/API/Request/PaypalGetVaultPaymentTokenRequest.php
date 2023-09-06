@@ -29,7 +29,8 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\ExtensionSDK\VaultPaymentTokens;
+use PaypalAddons\classes\API\ExtensionSDK\GetVaultPaymentToken;
+use PaypalAddons\classes\API\Model\PaymentSourceInfo;
 use PaypalAddons\classes\API\Model\VaultInfo;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseVaultPaymentToken;
@@ -43,22 +44,22 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
+class PaypalGetVaultPaymentTokenRequest extends RequestAbstract
 {
     /** @var string */
-    protected $tokenId;
+    protected $vaultId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, string $tokenId)
+    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, string $vaultId)
     {
         parent::__construct($client, $method);
 
-        $this->tokenId = $tokenId;
+        $this->vaultId = $vaultId;
     }
 
     public function execute()
     {
         $response = new ResponseVaultPaymentToken();
-        $request = new VaultPaymentTokens($this->tokenId);
+        $request = new GetVaultPaymentToken($this->vaultId);
 
         try {
             $exec = $this->client->execute($request);
@@ -66,11 +67,8 @@ class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
 
             if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
                 $response->setSuccess(true);
-                $vaultInfo = $this->getVaultInfo($exec);
-
-                if ($vaultInfo instanceof VaultInfo) {
-                    $response->setVaultInfo($vaultInfo);
-                }
+                $response->setVaultInfo($this->getVaultInfo($exec));
+                $response->setPaymentSourceInfo($this->getPaymentSourceInfo($exec));
             } else {
                 $error = new Error();
 
@@ -117,7 +115,6 @@ class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
     protected function getVaultInfo(HttpResponse $response)
     {
         $vaultInfo = new VaultInfo();
-        $vaultInfo->setPaymentSource(Vaulting::PAYMENT_SOURCE_PAYPAL);
 
         if (false === empty($response->result->id)) {
             $vaultInfo->setVaultId((string) $response->result->id);
@@ -127,5 +124,32 @@ class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
         }
 
         return $vaultInfo;
+    }
+
+    protected function getPaymentSourceInfo(HttpResponse $response)
+    {
+        $info = new PaymentSourceInfo();
+
+        if (false === empty($response->result->payment_source->paypal)) {
+            $info->setType(Vaulting::PAYMENT_SOURCE_PAYPAL);
+
+            if (false === empty($response->result->payment_source->paypal->email_address)) {
+                $info->setEmail($response->result->payment_source->paypal->email_address);
+            }
+            if (false === empty($response->result->payment_source->paypal->shipping->address->address_line_1)) {
+                $info->setAddress($response->result->payment_source->paypal->shipping->address->address_line_1);
+            }
+            if (false === empty($response->result->payment_source->paypal->shipping->address->admin_area_2)) {
+                $info->setCity($response->result->payment_source->paypal->shipping->address->admin_area_2);
+            }
+            if (false === empty($response->result->payment_source->paypal->shipping->address->postal_code)) {
+                $info->setPostcode($response->result->payment_source->paypal->shipping->address->postal_code);
+            }
+            if (false === empty($response->result->payment_source->paypal->shipping->address->country_code)) {
+                $info->setCountry($response->result->payment_source->paypal->shipping->address->country_code);
+            }
+        }
+
+        return $info;
     }
 }
