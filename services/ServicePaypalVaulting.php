@@ -26,6 +26,8 @@
 
 namespace PaypalAddons\services;
 
+use Db;
+use DbQuery;
 use Exception;
 use PaypalAddons\classes\API\Model\VaultInfo;
 use Throwable;
@@ -38,6 +40,13 @@ if (!defined('_PS_VERSION_')) {
 
 class ServicePaypalVaulting
 {
+    protected $db;
+
+    public function __construct()
+    {
+        $this->db = Db::getInstance();
+    }
+
     /**
      * @param $idCustomer integer id of the Prestashop Customer object
      * @param $rememberedCards string hash of the remembered card ids
@@ -137,6 +146,36 @@ class ServicePaypalVaulting
         $collection->where('profile_key', '=', $this->getProfileKey((int) $mode));
 
         return $collection->getFirst();
+    }
+
+    public function getVaultListByCustomer(int $idCustomer, $mode = null)
+    {
+        if ($mode === null) {
+            $mode = (int) \Configuration::get('PAYPAL_SANDBOX');
+        }
+
+        $query = new DbQuery();
+        $query->from(\PaypalVaulting::$definition['table']);
+        $query->where('id_customer = ' . (int) $idCustomer);
+        $query->where('sandbox = ' . (int) $mode);
+        $query->where(sprintf('profile_key = "%s"', $this->getProfileKey((int) $mode)));
+        $query->where('vault_id <> ""');
+        $query->where('vault_id IS NOT NULL');
+
+        $result = $this->db->executeS($query);
+        $vaultList = [];
+
+        if (empty($result)) {
+            return $vaultList;
+        }
+
+        foreach ($result as $row) {
+            $obj = new \PaypalVaulting();
+            $obj->hydrate($row);
+            $vaultList[] = $obj;
+        }
+
+        return $vaultList;
     }
 
     protected function getProfileKey($mode)

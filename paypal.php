@@ -67,6 +67,7 @@ use PaypalAddons\classes\Widget\ShortcutWidget;
 use PaypalAddons\services\PaymentRefundAmount;
 use PaypalAddons\services\PaypalContext;
 use PaypalAddons\services\ServicePaypalOrder;
+use PaypalAddons\services\ServicePaypalVaulting;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\AbstractModuleExtension;
@@ -244,6 +245,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'displayNavFullWidth',
         'actionLocalizationPageSave',
         'actionAdminOrdersTrackingNumberUpdate',
+        'displayCustomerAccount',
         ShortcutConfiguration::HOOK_REASSURANCE,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS,
@@ -799,6 +801,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $payments_options;
+    }
+
+    public function hookDisplayCustomerAccount()
+    {
+        $paypalVaultingService = $this->initPaypalVaultingService();
+        $vaultList = $paypalVaultingService->getVaultListByCustomer($this->context->customer->id);
+
+        if (false === empty($vaultList)) {
+            return $this->context->smarty->fetch('module:paypal/views/templates/hook/my-account.tpl');
+        }
     }
 
     protected function buildVenmoPaymentOption($params = [])
@@ -3036,5 +3048,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initVaultingFunctionality()
     {
         return new VaultingFunctionality();
+    }
+
+    protected function initPaypalVaultingService()
+    {
+        return new ServicePaypalVaulting();
     }
 }

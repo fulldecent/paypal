@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,23 +22,24 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
- *
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
 /**
- * @param $module PayPal
- *
- * @return bool
+ * Prepare EC payment
  */
-function upgrade_module_6_2_0($module)
+class PaypalVaultListModuleFrontController extends ModuleFrontController
 {
-    $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
-    $installer->installObjectModels();
-    $installer->registerHooks();
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-    return true;
+    public function initContent()
+    {
+        $this->setTemplate('module:paypal/views/templates/front/vaulting-list.tpl');
+        parent::initContent();
+    }
 }

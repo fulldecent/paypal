@@ -1,5 +1,4 @@
-<?php
-/*
+{**
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -23,22 +22,12 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  *
- */
+ *}
 
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
 
-/**
- * @param $module PayPal
- *
- * @return bool
- */
-function upgrade_module_6_2_0($module)
-{
-    $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
-    $installer->installObjectModels();
-    $installer->registerHooks();
-
-    return true;
-}
+<div style="margin-bottom: 20px">
+  <label>
+    <input type="checkbox" save-paypal-account>
+    {l s='Save my PayPal account for future payments' mod='paypal'}
+  </label>
+</div>
