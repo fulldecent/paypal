@@ -88,6 +88,7 @@ class Banner
         $placement = $this->getPlacement();
         if (isset($config['homepage'])) {
             $config['home'] = $config['homepage'];
+            $config['home']['placement'] = 'home';
         }
         if (isset($config[$placement]) === false) {
             switch ($placement) {
