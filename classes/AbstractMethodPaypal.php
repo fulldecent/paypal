@@ -189,6 +189,17 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return $response;
     }
 
+    public function deleteVaultPaymentToken($vaultId)
+    {
+        if (false === $this->paypalApiManager instanceof PaypalVaultApiManagerInterface) {
+            return false;
+        }
+        /** @var Response $response */
+        $response = $this->paypalApiManager->getDeleteVaultPaymentTokenRequest($vaultId)->execute();
+
+        return $response->isSuccess();
+    }
+
     /**
      * @see AbstractMethodPaypal::validation()
      *

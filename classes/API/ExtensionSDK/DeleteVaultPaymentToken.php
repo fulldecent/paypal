@@ -1,4 +1,5 @@
-{**
+<?php
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,15 +23,23 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  *
- *}
+ */
 
-{extends file='page.tpl'}
+namespace PaypalAddons\classes\API\ExtensionSDK;
 
-{block name='page_content_container'}
-  {if false === empty($vaultList)}
-      <h1>Saved PayPal accounts</h1>
-      {foreach from=$vaultList item=vault}
-          {include file = "module:paypal/views/templates/front/_partials/vault-payment-source.tpl" vault=$vault}
-      {/foreach}
-  {/if}
-{/block}
+use PayPalHttp\HttpRequest;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+class DeleteVaultPaymentToken extends HttpRequest
+{
+    public function __construct($vaultId)
+    {
+        parent::__construct(
+            sprintf('/v3/vault/payment-tokens/%s', (string) $vaultId),
+            'DELETE'
+        );
+    }
+}

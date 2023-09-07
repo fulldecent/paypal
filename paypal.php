@@ -809,7 +809,19 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $vaultList = $paypalVaultingService->getVaultListByCustomer($this->context->customer->id);
 
         if (false === empty($vaultList)) {
-            return $this->context->smarty->fetch('module:paypal/views/templates/hook/my-account.tpl');
+            $template = $this->context->smarty->createTemplate('module:paypal/views/templates/hook/my-account.tpl');
+            $template->assign(
+                'vaultListUrl',
+                $this->context->link->getModuleLink(
+                    $this->name,
+                    'vaultList',
+                    [
+                        'token' => $this->context->customer->secure_key,
+                    ]
+                )
+            );
+
+            return $template->fetch();
         }
     }
 

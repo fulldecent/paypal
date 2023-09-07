@@ -24,18 +24,24 @@
  *
  *}
 
-<div style="display: flex; align-items: center">
-  <div payment-source vault-id="{$vault.id|default:''}" style="max-width: 400px; border: solid; margin: 20px; padding: 10px">
-      {if $vault.paymentSource->getType() === 'paypal'}
-        <div><b>{$vault.paymentSource->getEmail()|escape:'htmlall':'UTF-8'}</b></div>
-        <div>{$vault.paymentSource->getAddress()|escape:'htmlall':'UTF-8'}</div>
-        <div>{$vault.paymentSource->getPostcode()|escape:'htmlall':'UTF-8'}</div>
-        <div>{$vault.paymentSource->getCity()|escape:'htmlall':'UTF-8'}</div>
-        <div>{$vault.paymentSource->getCountry()|escape:'htmlall':'UTF-8'}</div>
-      {/if}
-  </div>
-  <div>
-    <button class="btn btn-danger">Remove</button>
+<div payment-source style="margin: 20px 0;">
+  <div style="display: flex; flex-direction: column; width: 500px; background: white">
+    <div style="padding: 20px 10px">
+        {if $vault.paymentSource->getType() === 'paypal'}
+          <div><b>{$vault.paymentSource->getEmail()|escape:'htmlall':'UTF-8'}</b></div>
+          <div>{$vault.paymentSource->getAddress()|escape:'htmlall':'UTF-8'}</div>
+          <div>{$vault.paymentSource->getPostcode()|escape:'htmlall':'UTF-8'}</div>
+          <div>{$vault.paymentSource->getCity()|escape:'htmlall':'UTF-8'}</div>
+          <div>{$vault.paymentSource->getCountry()|escape:'htmlall':'UTF-8'}</div>
+        {/if}
+    </div>
+
+    <div
+      style="border-top: solid 0.5px; padding: 10px; cursor: pointer; display: flex; align-items: center;"
+      remove-payment-source
+      account="{$vault.paymentSource->getEmail()|escape:'htmlall':'UTF-8'}"
+      id-paypal-vaulting="{$vault.id|default:''}"><i class="material-icons">delete</i>Delete</div>
   </div>
 </div>
+
 

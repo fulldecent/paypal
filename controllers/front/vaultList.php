@@ -26,6 +26,8 @@
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\services\ServicePaypalVaulting;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -42,12 +44,37 @@ class PaypalVaultListModuleFrontController extends ModuleFrontController
 
     protected $method;
 
+    protected $request;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->paypalVaultingService = new ServicePaypalVaulting();
         $this->method = AbstractMethodPaypal::load();
+        $this->request = Request::createFromGlobals();
+    }
+
+    public function checkAccess()
+    {
+        if (empty($this->request->get('token')) || $this->request->get('token') != $this->context->customer->secure_key) {
+            Tools::redirect(
+                $this->context->link->getPageLink('my-account')
+            );
+        }
+
+        return parent::checkAccess();
+    }
+
+    public function setMedia()
+    {
+        $this->registerJavascript(
+            'paypal-vault-list-page',
+            '/modules/paypal/views/js/vaultListPage.js',
+            ['position' => 'bottom', 'priority' => 0]
+        );
+
+        return parent::setMedia();
     }
 
     public function initContent()
@@ -70,11 +97,37 @@ class PaypalVaultListModuleFrontController extends ModuleFrontController
             }
 
             $preparedVaultList[] = [
-                'id' => $paypalVaulting->vault_id,
+                'id' => $paypalVaulting->id,
                 'paymentSource' => $response->getPaymentSourceInfo(),
             ];
         }
 
         return $preparedVaultList;
+    }
+
+    public function displayAjaxRemovePaypalVaulting()
+    {
+        $response = new JsonResponse();
+        $paypalVaulting = new PaypalVaulting((int) $this->request->get('id'));
+
+        if (false === Validate::isLoadedObject($paypalVaulting)) {
+            return $response->setData([
+                'success' => false,
+                'message' => 'PayPal vaulting is not found',
+            ])->send();
+        }
+
+        if (false === $this->method->deleteVaultPaymentToken($paypalVaulting->vault_id)) {
+            return $response->setData([
+                'success' => false,
+                'message' => 'Deleting the payment token is failed',
+            ])->send();
+        }
+
+        $paypalVaulting->delete();
+
+        return $response->setData([
+            'success' => true,
+        ])->send();
     }
 }

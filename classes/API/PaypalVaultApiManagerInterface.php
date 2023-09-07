@@ -36,4 +36,7 @@ interface PaypalVaultApiManagerInterface
 
     /** @return RequestInteface*/
     public function getVaultPaymentTokenRequest($vaultId);
+
+    /** @return RequestInteface*/
+    public function getDeleteVaultPaymentTokenRequest($vaultId);
 }
