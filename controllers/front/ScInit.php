@@ -158,7 +158,7 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             $this->method->setShortCut(true);
         }
 
-        if ($request->savePaypalAccount) {
+        if (isset($request->savePaypalAccount) && $request->savePaypalAccount) {
             PaypalContext::getContext()->set('savePaypalAccount', true);
         }
 

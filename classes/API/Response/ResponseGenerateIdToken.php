@@ -25,21 +25,21 @@
  *
  */
 
-namespace PaypalAddons\classes\API;
+namespace PaypalAddons\classes\API\Response;
 
-use PaypalAddons\classes\API\Request\RequestInteface;
-
-interface PaypalVaultApiManagerInterface
+class ResponseGenerateIdToken extends Response
 {
-    /** @return RequestInteface*/
-    public function getGenerateVaultPaymentTokenRequest($tokenId);
+    protected $idToken;
 
-    /** @return RequestInteface*/
-    public function getVaultPaymentTokenRequest($vaultId);
+    public function getIdToken()
+    {
+        return (string) $this->idToken;
+    }
 
-    /** @return RequestInteface*/
-    public function getDeleteVaultPaymentTokenRequest($vaultId);
+    public function setIdToken(string $idToken)
+    {
+        $this->idToken = $idToken;
 
-    /** @return RequestInteface*/
-    public function getGenerateIdTokenRequest($paypalCustomerId);
+        return $this;
+    }
 }

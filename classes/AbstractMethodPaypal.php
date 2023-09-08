@@ -41,6 +41,7 @@ use PaypalAddons\classes\API\PaypalApiManagerInterface;
 use PaypalAddons\classes\API\PaypalVaultApiManagerInterface;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
+use PaypalAddons\classes\API\Response\ResponseGenerateIdToken;
 use PaypalAddons\classes\API\Response\ResponseOrderCapture;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
@@ -198,6 +199,21 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $response = $this->paypalApiManager->getDeleteVaultPaymentTokenRequest($vaultId)->execute();
 
         return $response->isSuccess();
+    }
+
+    public function generateVaultUserIdToken($paypalCustomerId)
+    {
+        if (false === $this->paypalApiManager instanceof PaypalVaultApiManagerInterface) {
+            return null;
+        }
+        /** @var ResponseGenerateIdToken $response */
+        $response = $this->paypalApiManager->getGenerateIdTokenRequest($paypalCustomerId)->execute();
+
+        if (false === $response->isSuccess()) {
+            return null;
+        }
+
+        return $response->getIdToken();
     }
 
     /**
@@ -502,7 +518,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'components' => 'buttons',
         ];
 
-        if (false == empty($parameters)) {
+        if (false === empty($parameters)) {
             $params = array_merge($params, $parameters);
         }
 

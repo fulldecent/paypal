@@ -37,6 +37,7 @@ use PaypalAddons\classes\APM\ApmCollection;
 use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\APM;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -57,6 +58,7 @@ use PaypalAddons\classes\SEPA\SepaFunctionality;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Vaulting\VaultedPaymentButtonCollection;
 use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\classes\Venmo\VenmoButton;
 use PaypalAddons\classes\Venmo\VenmoFunctionality;
@@ -1053,6 +1055,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if ($vaultingFunctionality->isAvailable()) {
             if ($vaultingFunctionality->isEnabled()) {
                 if ($vaultingFunctionality->isCapabilityAvailable(false)) {
+                    $vaultedButtonCollection = new VaultedPaymentButtonCollection(
+                        (int) $this->context->customer->id,
+                        Vaulting::PAYMENT_SOURCE_PAYPAL
+                    );
+                    $additionalInformation = $vaultedButtonCollection->render() . $additionalInformation;
                     $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
                 }
             }

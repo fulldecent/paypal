@@ -54,6 +54,7 @@ const config = {
     'js/diagnostic/diagnostic': './202/_dev/js/diagnostic/diagnostic.js',
     'js/admin': './202/_dev/js/admin.js',
     'js/vaultListPage': './202/_dev/js/vaultListPage.js',
+    'js/paypalButton': './202/_dev/js/paypalButton.js',
 
     'css/paypal_bo': './202/_dev/scss/paypal_bo.scss',
     'css/paypal_fo': './202/_dev/scss/paypal_fo.scss',
