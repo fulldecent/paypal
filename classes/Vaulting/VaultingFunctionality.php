@@ -69,6 +69,12 @@ class VaultingFunctionality
 
     public function isCapabilityAvailable($refresh = true)
     {
+        if ($this->method->isSandbox()) {
+            if (false === defined('_PS_ADMIN_DIR_')) {
+                return true;
+            }
+        }
+
         $isAvailable = (int) Configuration::get(Vaulting::ACCOUNT_VAULTING_STATE);
 
         if ($refresh == false && in_array($isAvailable, [Vaulting::IS_AVAILABLE, Vaulting::IS_UNAVAILABLE])) {
