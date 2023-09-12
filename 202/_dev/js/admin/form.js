@@ -533,7 +533,7 @@ class Form {
     window.merchantConfigurators.Messaging({
       config: configObject,
       locale: paypal.locale,
-      merchantClientId: paypal.merchantId,
+      merchantIdentifier: paypal.merchantId,
       partnerClientId: paypal.partnerClientId,
       partnerName: paypal.partnerName,
       bnCode: 'PRESTASHOP_Cart_SPB',
