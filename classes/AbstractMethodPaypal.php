@@ -33,10 +33,13 @@ use Country;
 use Currency;
 use Customer;
 use Exception;
+use MethodMB;
 use Module;
 use PayPal;
 use PaypalAddons\classes\API\PaypalApiManagerInterface;
+use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
+use PaypalAddons\classes\API\Response\ResponseOrderCapture;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalAddons\classes\PUI\SignupLink;
@@ -188,11 +191,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             throw new Exception('The elements in the shopping cart were changed. Please try to pay again.');
         }
 
-        if ($this->getIntent() == 'CAPTURE') {
-            $response = $this->paypalApiManager->getOrderCaptureRequest($this->getPaymentId())->execute();
-        } else {
-            $response = $this->paypalApiManager->getOrderAuthorizeRequest($this->getPaymentId())->execute();
-        }
+        $response = $this->completePayment();
 
         if ($response->isSuccess() == false) {
             throw new Exception($response->getError()->getMessage());
@@ -214,6 +213,48 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             false,
             $customer->secure_key
         );
+    }
+
+    /**
+     * @return ResponseOrderCapture
+     */
+    protected function completePayment()
+    {
+        /** @var ResponseOrderGet $getOrderResponse */
+        $getOrderResponse = $this->paypalApiManager->getOrderGetRequest($this->getPaymentId())->execute();
+
+        if ($this instanceof MethodMB || $getOrderResponse->getStatus() === 'APPROVED') {
+            if ($this->getIntent() == 'CAPTURE') {
+                return $this->paypalApiManager->getOrderCaptureRequest($this->getPaymentId())->execute();
+            } else {
+                return $this->paypalApiManager->getOrderAuthorizeRequest($this->getPaymentId())->execute();
+            }
+        }
+
+        $response = new ResponseOrderCapture();
+
+        if ($getOrderResponse->getStatus() !== 'COMPLETED') {
+            $error = new Error();
+            $error->setMessage('Payment was not approved');
+            $response->setError($error)->setSuccess(false);
+
+            return $response;
+        }
+
+        $response->setSuccess(true)
+            ->setData($getOrderResponse->getData())
+            ->setPaymentId($this->getPaymentId())
+            ->setTransactionId($getOrderResponse->getTransactionId())
+            ->setCurrency($getOrderResponse->getPurchaseUnit()->getCurrency())
+            ->setCapture($this->getIntent() !== 'CAPTURE')
+            ->setTotalPaid($getOrderResponse->getPurchaseUnit()->getAmount())
+            ->setStatus($getOrderResponse->getStatus())
+            ->setPaymentMethod($getOrderResponse->getPaymentMethod())
+            ->setPaymentTool($getOrderResponse->getPaymentTool())
+            ->setMethod($getOrderResponse->getMethod())
+            ->setDateTransaction($getOrderResponse->getDateTransaction());
+
+        return $response;
     }
 
     /**
@@ -343,10 +384,14 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     public function getCustomFieldInformation(Cart $cart)
     {
         $module = \Module::getInstanceByName($this->name);
-        $return = $module->l('Cart ID: ', get_class($this)) . $cart->id . '.';
+        $return = (string) _PS_VERSION_ . '_' . (string) $module->version . '_' . \phpversion() . '_';
+        if (Tools::getValue('sc') !== false) {
+            $return .= 'ESC_';
+        }
+        $return .= $module->l('Cart ID: ', get_class($this)) . $cart->id . '_';
         $return .= $module->l('Shop name: ', get_class($this)) . \Configuration::get('PS_SHOP_NAME', null, $cart->id_shop);
 
-        return $return;
+        return \substr($return, 0, 137);
     }
 
     public function getBrandName()

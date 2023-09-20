@@ -1,4 +1,4 @@
-/**
+{**
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,37 +22,7 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  *
- */
-
-import '~/bootstrap';
-import Steps from './admin/steps';
-import Form from './admin/form';
-import Section from './admin/section';
-
-window.addEventListener('load', () => {
-  $('#modal-configuration').modal('show');
-
-  const steps = new Steps('#modal-configuration-steps');
-  steps.init();
-
-  const form = new Form();
-  form.init();
-
-  const section = new Section();
-  section.init();
-
-  if (document.location.hash.slice(1,)) {
-    document.dispatchEvent(
-      (new CustomEvent(
-        'showSection',
-        {
-          bubbles: true,
-          detail: {
-            section: document.location.hash.slice(1,)
-          }
-        }
-      ))
-    );
-  }
-});
-
+ *}
+{foreach from=$messages item=message}
+    {$message|escape:'htmlall':'UTF-8'}<br />
+{/foreach}

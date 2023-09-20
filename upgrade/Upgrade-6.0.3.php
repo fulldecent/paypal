@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,41 +22,23 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
 /**
- * Class PaypalIpn.
+ * @param $module PayPal
+ *
+ * @return bool
  */
-class PaypalIpn extends ObjectModel
+function upgrade_module_6_0_3($module)
 {
-    /* @var string transaction_id*/
-    public $id_transaction;
+    $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
+    $installer->installObjectModels();
+    Db::getInstance()->delete(PaypalWebhook::$definition['table'], 'id_webhook IS NULL OR id_webhook =""');
 
-    /* @var string */
-    public $status;
-
-    /* @var string */
-    public $response;
-
-    /* @var string creation date*/
-    public $date_add;
-
-    /**
-     * @see ObjectModel::$definition
-     */
-    public static $definition = [
-        'table' => 'paypal_ipn',
-        'primary' => 'id_paypal_ipn',
-        'multilang' => false,
-        'fields' => [
-            'id_transaction' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
-            'status' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 50],
-            'response' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
-            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
-        ],
-        'collation' => 'utf8_general_ci',
-    ];
+    return true;
 }

@@ -102,13 +102,15 @@ class StatusMapping
             } else {
                 $idStatus = (int) Configuration::get('PAYPAL_OS_REFUNDED');
             }
+        } else {
+            $idStatus = (int) Configuration::get('PS_OS_REFUND');
         }
 
         if ($idStatus) {
             return $idStatus;
         }
-
-        return (int) Configuration::get('PS_OS_REFUND');
+        //no action
+        return -1;
     }
 
     public function getFailedStatus()
@@ -142,13 +144,15 @@ class StatusMapping
                     $idStatus = (int) Configuration::get('PAYPAL_OS_CAPTURE_CANCELED');
                 }
             }
+        } else {
+            $idStatus = (int) Configuration::get('PS_OS_CANCELED');
         }
 
         if ($idStatus) {
             return $idStatus;
         }
-
-        return (int) Configuration::get('PS_OS_CANCELED');
+        //no action
+        return -1;
     }
 
     public function getWaitValidationStatus()

@@ -9,6 +9,7 @@ use Module;
 use PaypalAddons\classes\ACDC\AcdcFunctionality;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalAddons\classes\Venmo\VenmoFunctionality;
 use Tools;
 
 if (!defined('_PS_VERSION_')) {
@@ -24,11 +25,14 @@ class CheckoutForm implements FormInterface
 
     protected $acdcFunctionality;
 
+    protected $venmoFunctionality;
+
     public function __construct()
     {
         $this->module = Module::getInstanceByName('paypal');
         $countryDefault = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Context::getContext()->language->id);
         $this->acdcFunctionality = new AcdcFunctionality();
+        $this->venmoFunctionality = new VenmoFunctionality();
 
         switch ($countryDefault->iso_code) {
             case 'DE':
@@ -118,7 +122,7 @@ class CheckoutForm implements FormInterface
             'label' => $this->module->l('Brand name', 'CheckoutForm'),
             'name' => PaypalConfigurations::BRAND_NAME,
             'value' => Configuration::get(PaypalConfigurations::BRAND_NAME),
-            'placeholder' => $this->module->l('Leave it empty to use your Shop name setup on your PayPal account', 'AdminPayPalCustomizeCheckoutController'),
+            'placeholder' => $this->module->l('Leave it empty to use your shop name', 'AdminPayPalCustomizeCheckoutController'),
             'hint' => $this->module->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', 'AdminPayPalCustomizeCheckoutController'),
         ];
 
@@ -217,6 +221,28 @@ class CheckoutForm implements FormInterface
                     ],
                 ],
                 'value' => (int) Configuration::get(PaypalConfigurations::ACDC_OPTION),
+            ];
+        }
+
+        if ($this->venmoFunctionality->isAvailable()) {
+            $fields[PaypalConfigurations::VENMO_OPTION] = [
+                'type' => 'switch',
+                'label' => $this->module->l('Venmo', 'AdminPayPalCustomizeCheckoutController'),
+                'name' => PaypalConfigurations::VENMO_OPTION,
+                'is_bool' => true,
+                'values' => [
+                    [
+                        'id' => PaypalConfigurations::VENMO_OPTION . '_on',
+                        'value' => 1,
+                        'label' => $this->module->l('Enabled', 'AdminPayPalCustomizeCheckoutController'),
+                    ],
+                    [
+                        'id' => PaypalConfigurations::VENMO_OPTION . '_off',
+                        'value' => 0,
+                        'label' => $this->module->l('Disabled', 'AdminPayPalCustomizeCheckoutController'),
+                    ],
+                ],
+                'value' => (int) Configuration::get(PaypalConfigurations::VENMO_OPTION),
             ];
         }
 
@@ -440,6 +466,11 @@ class CheckoutForm implements FormInterface
         Configuration::updateValue(
             PaypalConfigurations::ACDC_OPTION,
             isset($data[PaypalConfigurations::ACDC_OPTION]) ? 1 : 0
+        );
+
+        Configuration::updateValue(
+            PaypalConfigurations::VENMO_OPTION,
+            isset($data[PaypalConfigurations::VENMO_OPTION]) ? 1 : 0
         );
 
         Configuration::updateValue(

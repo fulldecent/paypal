@@ -31,3 +31,15 @@
 <p>
   {l s='If some elements added via other modules are displayed on the same hook, you can manage the position of the PayPal Official module via « Design - Positions ». By default, PayPal shortcuts are displayed on your website via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy the widget code and insert it wherever you want in the product template.' mod='paypal'}
 </p>
+
+<p>
+  {l s='People around the world know us for the color gold and research confirms it. Extensive testing determined just the right shade and shape that help increase conversion. Use it on your website to leverage PayPal’s recognition and preference.' mod='paypal'}
+</p>
+
+<p>
+  {l s='If gold does not work for your site, try the PayPal blue button. Research shows that people know it is our brand color, which provides a halo of trust and security to your experience.' mod='paypal'}
+</p>
+
+<p>
+  {l s='If gold or blue does not work for your site design or aesthetic, try the silver, white, or black buttons. Because these colors are less capable of drawing people’s attention, we recommend these button colors as a second alternative.' mod='paypal'}
+</p>

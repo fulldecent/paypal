@@ -174,10 +174,10 @@ class WebhookEventHandler
             $paypalWebhook->save();
         } catch (Throwable $e) {
             $paypalWebhook->data = '';
-            $paypalOrder->save();
+            $paypalWebhook->save();
         } catch (Exception $e) {
             $paypalWebhook->data = '';
-            $paypalOrder->save();
+            $paypalWebhook->save();
         }
 
         if ($psOrderStatus == $this->getStatusMapping()->getAcceptedStatus()) {
@@ -378,7 +378,9 @@ class WebhookEventHandler
             }
         }
 
-        return $this->getStatusMapping()->getPsOrderStatusByEventType($event->getEventType());
+        $idStatus = $this->getStatusMapping()->getPsOrderStatusByEventType($event->getEventType());
+
+        return $idStatus < 1 ? 0 : $idStatus;
     }
 
     protected function getPaymentTotal(WebhookEvent $event)

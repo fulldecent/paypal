@@ -6,6 +6,7 @@ class Form {
     this.inputDynamicSelector = '.custom-control-input';
     this.inputInstallementColor = '[name="PAYPAL_INSTALLMENT_COLOR"]';
     this.controller = document.location.href;
+    this.generateCredentialsEventDone = false;
   }
 
   init() {
@@ -356,12 +357,16 @@ class Form {
   }
 
   generateCredentials(data) {
+    if (this.generateCredentialsEventDone === true) {
+      return false;
+    }
     const url = new URL(this.controller);
     url.searchParams.append('ajax', 1);
     url.searchParams.append('action', 'generateCredentials');
     url.searchParams.append('authCode', data.authCode);
     url.searchParams.append('sharedId', data.sharedId);
     url.searchParams.append('isSandbox', this.isSandbox() ? 1 : 0);
+    this.generateCredentialsEventDone = true;
 
     fetch(url.toString(), {
       method: 'GET',
@@ -383,10 +388,23 @@ class Form {
             document.querySelector('[name="merchant_id_live"]').value = response.merchantId;
           }
           paypal.merchantId = response.clientid;
+        } else {
+          this.errorMessage(response);
         }
 
         this.updateButtonSection();
+        this.generateCredentialsEventDone = false;
       });
+  }
+
+  errorMessage(response) {
+    let messageSection = '#paypal_error_ajax';
+    let prependTo = '[onboarding-button-section]';
+    if (!$(messageSection).length || $(messageSection).length <= 0) {
+      const htmlDiv = '<div id="paypal_error_ajax" class="alert alert-danger"></div>';
+      $(prependTo).append(htmlDiv);
+    }
+    $(messageSection).html(response.message);
   }
 
   isSandbox() {

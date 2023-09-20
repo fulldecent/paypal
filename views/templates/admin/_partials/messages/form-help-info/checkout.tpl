@@ -32,6 +32,12 @@
   {{l s='[b]Payment Action:Authorization/capture:[/b] The authorized mode is a deferred mode of payment that requires the funds to be collected manually when you want to transfer the money. This mode is used if you want to ensure that you have the merchandise before depositing the money' mod='paypal'}|paypalreplace:[]}
 </p>
 <p>
+    {l s='We recommend the Authorize configuration only in case you need to check the availability of your products before confirming the order.' mod='paypal'}
+</p>
+<p>
+    {l s='In-context has shown a better conversion rate.' mod='paypal'}
+</p>
+<p>
     {{l s='[b]PayPal In-Context:[/b] opens in a pop-up window, allowing your buyers to finalize their payment without leaving your website. Optimized, modern and reassuring experience which benefits from the same security standards than during a redirection to the PayPal website.' mod='paypal'}|paypalreplace:[]}
 </p>
 
@@ -47,6 +53,10 @@
 
 <p>
     {{l s='[b]Show PayPal benefits to your customers:[/b] you can increase your conversion rate by presenting PayPal benefits to your customers on the payment methods selection page.' mod='paypal'}|paypalreplace:[]}
+</p>
+
+<p>
+  {l s='PayPal shortcuts allow a faster checkout for your buyers. PayPal automatically provides you with the client\'s shipping and billing information.' mod='paypal'}
 </p>
 
 <p>
