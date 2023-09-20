@@ -151,6 +151,7 @@ const Shortcut = {
     url.searchParams.append('action', 'CreateOrder');
     this.updateInfo();
     data['page'] = this.page;
+    data['sc'] = true;
 
 
     if (this.page == 'product') {
@@ -186,6 +187,7 @@ const Shortcut = {
     url.searchParams.append('action', 'CheckAvailability');
     this.updateInfo();
     data['page'] = this.page;
+    data['sc'] = true;
 
     if (this.page == 'product') {
       data['idProduct'] = this.idProduct;
