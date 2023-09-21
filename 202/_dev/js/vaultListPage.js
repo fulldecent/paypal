@@ -51,9 +51,25 @@ document.addEventListener('click', (event) => {
       .then((response) => {
         if (response.success) {
           const paymentSource = event.target.closest('[payment-source]');
+          const mainSection = document.getElementById('main');
 
           if (paymentSource instanceof HTMLElement) {
             paymentSource.remove();
+          }
+
+          if (mainSection instanceof HTMLElement) {
+            const alert = document.createElement('div');
+            let html = '<div class="alert alert-info">Your saved account has been deleted';
+            html += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+            html += '<span aria-hidden="true">&times;</span>';
+            html += '</button></div>';
+            alert.innerHTML = html;
+
+            if (mainSection.firstChild) {
+              mainSection.insertBefore(alert, mainSection.firstChild);
+            } else {
+              mainSection.appendChild(alert);
+            }
           }
         }
       });

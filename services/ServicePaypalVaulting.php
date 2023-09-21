@@ -29,6 +29,7 @@ namespace PaypalAddons\services;
 use Db;
 use DbQuery;
 use Exception;
+use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Model\VaultInfo;
 use Throwable;
 
@@ -42,9 +43,17 @@ class ServicePaypalVaulting
 {
     protected $db;
 
-    public function __construct()
+    protected $method;
+
+    public function __construct($method = null)
     {
         $this->db = Db::getInstance();
+
+        if ($method instanceof AbstractMethodPaypal) {
+            $this->method = $method;
+        } else {
+            $this->method = AbstractMethodPaypal::load();
+        }
     }
 
     /**
@@ -180,10 +189,6 @@ class ServicePaypalVaulting
 
     protected function getProfileKey($mode)
     {
-        if ((int) $mode) {
-            return md5(\Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'));
-        } else {
-            return md5(\Configuration::get('PAYPAL_MB_LIVE_CLIENTID'));
-        }
+        return md5($this->method->getClientId((int) $mode));
     }
 }
