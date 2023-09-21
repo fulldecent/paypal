@@ -61,20 +61,24 @@
 
 
   {* BNPL Button section *}
-  {include
-    file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-    form=$formInstallment
-    sectionColFormClasses=' '
-    sectionColInfoClasses=' '
-  }
+    {if isset($formInstallment)}
+        {include
+        file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+        form=$formInstallment
+        sectionColFormClasses=' '
+        sectionColInfoClasses=' '
+        }
+    {/if}
 
   {* BNPL Installment section *}
-  {include
-    file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-    form=$formInstallmentMessaging
-    sectionColFormClasses=' '
-    sectionColInfoClasses=' '
-  }
+    {if isset($formInstallmentMessaging)}
+        {include
+        file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+        form=$formInstallmentMessaging
+        sectionColFormClasses=' '
+        sectionColInfoClasses=' '
+        }
+    {/if}
 
     {* Shortcut section *}
   {if isset($shortcutConfigurationForm)}
