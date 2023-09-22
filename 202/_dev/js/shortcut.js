@@ -158,6 +158,7 @@ const Shortcut = {
       data['idProduct'] = this.idProduct;
       data['quantity'] = this.productQuantity;
       data['combination'] = this.combination.join('|');
+      data['sc'] = true;
     }
 
     if (this.isAddAddress) {
@@ -192,6 +193,7 @@ const Shortcut = {
       data['idProduct'] = this.idProduct;
       data['quantity'] = this.productQuantity;
       data['combination'] = this.combination.join('|');
+      data['sc'] = true;
     }
 
     fetch(url.toString(),
