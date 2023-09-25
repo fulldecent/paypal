@@ -20,12 +20,12 @@ class Steps {
       if (e.originalEvent.detail.form.classList.contains('form-modal') == false) {
         return;
       }
-
+      const currentStepIndex = this.getCurrentStepIndex();
       this.setAction('next');
       this.updateCurrentBadgeStep();
       this.updateStepsProgress();
 
-      if (this.getCurrentStepIndex() == -1) {
+      if (currentStepIndex + 1 === this.getSteps().length) {
         $(e.originalEvent.detail.form).closest('.modal').modal('hide');
         document.location.reload();
       }
@@ -35,7 +35,6 @@ class Steps {
       this.setAction($(e.currentTarget).data('btn-action'));
       this.updateCurrentBadgeStep();
       this.updateStepsProgress();
-      this.updateFormStep();
 
       if ($(e.currentTarget).attr('data-dismiss') === 'modal') {
         $(e.currentTarget).closest('.modal').modal('hide');
@@ -65,9 +64,6 @@ class Steps {
   updateCurrentBadgeStep() {
     const currentStepIndex = this.getCurrentStepIndex();
 
-    if (currentStepIndex < 0) {
-      return;
-    }
     if (currentStepIndex <= this.getLastStepIndex()) {
       this.$stepsContainer.find(this.currentStepBadge).html(currentStepIndex + 1);
     }
@@ -76,10 +72,6 @@ class Steps {
   updateStepsProgress() {
     const currentStepIndex = this.getCurrentStepIndex();
     const value = currentStepIndex * 100 / this.getLastStepIndex();
-
-    if (currentStepIndex < 0) {
-      return;
-    }
 
     this.$stepsContainer.find(this.stepsProgress).attr('aria-valuenow', value).css('width', `${value}%`);
   }
@@ -115,22 +107,27 @@ class Steps {
   }
 
   setActiveStep(currentIndex, newIndex) {
-    if (newIndex !== currentIndex) {
-      const direction = (newIndex > currentIndex)
-        ? (start) => start <= newIndex
-        : (start) => start >= newIndex;
-
-      const index = (newIndex > currentIndex)
-        ? (start) => start + 1
-        : (start) => start - 1;
-
-      while (direction(currentIndex)) {
-        this.setShowStep(currentIndex);
-        currentIndex = index(currentIndex);
-      }
-
-      this.updateButtons();
+    if (newIndex + 1 > this.getSteps().length) {
+      return;
     }
+    if (newIndex === currentIndex) {
+      return;
+    }
+
+    const direction = (newIndex > currentIndex)
+      ? (start) => start <= newIndex
+      : (start) => start >= newIndex;
+
+    const index = (newIndex > currentIndex)
+      ? (start) => start + 1
+      : (start) => start - 1;
+
+    while (direction(currentIndex)) {
+      this.setShowStep(currentIndex);
+      currentIndex = index(currentIndex);
+    }
+
+    this.updateButtons();
   }
 
   setShowStep(index) {
