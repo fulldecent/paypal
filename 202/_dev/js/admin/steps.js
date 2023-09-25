@@ -64,6 +64,10 @@ class Steps {
 
   updateCurrentBadgeStep() {
     const currentStepIndex = this.getCurrentStepIndex();
+
+    if (currentStepIndex < 0) {
+      return;
+    }
     if (currentStepIndex <= this.getLastStepIndex()) {
       this.$stepsContainer.find(this.currentStepBadge).html(currentStepIndex + 1);
     }
@@ -72,6 +76,11 @@ class Steps {
   updateStepsProgress() {
     const currentStepIndex = this.getCurrentStepIndex();
     const value = currentStepIndex * 100 / this.getLastStepIndex();
+
+    if (currentStepIndex < 0) {
+      return;
+    }
+
     this.$stepsContainer.find(this.stepsProgress).attr('aria-valuenow', value).css('width', `${value}%`);
   }
 
