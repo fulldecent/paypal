@@ -15,6 +15,7 @@ class Form {
     paypal.saveProcessInstallment = this.saveProcessInstallment;
     paypal.submitInstallmentForm = this.submitInstallmentForm;
     paypal.refreshForms = this.refreshForms;
+    paypal.refreshMessenging();
     this.registerEvents();
   }
 
@@ -64,10 +65,6 @@ class Form {
       if (event.target.hasAttribute('refresh-feature-checklist')) {
         this.refreshFeatureChecklist();
       }
-    });
-
-    $(document).on('readystatechange', function() {
-      paypal.refreshMessenging();
     });
 
     $(document).on('click', '[data-form-installment]', (e) => {
