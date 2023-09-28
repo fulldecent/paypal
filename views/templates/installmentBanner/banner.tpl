@@ -25,12 +25,12 @@
  *}
 {include file='module:paypal/views/templates/_partials/javascript.tpl'}
 
-<div paypal-messaging-banner 
- data-pp-message 
+<div paypal-messaging-banner
+ data-pp-message
  {if $paypalmessenging.placement != 'home' && $paypalmessenging.placement != 'category'}
     data-pp-style-layout="{$paypalmessenging.layout|escape:'htmlall':'UTF-8'}"
     data-pp-style-logo-type="{$paypalmessenging.logo_type|escape:'htmlall':'UTF-8'}"
-    data-pp-style-logo-position="{$paypalmessenging.logo_position|escape:'htmlall':'UTF-8'}"
+    data-pp-style-logo-position="{$paypalmessenging.logo_position|escape:'htmlall':'UTF-8'|default:'left'}"
     data-pp-style-text-color="{$paypalmessenging.text_color|escape:'htmlall':'UTF-8'}"
     data-pp-style-text-size="{$paypalmessenging.text_size|escape:'htmlall':'UTF-8'}"
  {else}
@@ -40,9 +40,9 @@
  {/if}
  data-pp-amount="{$paypalmessenging.amount|escape:'htmlall':'UTF-8'}"
  {if ($paypalmessenging.placement) == 'home'}
-   data-pp-placement="homepage" 
+   data-pp-placement="homepage"
  {else}
-   data-pp-placement="{$paypalmessenging.placement|escape:'htmlall':'UTF-8'}" 
+   data-pp-placement="{$paypalmessenging.placement|escape:'htmlall':'UTF-8'}"
  {/if}
  data-pp-locale="{$paypalmessenging.locale|escape:'htmlall':'UTF-8'}">
 </div>
