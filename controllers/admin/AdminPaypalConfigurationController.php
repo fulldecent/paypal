@@ -71,11 +71,12 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
 
         if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {
             $this->forms['formInstallment'] = new FormInstallment((bool) $this->is_shown_modal);
+
+            if ((bool) $this->is_shown_modal === false) {
+                $this->forms['formInstallmentMessaging'] = new FormInstallmentMessaging();
+            }
         }
 
-        if ((bool) $this->is_shown_modal === false) {
-            $this->forms['formInstallmentMessaging'] = new FormInstallmentMessaging();
-        }
         $this->forms['whiteListForm'] = new WhiteListForm();
         $this->forms['accountForm'] = new AccountForm();
         $this->forms['orderStatusForm'] = new OrderStatusForm();
