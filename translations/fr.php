@@ -732,7 +732,7 @@ $_MODULE['<{paypal}prestashop>payment-option_640d81cc6a61a174ffda2288e6532312'] 
 $_MODULE['<{paypal}prestashop>dashboard_f830ef399687a9b575b6ecbd0259be39'] = 'Checklist Technique';
 $_MODULE['<{paypal}prestashop>dashboard_d2de9643f15d70212b03d0f1acefda16'] = 'Checklist fonctionnelle';
 $_MODULE['<{paypal}prestashop>dashboard_0557fa923dcee4d0f86b1409f5c2167f'] = 'Retour';
-$_MODULE['<{paypal}prestashop>featurechecklist_44366bddc41085ee7180f17c40b92d64'] = 'Buy now pay later désactivé';
+$_MODULE['<{paypal}prestashop>featurechecklist_44366bddc41085ee7180f17c40b92d64'] = 'Buy now pay later activé';
 $_MODULE['<{paypal}prestashop>featurechecklist_eae7904d870bfc265c03cfe7ba54013b'] = 'Buy now pay later désactivé';
 $_MODULE['<{paypal}prestashop>featurechecklist_8e5a9e5eecfa97578270d7ac818826a1'] = 'Personnalisation des boutons shortcut activé';
 $_MODULE['<{paypal}prestashop>featurechecklist_610e933c022f9e2adf39d456beff60f7'] = 'Carte de crédit activé';
