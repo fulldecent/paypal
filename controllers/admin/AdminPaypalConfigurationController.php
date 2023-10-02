@@ -363,6 +363,32 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         exit;
     }
 
+    public function ajaxProcessGetMessagingConfig()
+    {
+        $jsonResponse = new JsonResponse();
+
+        if (false === $this->method->isConfigured()) {
+            $jsonResponse->setData(['success' => false])->send();
+            exit;
+        }
+
+        $messagingConfig = [
+            'placements' => ['product', 'homepage', 'cart', 'checkout', 'category'],
+            'merchantIdentifier' => $this->method->getClientId(),
+            'partnerClientId' => ($this->method->isSandbox() ? PayPal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX : PayPal::PAYPAL_PARTNER_CLIENT_ID_LIVE),
+            'partnerName' => ($this->method->isSandbox() ? PayPal::PAYPAL_PARTNER_ID_SANDBOX : PayPal::PAYPAL_PARTNER_ID_LIVE),
+            'bnCode' => $this->method->getPaypalPartnerId(),
+            'locale' => str_replace('-', '_', Context::getContext()->language->locale),
+            'config' => json_decode(
+                Configuration::get(ConfigurationMap::MESSENGING_CONFIG, null, null, null, '{}'),
+                true
+            ),
+        ];
+
+        $jsonResponse->setData(['success' => true, 'config' => $messagingConfig])->send();
+        exit;
+    }
+
     public function initPageHeaderToolbar()
     {
         parent::initPageHeaderToolbar();

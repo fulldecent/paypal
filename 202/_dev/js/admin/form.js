@@ -384,7 +384,6 @@ class Form {
             document.querySelector('[name="paypal_secret_live"]').value = response.secret;
             document.querySelector('[name="merchant_id_live"]').value = response.merchantId;
           }
-          paypal.merchantId = response.clientid;
         } else {
           this.errorMessage(response);
         }
@@ -535,25 +534,25 @@ class Form {
   }
 
   refreshMessenging() {
-    if (!$('#messaging-configurator').length) {
+    if (!document.getElementById('messaging-configurator')) {
       return;
     }
-    let configObject = {};
-    try {
-      configObject = JSON.parse(paypal.messagingConfig);
-    } catch (error) {
-      console.log(error);
-      $.growl.notice({title: 'Information', message: 'Messenging configurator :<br />Default parameters loaded.'});
-    }
-    window.merchantConfigurators.Messaging({
-      config: configObject,
-      locale: paypal.locale,
-      merchantIdentifier: paypal.merchantId,
-      partnerClientId: paypal.partnerClientId,
-      partnerName: paypal.partnerName,
-      bnCode: 'PRESTASHOP_Cart_SPB',
-      onSave: paypal.saveDataMessengingConfigurator,
-      placements: ['product', 'homepage', 'cart', 'checkout', 'category'],
+
+    const url = new URL(document.location);
+    url.searchParams.append('ajax', '1');
+    url.searchParams.append('action', 'getMessagingConfig');
+
+    fetch(url)
+    .then(response => response.json())
+    .then((response) => {
+      if (response.success !== true) {
+        return;
+      }
+
+      const config = response.config;
+      config.onSave = paypal.saveDataMessengingConfigurator;
+
+      window.merchantConfigurators.Messaging(config);
     });
   }
 }
