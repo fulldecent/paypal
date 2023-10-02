@@ -25,12 +25,14 @@
  *}
 {include file='module:paypal/views/templates/_partials/javascript.tpl'}
 
-<div paypal-messaging-banner
+<div paypal-messaging-banner class="{if in_array($paypalmessenging.placement, ['category', 'home'])}container{/if}"
  data-pp-message
  {if $paypalmessenging.placement != 'home' && $paypalmessenging.placement != 'category'}
     data-pp-style-layout="{$paypalmessenging.layout|escape:'htmlall':'UTF-8'}"
     data-pp-style-logo-type="{$paypalmessenging.logo_type|escape:'htmlall':'UTF-8'}"
-    data-pp-style-logo-position="{$paypalmessenging.logo_position|escape:'htmlall':'UTF-8'|default:'left'}"
+   {if isset($paypalmessenging.logo_position)}
+     data-pp-style-logo-position="{$paypalmessenging.logo_position|escape:'htmlall':'UTF-8'}"
+   {/if}
     data-pp-style-text-color="{$paypalmessenging.text_color|escape:'htmlall':'UTF-8'}"
     data-pp-style-text-size="{$paypalmessenging.text_size|escape:'htmlall':'UTF-8'}"
  {else}
