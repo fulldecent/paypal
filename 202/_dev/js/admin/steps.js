@@ -27,7 +27,6 @@ class Steps {
 
       if (currentStepIndex + 1 === this.getSteps().length) {
         $(e.originalEvent.detail.form).closest('.modal').modal('hide');
-        document.location.reload();
       }
     });
     $(document).on('click', this.btn, (e) => {
@@ -38,7 +37,6 @@ class Steps {
 
       if ($(e.currentTarget).attr('data-dismiss') === 'modal') {
         $(e.currentTarget).closest('.modal').modal('hide');
-        document.location.reload();
       }
     });
   }
