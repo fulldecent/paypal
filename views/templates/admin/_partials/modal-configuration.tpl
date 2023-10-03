@@ -42,50 +42,62 @@
         </div>
       </div>
       <div>
-        <div data-step-content>
-          {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-            form=$accountForm
-            isModal=true
-          }
-        </div>
-        <div class="d-none" data-step-content>
-          {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-            form=$checkoutForm
-            isModal=true
-          }
-        </div>
-        <div class="d-none" data-step-content>
-          {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-            form=$formInstallment
-            sectionColFormClasses=' '
-            sectionColInfoClasses=' '
-            isModal=true
-          }
-        </div>
-        <div class="d-none" data-step-content>
-          {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-            form=$shortcutConfigurationForm
-            isModal=true
-          }
-        </div>
-        <div class="d-none" data-step-content>
-          {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-            form=$orderStatusForm
-            isModal=true
-          }
-        </div>
-        <div class="d-none" data-step-content>
-          {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
-            form=$whiteListForm
-            isModal=true
-          }
-        </div>
+          {if isset($accountForm)}
+            <div data-step-content>
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+                form=$accountForm
+                isModal=true
+                }
+            </div>
+          {/if}
+          {if isset($checkoutForm)}
+            <div class="d-none" data-step-content>
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+                form=$checkoutForm
+                isModal=true
+                }
+            </div>
+          {/if}
+          {if isset($formInstallment)}
+            <div class="d-none" data-step-content>
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+                form=$formInstallment
+                sectionColFormClasses=' '
+                sectionColInfoClasses=' '
+                isModal=true
+                }
+            </div>
+          {/if}
+          {if isset($shortcutConfigurationForm)}
+            <div class="d-none" data-step-content>
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+                form=$shortcutConfigurationForm
+                isModal=true
+                }
+            </div>
+          {/if}
+          {if isset($orderStatusForm)}
+            <div class="d-none" data-step-content>
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+                form=$orderStatusForm
+                isModal=true
+                }
+            </div>
+          {/if}
+          {if isset($whiteListForm)}
+            <div class="d-none" data-step-content>
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+                form=$whiteListForm
+                isModal=true
+                }
+            </div>
+          {/if}
       </div>
      </div>
    </div>
