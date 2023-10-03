@@ -67,7 +67,7 @@ class MethodMB extends AbstractMethodPaypal
 
     public function __construct()
     {
-        $this->servicePaypalVaulting = new ServicePaypalVaulting();
+        $this->servicePaypalVaulting = new ServicePaypalVaulting($this);
         $this->whiteListService = new WhiteListService();
         $this->initApiManager();
     }
