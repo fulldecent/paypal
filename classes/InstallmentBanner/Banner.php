@@ -97,7 +97,7 @@ class Banner
                 case 'checkout':
                     $config[$placement] = [
                         'layout' => 'text',
-                        'logo_type' => 'inline',
+                        'logo_type' => 'primary',
                         'logo_position' => 'left',
                         'placement' => $placement,
                         'text_color' => 'black',
@@ -107,7 +107,7 @@ class Banner
                 default:
                     $config[$placement] = [
                         'layout' => 'flex',
-                        'color' => 'white-no-border',
+                        'color' => 'blue',
                         'placement' => $placement,
                         'ratio' => '20x1',
                     ];
