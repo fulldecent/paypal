@@ -185,7 +185,7 @@ class BannerManager
      */
     public function renderForCheckoutPage()
     {
-        return $this->renderBanner('payment');
+        return $this->renderBanner('checkout');
     }
 
     /**

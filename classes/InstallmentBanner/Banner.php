@@ -94,7 +94,7 @@ class Banner
             switch ($placement) {
                 case 'cart':
                 case 'product':
-                case 'payment':
+                case 'checkout':
                     $config[$placement] = [
                         'layout' => 'text',
                         'logo_type' => 'inline',
