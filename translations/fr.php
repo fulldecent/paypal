@@ -569,7 +569,7 @@ $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Liste des IPs autorisées';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{paypal}prestashop>statusblock_32d5facdc889dd6e687606994a04bce9'] = 'L\'extention PHP cURL est activé sur votre serveur';
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Vos paramètres d\'arrondi ne sont pas entièrement compatibles avec les exigences de PayPal. Afin d\'éviter que certaines transactions échouent, veuillez changer le mode d\'arrondi de PrestaShop.';
+$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Vos paramètres d\'arrondi ne sont pas entièrement compatibles avec les exigences de PayPal. Afin d\'éviter que certaines transactions échouent, veuillez changer le mode d\'arrondi de PrestaShop dans [a @href1@] Préférences > Général [/a] en :';
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'Accepter les paiements PayPal';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
@@ -732,8 +732,8 @@ $_MODULE['<{paypal}prestashop>payment-option_640d81cc6a61a174ffda2288e6532312'] 
 $_MODULE['<{paypal}prestashop>dashboard_f830ef399687a9b575b6ecbd0259be39'] = 'Checklist Technique';
 $_MODULE['<{paypal}prestashop>dashboard_d2de9643f15d70212b03d0f1acefda16'] = 'Checklist fonctionnelle';
 $_MODULE['<{paypal}prestashop>dashboard_0557fa923dcee4d0f86b1409f5c2167f'] = 'Retour';
-$_MODULE['<{paypal}prestashop>featurechecklist_44366bddc41085ee7180f17c40b92d64'] = 'Buy now pay later désactivé';
-$_MODULE['<{paypal}prestashop>featurechecklist_eae7904d870bfc265c03cfe7ba54013b'] = 'Buy now pay later désactivé';
+$_MODULE['<{paypal}prestashop>featurechecklist_44366bddc41085ee7180f17c40b92d64'] = 'Buy Now Pay Later activé';
+$_MODULE['<{paypal}prestashop>featurechecklist_eae7904d870bfc265c03cfe7ba54013b'] = 'Buy Now Pay Later désactivé';
 $_MODULE['<{paypal}prestashop>featurechecklist_8e5a9e5eecfa97578270d7ac818826a1'] = 'Personnalisation des boutons shortcut activé';
 $_MODULE['<{paypal}prestashop>featurechecklist_610e933c022f9e2adf39d456beff60f7'] = 'Carte de crédit activé';
 $_MODULE['<{paypal}prestashop>featurechecklist_f67fc894b5813f835edef6f58be72d12'] = 'PUI activé';
