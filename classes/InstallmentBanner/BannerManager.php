@@ -151,7 +151,7 @@ class BannerManager
             }
         }
 
-        if ($placement == 'cart' || $placement == 'payment') {
+        if (in_array($placement, ['cart', 'checkout'])) {
             $banner->setAmount($this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true)));
         }
 
