@@ -39,6 +39,6 @@ onsubmit="function (e) { e.preventDefault(); e.stopPropagation();}">
         <button data-btn-action="next" class="btn btn-outline-primary">{l s='Skip this step' mod='paypal'}</button>
       </div>
     {/if}
-    <button data-form-installment class="btn btn-secondary ml-auto" name={$form.submit.name}>{$form.submit.title}</button>
+    <button data-form-installment class="btn btn-secondary ml-auto" name={$form.submit.name|escape:'htmlall':'UTF-8'}>{$form.submit.title|escape:'htmlall':'UTF-8'}</button>
   {/block}
 </div>

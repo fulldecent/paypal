@@ -35,16 +35,16 @@
    <div class="card">
    {if !$isModal}
       <div class="card-header">
-        {$form.legend.title}
+        {$form.legend.title|escape:'htmlall':'UTF-8'}
       </div>
     {/if}
     <div class="card-body {[
       'pr-0' => $isModal
     ]|classnames}">
       {if $isModal}
-        <div class="h1">{$form.legend.title}</div>
+        <div class="h1">{$form.legend.title|escape:'htmlall':'UTF-8'}</div>
       {/if}
-        <div form-container="{$form.id_form}">
+        <div form-container="{$form.id_form|escape:'htmlall':'UTF-8'}">
             {if $form.id_form != 'pp_white_list_form'}
                 {include file=$moduleFullDir|cat:"/views/templates/admin/_partials/forms/"|cat:$form.id_form|cat:".tpl" form=$form}
             {else}
@@ -56,9 +56,9 @@
  </div>
 
  {if $form.help && $form.help != ''}
-  <div class="col col-12 col-md-4{$sectionColInfoClasses}">
+  <div class="col col-12 col-md-4{$sectionColInfoClasses|escape:'htmlall':'UTF-8'}">
     <div class="card-body">
-      {$form.help|default:''}
+      {$form.help|default:'' nofilter}
     </div>
   </div>
  {/if}

@@ -120,7 +120,7 @@
                 'col-9' => $isModal
                 ]|classnames}">
                   <a
-                    href="{$field.set.urlOnboarding_live}"
+                    href="{$field.set.urlOnboarding_live nofilter}"
                     class="btn btn-secondary btn-block"
                     target="_blank"
                     data-paypal-button
@@ -146,7 +146,7 @@
                 'col-9' => $isModal
                 ]|classnames}">
                   <a
-                    href="{$field.set.urlOnboarding_sandbox}"
+                    href="{$field.set.urlOnboarding_sandbox nofilter}"
                     class="btn btn-secondary btn-block"
                     target="_blank"
                     data-paypal-button
@@ -257,5 +257,5 @@
 {/block}
 
 {block name='form_footer_buttons'}
-  <button save-form class="btn btn-secondary ml-auto" name={$form.submit.name}>{$form.submit.title}</button>
+  <button save-form class="btn btn-secondary ml-auto" name={$form.submit.name|escape:'htmlall':'UTF-8'}>{$form.submit.title|escape:'htmlall':'UTF-8'}</button>
 {/block}

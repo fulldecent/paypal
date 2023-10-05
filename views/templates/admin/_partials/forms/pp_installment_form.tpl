@@ -24,18 +24,18 @@
  *
  *}
  {extends file="../forms/form.tpl"}
- 
- 
+
+
  {block name='form_content'}
   {assign var="fieldsInstallmentBNPL" value=['PAYPAL_BNPL_PRODUCT_PAGE', 'PAYPAL_BNPL_PAYMENT_STEP_PAGE', 'PAYPAL_BNPL_CART_PAGE', 'PAYPAL_BNPL_CHECKOUT_PAGE']}
   {assign var="dynamicField" value=$form.fields.PAYPAL_ENABLE_BNPL|default:false}
    {if $dynamicField}
      {include file="../form-fields.tpl" field=$form.fields.PAYPAL_ENABLE_BNPL dynamicField=$dynamicField}
    {/if}
- 
+
    <div class="form-group row {[
      'd-none' => $dynamicField && !$dynamicField.value
-   ]|classnames}" {if $dynamicField.name|default:false}group-name="{$dynamicField.name}"{/if}>
+   ]|classnames}" {if $dynamicField.name|default:false}group-name="{$dynamicField.name|escape:'htmlall':'UTF-8'}"{/if}>
      <label class="form-control-label form-control-label-check col-2" for="PAYPAL_BNPL">{l s='Active on' mod='paypal'}</label>
      <div class="col-10">
        <div class="row no-gutters">
