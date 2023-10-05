@@ -120,7 +120,7 @@
                 'col-9' => $isModal
                 ]|classnames}">
                   <a
-                    href="{$field.set.urlOnboarding_live nofilter}"
+                    href="{$field.set.urlOnboarding_live}"
                     class="btn btn-secondary btn-block"
                     target="_blank"
                     data-paypal-button
@@ -146,7 +146,7 @@
                 'col-9' => $isModal
                 ]|classnames}">
                   <a
-                    href="{$field.set.urlOnboarding_sandbox nofilter}"
+                    href="{$field.set.urlOnboarding_sandbox}"
                     class="btn btn-secondary btn-block"
                     target="_blank"
                     data-paypal-button
