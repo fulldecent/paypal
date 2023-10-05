@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2023 PayPal
  *
@@ -21,24 +22,13 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
- *
  */
-.table {
-  th,
-  td {
-    vertical-align: middle;
-  }
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-  th {
-    font-weight: $font-weight-semibold;
-    padding: 0 0 $table-cell-padding !important;
-    line-height: $custom-control-indicator-size + .2rem;
-    color: $table-head-color !important;
-    font-size: .8125rem; // 13px
-  }
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-  td {
-    padding: $table-cell-padding 0 $table-cell-padding !important;
-    font-size: .75rem; // 12px
-  }
-}
+header('Location: ../');
+exit;

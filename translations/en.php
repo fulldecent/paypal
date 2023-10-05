@@ -795,3 +795,5 @@ $_MODULE['<{paypal}prestashop>overrides_9dc30bc4f60ed7395a11ebacc234da77'] = 'So
 $_MODULE['<{paypal}prestashop>overrides_0f28c8cc313f7bd03c8c9a137f9484a7'] = 'Overrides may cause conflits with %s modules. As all customizations, overrides get complexity to your PrestaShop.';
 $_MODULE['<{paypal}prestashop>overrides_720083069fc2dfac121c5638dc6c93d2'] = 'You\'ll found here the list of overrides.';
 $_MODULE['<{paypal}prestashop>overrides_95a123a5343fbe3d8c4ba30916f1aee5'] = 'No overrides detected.';
+$_MODULE['<{paypal}prestashop>featurechecklist_44366bddc41085ee7180f17c40b92d64'] = 'Buy Now Pay Later enabled';
+$_MODULE['<{paypal}prestashop>featurechecklist_eae7904d870bfc265c03cfe7ba54013b'] = 'Buy Now Pay Later disabled';
