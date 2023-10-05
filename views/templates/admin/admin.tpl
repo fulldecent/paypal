@@ -60,15 +60,25 @@
   {/if}
 
 
-  {* Installment section *}
-  {if isset($formInstallment)}
-      {include
+  {* BNPL Button section *}
+    {if isset($formInstallment)}
+        {include
         file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
         form=$formInstallment
         sectionColFormClasses=' '
         sectionColInfoClasses=' '
-      }
-  {/if}
+        }
+    {/if}
+
+  {* BNPL Installment section *}
+    {if isset($formInstallmentMessaging)}
+        {include
+        file=$moduleFullDir|cat:"/views/templates/admin/_partials/section.tpl"
+        form=$formInstallmentMessaging
+        sectionColFormClasses=' '
+        sectionColInfoClasses=' '
+        }
+    {/if}
 
     {* Shortcut section *}
   {if isset($shortcutConfigurationForm)}

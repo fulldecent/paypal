@@ -24,6 +24,7 @@
  *
  *}
 {extends file="./form.tpl"}
+{assign var="dynamicField" value=$form.fields.PAYPAL_CUSTOMIZE_ORDER_STATUS}
 
 {block name='form_field'}
     {assign var="dynamicField" value=$form.fields.PAYPAL_CUSTOMIZE_ORDER_STATUS}

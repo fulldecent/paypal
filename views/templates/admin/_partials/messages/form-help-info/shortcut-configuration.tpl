@@ -25,7 +25,7 @@
  *}
 
 <p>
-  {{l s='[b]PayPal Express checkout advanced settings[/b] are added to the module in order to provide the most customizable solution possible. You can customize the display options and styles of the PayPal shortcuts. They can be changed for each button separately depending on their location. These customization options will be shown only if the shortcuts are enabled at least for one location (Cart Page / Product pages/ Sign up step in checkout)' mod='paypal'}|paypalreplace:[]}
+    {{l s='[b]PayPal Express checkout advanced settings[/b] are added to the module in order to provide the most customizable solution possible. You can customize the display options and styles of the PayPal shortcuts. They can be changed for each button separately depending on their location. These customization options will be shown only if the shortcuts are enabled at least for one location (Cart Page / Product pages/ Sign up step in checkout)' mod='paypal'}|paypalreplace:[]}
 </p>
 
 <p>

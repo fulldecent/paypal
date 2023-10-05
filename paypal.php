@@ -656,6 +656,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable()) {
+                if ($this->context->controller instanceof CategoryController) {
+                    return $bannerManager->renderBanner('category');
+                }
+
                 return $bannerManager->renderForHomePage();
             }
         }
@@ -1461,7 +1465,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
     }
 
     public function validateOrder(
-        $id_cart, $id_order_state,
+        $id_cart,
+        $id_order_state,
         $amount_paid,
         $payment_method = 'Unknown',
         $message = null,
@@ -1917,13 +1922,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         $installmentTab->name[$language['id_lang']] = 'Pay in 4';
                         break;
                     case 'uk':
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                     case 'us':
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                     default:
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                 }
             }

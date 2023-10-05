@@ -484,3 +484,5 @@ $_MODULE['<{paypal}prestashop>shortcut-product_dac2693baa5c5c9a5318609ed81c4f2a'
 $_MODULE['<{paypal}prestashop>hookselect_cf7e0dec152058173716133deabf5343'] = 'If some elements added via other modules are displayed on the same hook, you can manage the position of the PayPal Official module via [a @href1@]« Design - Positions »[/a].';
 $_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Enable \'Pay Later\' in your checkout';
 $_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = '\'Pay Later\' is active on';
+$_MODULE['<{paypal}prestashop>featurechecklist_44366bddc41085ee7180f17c40b92d64'] = 'Buy Now Pay Later enabled';
+$_MODULE['<{paypal}prestashop>featurechecklist_eae7904d870bfc265c03cfe7ba54013b'] = 'Buy Now Pay Later disabled';

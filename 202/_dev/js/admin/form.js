@@ -10,6 +10,12 @@ class Form {
   }
 
   init() {
+    paypal.refreshMessenging = this.refreshMessenging;
+    paypal.saveDataMessengingConfigurator = this.saveDataMessengingConfigurator;
+    paypal.saveProcessInstallment = this.saveProcessInstallment;
+    paypal.submitInstallmentForm = this.submitInstallmentForm;
+    paypal.refreshForms = this.refreshForms;
+    paypal.refreshMessenging();
     this.registerEvents();
   }
 
@@ -19,8 +25,15 @@ class Form {
       const $formGroups = $(e.currentTarget).closest(this.formGroupDynamicSelector).siblings(`[group-name="${groupName}"]`);
       if ($(e.currentTarget).prop('checked')) {
         $formGroups.removeClass('d-none');
+        if (groupName == 'PAYPAL_ENABLE_INSTALLMENT' && $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').length) {
+          $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').removeClass('d-none');
+          paypal.refreshMessenging();
+        }
       } else {
         $formGroups.addClass('d-none');
+        if (groupName == 'PAYPAL_ENABLE_INSTALLMENT' && $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').length) {
+          $('[group-name="PAYPAL_ENABLE_INSTALLMENTG"]').addClass('d-none');
+        }
       }
     });
 
@@ -54,13 +67,36 @@ class Form {
       }
     });
 
+    $(document).on('click', '[data-form-installment]', (e) => {
+      paypal.event = e;
+      try {
+        paypal.configuratorsaved = false;
+        $('#configurator-eligibleContainer').find('button')[0].click();
+        setTimeout(function() {
+          console.log('Error on saving messengin configuration, continue.');
+          if (paypal.configuratorsaved !== true) {
+            const newConfig = JSON.stringify(paypal.messagingConfig);
+            $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(newConfig);
+            paypal.messagingConfig = newConfig;
+            paypal.submitInstallmentForm();
+          }
+        }, 500);
+      } catch (error) {
+        paypal.submitInstallmentForm();
+        console.log(error);
+      }
+    });
+
     $(document).on('click', '[save-form]', (e) => {
       e.preventDefault();
 
       this.saveProcess(e)
         .then((result) => {
           if (result) {
-            this.refreshForms(e.target.closest('form').classList.contains('form-modal'));
+            this.refreshForms(
+              e.target.closest('form').classList.contains('form-modal'),
+              new URL(this.controller)
+            );
             document.dispatchEvent(
               (new CustomEvent(
                 'afterFormSaved',
@@ -271,6 +307,29 @@ class Form {
     }
   }
 
+  saveProcessInstallment(event) {
+    return new Promise((resolve, reject) => {
+      event.target.disabled = true;
+      const formData = new FormData(document.getElementById('pp_installment_messenging_form'));
+      const url = new URL(document.location);
+      formData.append('installmentMessengingForm', 1);
+      url.searchParams.append('ajax', 1);
+      url.searchParams.append('action', 'saveForm');
+
+      fetch(url.toString(), {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => {
+          event.target.disabled = false;
+          return response.json();
+        })
+        .then((response) => {
+          resolve(response.success == true);
+        });
+    });
+  }
+
   saveProcess(event) {
     return new Promise((resolve, reject) => {
       event.target.disabled = true;
@@ -401,8 +460,7 @@ class Form {
       });
   }
 
-  refreshForms(isModal=false) {
-    const url = new URL(this.controller);
+  refreshForms(isModal=false, url) {
     url.searchParams.append('ajax', 1);
     url.searchParams.append('action', 'getForms');
     url.searchParams.append('isModal', (isModal ? '1' : '0'));
@@ -427,6 +485,7 @@ class Form {
 
           container.html(response.forms[idForm]);
         }
+        paypal.refreshMessenging();
       });
   }
 
@@ -437,6 +496,63 @@ class Form {
         return ['0','1','2','3','4','5','6','7','8','9','.',','].indexOf(symbol) >= 0;
       })
       .join('');
+  }
+
+  submitInstallmentForm() {
+    const formElement = document.getElementById('pp_installment_messenging_form');
+    const e = paypal.event;
+    paypal.saveProcessInstallment(e)
+      .then((result) => {
+        if (result) {
+          paypal.refreshForms(
+            formElement.classList.contains('form-modal'),
+            new URL(document.location)
+          );
+          document.dispatchEvent(
+            (new CustomEvent(
+              'afterFormSaved',
+              {
+                bubbles: true,
+                detail: {
+                  form: formElement,
+                }
+              }
+            ))
+          );
+          paypal.refreshMessenging();
+        }
+      });
+  }
+
+  saveDataMessengingConfigurator(data) {
+    paypal.configuratorsaved = true;
+    const newConfig = JSON.stringify(data.config);
+    $('#PAYPAL_INSTALLMENT_MESSAGING_CONFIG').val(newConfig);
+    paypal.messagingConfig = newConfig;
+    paypal.submitInstallmentForm();
+  }
+
+  refreshMessenging() {
+    if (!document.getElementById('messaging-configurator')) {
+      return;
+    }
+
+    const url = new URL(document.location);
+    url.searchParams.append('ajax', '1');
+    url.searchParams.append('action', 'getMessagingConfig');
+
+    fetch(url)
+    .then(response => response.json())
+    .then((response) => {
+      if (response.success !== true) {
+        return;
+      }
+
+      const config = response.config;
+      config.onSave = paypal.saveDataMessengingConfigurator;
+
+      window.merchantConfigurators.Messaging(config);
+    });
   }
 }
 

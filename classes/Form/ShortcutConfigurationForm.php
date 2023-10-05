@@ -160,7 +160,7 @@ class ShortcutConfigurationForm implements FormInterface
                 'name' => ShortcutConfiguration::PRODUCT_PAGE_HOOK,
                 'hint' => $this->module->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.', 'AdminPayPalCustomizeCheckoutController'),
                 'options' => $hooks,
-                'value' => Configuration::get(ShortcutConfiguration::CART_PAGE_HOOK),
+                'value' => Configuration::get(ShortcutConfiguration::PRODUCT_PAGE_HOOK),
             ];
             $fields[ShortcutConfiguration::STYLE_COLOR_PRODUCT] = $this->getButtonColorSelect(ShortcutConfiguration::STYLE_COLOR_PRODUCT);
             $fields[ShortcutConfiguration::STYLE_SHAPE_PRODUCT] = $this->getButtonShapeSelect(ShortcutConfiguration::STYLE_SHAPE_PRODUCT);

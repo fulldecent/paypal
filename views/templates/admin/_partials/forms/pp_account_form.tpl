@@ -255,5 +255,5 @@
 {/block}
 
 {block name='form_footer_buttons'}
-  <button save-form class="btn btn-secondary ml-auto" name={$form.submit.name}>{$form.submit.title}</button>
+  <button save-form class="btn btn-secondary ml-auto" name={$form.submit.name|escape:'htmlall':'UTF-8'}>{$form.submit.title|escape:'htmlall':'UTF-8'}</button>
 {/block}
