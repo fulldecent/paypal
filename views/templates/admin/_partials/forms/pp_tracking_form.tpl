@@ -41,7 +41,7 @@
             <tbody>
               {foreach from=$field.set.carriers item=carrier}
                 <tr>
-                  <td>{$carrier.name}</td>
+                  <td>{$carrier.name|escape:'htmlall':'UTF-8'}</td>
                   <td>
                     {assign var="optionsPaypalCarrier" value=[]}
                     {assign var="selectedCarrier" value=$carrier['id_reference']|cat:','|cat:$field.set.mapService->getPaypalCarrierByPsCarrier($carrier['id_reference'])}

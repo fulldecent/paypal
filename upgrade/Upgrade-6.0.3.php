@@ -1,4 +1,5 @@
-{**
+<?php
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,18 +23,22 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  *
- *}
+ */
 
-<div class="container">
-    {include file='./banner.tpl'}
-</div>
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-<script>
-    var paypalBanner = new Banner({
-        color: color,
-        layout: layout,
-        placement: placement,
-        container: '[paypal-banner-message]'
-    });
-    paypalBanner.initBanner();
-</script>
+/**
+ * @param $module PayPal
+ *
+ * @return bool
+ */
+function upgrade_module_6_0_3($module)
+{
+    $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
+    $installer->installObjectModels();
+    Db::getInstance()->delete(PaypalWebhook::$definition['table'], 'id_webhook IS NULL OR id_webhook =""');
+
+    return true;
+}

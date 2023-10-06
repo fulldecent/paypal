@@ -167,7 +167,7 @@
                 {if !$isModal}
                   <label class="form-control-label col-3">
                       {include
-                      file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+                      file="../icon-status.tpl"
                       isSuccess=true
                       }
                   </label>
@@ -255,5 +255,5 @@
 {/block}
 
 {block name='form_footer_buttons'}
-  <button save-form class="btn btn-secondary ml-auto" name={$form.submit.name}>{$form.submit.title}</button>
+  <button save-form class="btn btn-secondary ml-auto" name={$form.submit.name|escape:'htmlall':'UTF-8'}>{$form.submit.title|escape:'htmlall':'UTF-8'}</button>
 {/block}

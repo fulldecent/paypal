@@ -48,7 +48,7 @@
   <div class="form-group row ">
     <div class="col-7 offset-3">
       <div preview-section class="invisible" style="position: relative; pointer-events: none">
-        <div button-container>{$preview|default:''}</div>
+        <div button-container>{$preview|default:'' nofilter}</div>
         <div class="overlay"></div>
       </div>
     </div>
@@ -64,7 +64,7 @@
 
     {if isset($height) && isset($width) && $height && $width}
       <div class="form-group row">
-        <label class="form-control-label col-3" for="{$height.name}">{$height.label}</label>
+        <label class="form-control-label col-3" for="{$height.name|escape:'htmlall':'UTF-8'}">{$height.label|escape:'htmlall':'UTF-8'}</label>
         <div class="{[
         'col-7' => !$isModal,
         'col-9' => $isModal
@@ -73,13 +73,13 @@
             <div class="col col-6 pr-2">
               <input
                 type="text"
-                name="{$width.name}"
-                id="{$width.name}"
+                name="{$width.name|escape:'htmlall':'UTF-8'}"
+                id="{$width.name|escape:'htmlall':'UTF-8'}"
                 class="form-control"
                 {if $width.placeholder|default:false}
-                  placeholder="{$width.placeholder}"
+                  placeholder="{$width.placeholder|escape:'htmlall':'UTF-8'}"
                 {/if}
-                value="{$width.value|default:''}"
+                value="{$width.value|default:''|escape:'htmlall':'UTF-8'}"
                 data-type="width"
                 data-msg-error="{l s='Minimum 150 px is required' mod='paypal'}"
               >
@@ -88,13 +88,13 @@
             <div class="col col-6 pl-2">
               <input
                 type="text"
-                name="{$height.name}"
-                id="{$height.name}"
+                name="{$height.name|escape:'htmlall':'UTF-8'}"
+                id="{$height.name|escape:'htmlall':'UTF-8'}"
                 class="form-control"
                 {if $height.placeholder|default:false}
-                  placeholder="{$height.placeholder}"
+                  placeholder="{$height.placeholder|escape:'htmlall':'UTF-8'}"
                 {/if}
-                value="{$height.value|default:''}"
+                value="{$height.value|default:''|escape:'htmlall':'UTF-8'}"
                 data-type="height"
                 data-msg-error="{l s='Value from 25 to 55 is required' mod='paypal'}"
               >

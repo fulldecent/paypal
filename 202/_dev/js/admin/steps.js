@@ -6,6 +6,7 @@ class Steps {
     this.currentStepBadge = '[data-badge-current-step]';
     this.maxStepBadge = '[data-badge-max-step]';
     this.stepsProgress = '[data-steps-progress]';
+    this.modalConfiguration = '[data-modal-dialog-configuration]';
     this.controller = document.location.href;
   }
 
@@ -19,14 +20,13 @@ class Steps {
       if (e.originalEvent.detail.form.classList.contains('form-modal') == false) {
         return;
       }
-
+      const currentStepIndex = this.getCurrentStepIndex();
       this.setAction('next');
       this.updateCurrentBadgeStep();
       this.updateStepsProgress();
 
-      if (this.getCurrentStepIndex() == -1) {
+      if (currentStepIndex + 1 === this.getSteps().length) {
         $(e.originalEvent.detail.form).closest('.modal').modal('hide');
-        document.location.reload();
       }
     });
     $(document).on('click', this.btn, (e) => {
@@ -37,7 +37,6 @@ class Steps {
 
       if ($(e.currentTarget).attr('data-dismiss') === 'modal') {
         $(e.currentTarget).closest('.modal').modal('hide');
-        document.location.reload();
       }
     });
   }
@@ -62,6 +61,7 @@ class Steps {
 
   updateCurrentBadgeStep() {
     const currentStepIndex = this.getCurrentStepIndex();
+
     if (currentStepIndex <= this.getLastStepIndex()) {
       this.$stepsContainer.find(this.currentStepBadge).html(currentStepIndex + 1);
     }
@@ -70,6 +70,7 @@ class Steps {
   updateStepsProgress() {
     const currentStepIndex = this.getCurrentStepIndex();
     const value = currentStepIndex * 100 / this.getLastStepIndex();
+
     this.$stepsContainer.find(this.stepsProgress).attr('aria-valuenow', value).css('width', `${value}%`);
   }
 
@@ -97,29 +98,34 @@ class Steps {
     }
 
     if (this.getCurrentStepIndex() === this.getLastStepIndex()) {
-      $nextBtn.attr('data-dismiss', 'modal')
+      $nextBtn.attr('data-dismiss', 'modal');
     } else {
       $nextBtn.removeAttr('data-dismiss');
     }
   }
 
   setActiveStep(currentIndex, newIndex) {
-    if (newIndex !== currentIndex) {
-      const direction = (newIndex > currentIndex)
-        ? (start) => start <= newIndex
-        : (start) => start >= newIndex;
-
-      const index = (newIndex > currentIndex)
-        ? (start) => start + 1
-        : (start) => start - 1;
-
-      while (direction(currentIndex)) {
-        this.setShowStep(currentIndex);
-        currentIndex = index(currentIndex);
-      }
-
-      this.updateButtons();
+    if (newIndex + 1 > this.getSteps().length) {
+      return;
     }
+    if (newIndex === currentIndex) {
+      return;
+    }
+
+    const direction = (newIndex > currentIndex)
+      ? (start) => start <= newIndex
+      : (start) => start >= newIndex;
+
+    const index = (newIndex > currentIndex)
+      ? (start) => start + 1
+      : (start) => start - 1;
+
+    while (direction(currentIndex)) {
+      this.setShowStep(currentIndex);
+      currentIndex = index(currentIndex);
+    }
+
+    this.updateButtons();
   }
 
   setShowStep(index) {

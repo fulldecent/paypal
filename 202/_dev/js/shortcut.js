@@ -151,12 +151,14 @@ const Shortcut = {
     url.searchParams.append('action', 'CreateOrder');
     this.updateInfo();
     data['page'] = this.page;
+    data['sc'] = true;
 
 
     if (this.page == 'product') {
       data['idProduct'] = this.idProduct;
       data['quantity'] = this.productQuantity;
       data['combination'] = this.combination.join('|');
+      data['sc'] = true;
     }
 
     if (this.isAddAddress) {
@@ -185,11 +187,13 @@ const Shortcut = {
     url.searchParams.append('action', 'CheckAvailability');
     this.updateInfo();
     data['page'] = this.page;
+    data['sc'] = true;
 
     if (this.page == 'product') {
       data['idProduct'] = this.idProduct;
       data['quantity'] = this.productQuantity;
       data['combination'] = this.combination.join('|');
+      data['sc'] = true;
     }
 
     fetch(url.toString(),

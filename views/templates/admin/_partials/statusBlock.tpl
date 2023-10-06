@@ -57,7 +57,7 @@
             {l s='The PHP cURL extension must be enabled on your server.' mod='paypal'}
           {elseif $vars.tlsVersion|default:false}
             {l s='The PHP cURL extension must be enabled on your server. Please contact your hosting provider for more information.' mod='paypal'}
-            {$vars.tlsVersion['error_message']}
+            {$vars.tlsVersion['error_message']|escape:'htmlall':'UTF-8'}
           {/if}
         </li>
       {/if}

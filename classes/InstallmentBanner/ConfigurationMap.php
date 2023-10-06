@@ -51,6 +51,8 @@ class ConfigurationMap
 
     const COLOR = 'PAYPAL_INSTALLMENT_COLOR';
 
+    const MESSENGING_CONFIG = 'PAYPAL_INSTALLMENT_MESSAGING_CONFIG';
+
     const COLOR_BLUE = 'blue';
 
     const COLOR_GRAY = 'gray';
@@ -182,6 +184,21 @@ class ConfigurationMap
             'ProductController' => self::PRODUCT_PAGE,
             'IndexController' => self::HOME_PAGE,
             'CategoryController' => self::CATEGORY_PAGE,
+        ];
+    }
+
+    /**
+     * Return mapping of key attributes returned by configurator and configuration to display or not
+     * the section in front office
+     */
+    public static function getParameterConfMap()
+    {
+        return [
+            'checkout' => self::CHECKOUT_PAGE,
+            'cart' => self::CART_PAGE,
+            'product' => self::PRODUCT_PAGE,
+            'homepage' => self::HOME_PAGE,
+            'category' => self::CATEGORY_PAGE,
         ];
     }
 
