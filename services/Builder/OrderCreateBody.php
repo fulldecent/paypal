@@ -529,7 +529,7 @@ class OrderCreateBody implements BuilderInterface
             'paypal' => [
                 'attributes' => [
                     'vault' => [
-                        'permit_multiple_payment_tokens' => true,
+                        'permit_multiple_payment_tokens' => false,
                         'store_in_vault' => Vaulting::STORE_IN_VAULT_ON_SUCCESS,
                         'usage_type' => Vaulting::USAGE_TYPE_MERCHANT,
                         'customer_type' => Vaulting::CUSTOMER_TYPE_CONSUMER,

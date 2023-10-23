@@ -97,7 +97,14 @@ class ServicePaypalVaulting
             $mode = (int) \Configuration::get('PAYPAL_SANDBOX');
         }
 
-        $paypalVaultingObject = new \PaypalVaulting();
+        $idPaypalVaulting = (int) $this->db->getValue(
+            (new DbQuery())
+                ->from(\PaypalVaulting::$definition['table'])
+                ->where(sprintf('vault_id = "%s"', pSQL($vaultInfo->getVaultId())))
+                ->where(sprintf('paypal_customer_id = "%s"', pSQL($vaultInfo->getCustomerId())))
+        );
+
+        $paypalVaultingObject = new \PaypalVaulting($idPaypalVaulting);
         $paypalVaultingObject->id_customer = $idCustomer;
         $paypalVaultingObject->sandbox = (int) $mode;
         $paypalVaultingObject->profile_key = $this->getProfileKey((int) $mode);
