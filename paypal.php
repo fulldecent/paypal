@@ -369,6 +369,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             WebHookConf::ENABLE => 1,
             PaypalConfigurations::SHOW_MODAL_CONFIGURATION => 1,
+            PaypalConfigurations::PUI_ENABLED => 1,
+            PaypalConfigurations::SEPA_ENABLED => 1,
+            PaypalConfigurations::GIROPAY_ENABLED => 1,
+            PaypalConfigurations::SOFORT_ENABLED => 1,
+            PaypalConfigurations::ACDC_OPTION => 1,
         ];
 
         if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
