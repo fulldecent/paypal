@@ -30,7 +30,7 @@
     {$javascriptBlock nofilter}
 {/block}
 
-<div style="width: 200px">
+<div style="width: 250px; margin: 10px 0;">
   <div id="paypal-{$sdkNameSpace|escape:'htmlall':'UTF-8'}"></div>
 </div>
 
@@ -56,9 +56,18 @@
               paypal: window[skdNameSpace],
               style: {
                 height: 35
-              }
+              },
+              isMoveButtonAtEnd: '{$isMoveButtonAtEnd|default:''|escape:'htmlall':'utf-8'}'
             });
             button.initButton();
+            button.hideElementTillPaymentOptionChecked(
+              '[data-module-name="paypal"]',
+              '#payment-confirmation'
+          );
+          button.showElementIfPaymentOptionChecked(
+            '[data-module-name="paypal"]',
+            '#paypal-{$sdkNameSpace|escape:'htmlall':'UTF-8'}'
+          );
           }
 
         waitPaypalSDKIsLoaded();

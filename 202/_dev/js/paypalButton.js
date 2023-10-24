@@ -54,6 +54,7 @@ export const PaypalButton = function(conf) {
   this.messages = conf['messages'] === undefined ? [] : conf['messages'];
   this.style = conf['style'] === undefined ? [] : conf['style'];
   this.disableTillConsenting = conf['disableTillConsenting'] === undefined ? true : conf['disableTillConsenting'];
+  this.isMoveButtonAtEnd = conf['isMoveButtonAtEnd'] === undefined ? false : conf['isMoveButtonAtEnd'] === '1';
 };
 
 PaypalButton.prototype.initButton = function () {
@@ -91,19 +92,31 @@ PaypalButton.prototype.initButton = function () {
       document.getElementById('conditions_to_approve[terms-and-conditions]')
     );
   }
+  if (this.isMoveButtonAtEnd) {
+    const paypalButtonsContainer = this.getPaypalButtonsContainer();
+    paypalButtonsContainer.append(this.button);
+    this.button.style.display = 'none';
+  }
 };
 
 PaypalButton.prototype.getIdOrder = function () {
   const url = new URL(this.controller);
+  const postData = {
+    page: this.page
+  };
   url.searchParams.append('ajax', '1');
   url.searchParams.append('action', 'CreateOrder');
+
+  if (this.needSaveAccount()) {
+    postData['savePaypalAccount'] = '1';
+  }
 
   return fetch(url.toString(), {
     method: 'post',
     headers: {
       'content-type': 'application/json;charset=utf-8'
     },
-    body: JSON.stringify({page: this.page})
+    body: JSON.stringify(postData)
   }).then(resonse => resonse.json())
     .then((data) => {
     if (data.success) {
@@ -126,5 +139,37 @@ PaypalButton.prototype.sendData = function(data) {
   document.body.appendChild(form);
   form.submit();
 };
+
+PaypalButton.prototype.getPaypalButtonsContainer = function() {
+   if (document.querySelector('#paypal-buttons')) {
+    return document.querySelector('#paypal-buttons');
+   }
+
+   var container = document.createElement('div');
+   container.id = 'paypal-buttons';
+   container.style = 'width: 300px';
+
+   document.querySelector('#payment-confirmation').after(container);
+
+   return container;
+};
+
+PaypalButton.prototype.hideElementTillPaymentOptionChecked = function(paymentOptionSelector, hideElementSelector) {
+  Tools.hideElementTillPaymentOptionChecked(paymentOptionSelector, hideElementSelector);
+};
+
+PaypalButton.prototype.showElementIfPaymentOptionChecked = function(checkElementSelector, showElementSelector) {
+  Tools.showElementIfPaymentOptionChecked(checkElementSelector, showElementSelector);
+};
+
+PaypalButton.prototype.needSaveAccount = function() {
+  const vaultCheckbox = document.querySelector('[save-paypal-account]');
+
+  if (vaultCheckbox instanceof HTMLInputElement) {
+    return vaultCheckbox.checked;
+  } else {
+    return false;
+  }
+}
 
 window.PaypalButton = PaypalButton;

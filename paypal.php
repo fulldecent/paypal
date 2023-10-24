@@ -1059,7 +1059,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         (int) $this->context->customer->id,
                         Vaulting::PAYMENT_SOURCE_PAYPAL
                     );
-                    $additionalInformation = $vaultedButtonCollection->render() . $additionalInformation;
+                    $vaultedButtons = $vaultedButtonCollection->render();
+
+                    if (false === empty($vaultedButtons)) {
+                        $additionalInformation = $vaultedButtons;
+                    }
+
                     $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
                 }
             }

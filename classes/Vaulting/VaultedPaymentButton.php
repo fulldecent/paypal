@@ -32,6 +32,7 @@ use Context;
 use Country;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\PaypalConfigurations;
 use Tools;
 
 class VaultedPaymentButton
@@ -140,6 +141,7 @@ class VaultedPaymentButton
     {
         return [
             'sdkNameSpace' => $this->getIdentifier(),
+            'isMoveButtonAtEnd' => Configuration::get(PaypalConfigurations::MOVE_BUTTON_AT_END),
         ];
     }
 
