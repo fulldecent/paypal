@@ -201,9 +201,15 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
             ),
         ];
         $errorMessages[] = $this->module->l('More details: ', 'AdminPaypalConfigurationController', $locale);
+        $tooManyRequestMessage = $this->module->l('Client error response [url]https://api.paypal.com/v1/oauth2/token [status code] 429 [reason phrase] Too many Requests. 429 Unsual activity from this IP address. Too many request to PayPal systems. This could come from a shared infrastructure', 'AdminPaypalConfigurationController', $locale);
 
         if ($result->isSuccess() == false) {
-            $errorMessages[] = $result->getError()->getMessage();
+            if ((int) $result->getError()->getCode() === PayPal::PAYPAL_STATUS_CODE_TOO_MANY_REQUEST) {
+                $errorMessage[] = $tooManyRequestMessage;
+            } else {
+                $errorMessage[] = $result->getError()->getMessage();
+            }
+
             $this->errorTemplate($response, $errorMessages);
         }
 
@@ -214,7 +220,12 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
         $result = $paypalGetCredentials->execute();
 
         if ($result->isSuccess() == false) {
-            $errorMessage[] = $result->getError()->getMessage();
+            if ((int) $result->getError()->getCode() === PayPal::PAYPAL_STATUS_CODE_TOO_MANY_REQUEST) {
+                $errorMessage[] = $tooManyRequestMessage;
+            } else {
+                $errorMessage[] = $result->getError()->getMessage();
+            }
+
             $this->errorTemplate($response, $errorMessages);
         }
 

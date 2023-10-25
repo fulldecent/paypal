@@ -99,6 +99,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     const NEED_INSTALL_EXTENSIONS = 'PAYPAL_NEED_INSTALL_EXTENSIONS';
 
+    const PAYPAL_STATUS_CODE_TOO_MANY_REQUEST = 429;
+
     public static $dev = true;
     public $express_checkout;
     public $message;
