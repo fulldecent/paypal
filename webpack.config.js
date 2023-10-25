@@ -24,13 +24,13 @@
  *
  */
 const path = require('path');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const RemoveEmptyScripts = require('webpack-remove-empty-scripts');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const minimizers = [];
 const plugins = [
-  new FixStyleOnlyEntriesPlugin(),
+  new RemoveEmptyScripts(),
   new MiniCssExtractPlugin({
     filename: '[name].css',
   }),
