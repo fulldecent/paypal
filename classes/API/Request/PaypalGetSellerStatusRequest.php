@@ -137,7 +137,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         return $products;
     }
 
-    protected function getProductsFull(\PayPalHttp\HttpResponse $exec)
+    protected function getProductsFull(\PayPalHttp\HttpResponse $data)
     {
         if (empty($data->result->products)) {
             return [];
@@ -158,7 +158,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         return $products;
     }
 
-    protected function getCapabilitiesFull(\PayPalHttp\HttpResponse $exec)
+    protected function getCapabilitiesFull(\PayPalHttp\HttpResponse $data)
     {
         if (empty($data->result->capabilities)) {
             return [];
