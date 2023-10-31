@@ -177,13 +177,19 @@ PaypalButton.prototype.addMarkTo = function(element, styles = {}) {
           return;
         }
 
-        const markContainer = document.createElement('span');
+        let markContainer = element.querySelector('[paypal-mark-container]');
+
+        if (markContainer instanceof Element) {
+          markContainer.innerHTML = '';
+        } else {
+          markContainer = document.createElement('span');
+          markContainer.setAttribute('paypal-mark-container', '');
+        }
 
         for (let key in styles) {
           markContainer.style[key] = styles[key];
         }
 
-        markContainer.setAttribute('paypal-mark-container', '');
         element.appendChild(markContainer);
 
         const mark = this.paypal.Marks({
