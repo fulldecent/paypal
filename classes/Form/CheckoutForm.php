@@ -395,7 +395,7 @@ class CheckoutForm implements FormInterface
         if ($this->vaultingFunctionality->isAvailable()) {
             $fields[PaypalConfigurations::ACCOUNT_VAULTING] = [
                 'type' => 'switch',
-                'label' => $this->module->l('PayPal account vaulting', 'CheckoutForm'),
+                'label' => $this->module->l('PayPal account vaulting/save payments', 'CheckoutForm'),
                 'name' => PaypalConfigurations::ACCOUNT_VAULTING,
                 'values' => [
                     [
@@ -549,6 +549,7 @@ class CheckoutForm implements FormInterface
     {
         return Context::getContext()->smarty
             ->assign('isShowCustomerInstruction', $this->method == 'PPP')
+            ->assign('isShowVaultingFunctionality', $this->vaultingFunctionality->isAvailable())
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/messages/form-help-info/checkout.tpl');
     }
 }
