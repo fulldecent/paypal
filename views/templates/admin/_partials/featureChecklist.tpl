@@ -23,6 +23,11 @@
  *  @copyright PayPal
  *
  *}
+<style>
+  [vaulting-status-message] b {
+    cursor: pointer;
+  }
+</style>
 <div class="row pb-3 h-100">
   <div class="col-12 col-lg-9 col-xl-8 pb-4">
     <ul class="list-unstyled mb-0">
@@ -109,7 +114,7 @@
             file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
             isSuccess=$vars.isVaultingCapabilityAvailable|default:false
             }
-            {$vars.vaultingStatusMessage}
+            <div vaulting-status-message>{{$vars.vaultingStatusMessage|escape:'htmlall':'utf-8'}|paypalreplace:['<b>' => '<b refresh-feature-checklist>']}</div>
         </li>
       {/if}
 

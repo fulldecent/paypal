@@ -126,9 +126,10 @@ class VaultingFunctionality
         }
         /** @var ResponseGetSellerStatus $sellerStatus */
         $sellerStatus = $this->_cache['sellerStatus'];
+        $defaultMessage = $this->module->l('PayPal account vaulting/ save payments disabled');
 
         if ($sellerStatus->isSuccess() == false) {
-            return '';
+            return $defaultMessage;
         }
 
         foreach ($sellerStatus->getProductsFull() as $product) {
@@ -149,7 +150,7 @@ class VaultingFunctionality
                     return $this->module->l('PayPal account vaulting/save payments');
                 }
                 if (in_array($status, [Vaulting::PRODUCT_STATUS_NEED_MORE_DATA, Vaulting::PRODUCT_STATUS_PENDING, Vaulting::PRODUCT_STATUS_IN_REVIEW])) {
-                    return $this->module->l('PayPal account vaulting/ save payments capability is pending PayPal approval, click here to update status. PayPal may contact you by email if more information is needed.');
+                    return $this->module->l('PayPal account vaulting/ save payments capability is pending PayPal approval, click [b]here[/b] to update status. PayPal may contact you by email if more information is needed.');
                 }
                 if (in_array($status, [Vaulting::PRODUCT_STATUS_DECLINED, Vaulting::PRODUCT_STATUS_DENIED, Vaulting::PRODUCT_STATUS_REFUSED])) {
                     return $this->module->l('PayPal account vaulting/ save payments capability has been refused by PayPal, you could re-apply within 90 days by disconnect-reconnect your PayPal account');
@@ -157,6 +158,6 @@ class VaultingFunctionality
             }
         }
 
-        return '';
+        return $defaultMessage;
     }
 }
