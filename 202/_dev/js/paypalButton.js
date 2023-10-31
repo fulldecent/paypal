@@ -55,6 +55,7 @@ export const PaypalButton = function(conf) {
   this.style = conf['style'] === undefined ? [] : conf['style'];
   this.disableTillConsenting = conf['disableTillConsenting'] === undefined ? true : conf['disableTillConsenting'];
   this.isMoveButtonAtEnd = conf['isMoveButtonAtEnd'] === undefined ? false : conf['isMoveButtonAtEnd'] === '1';
+  this.isAddAddress = conf['isAddAddress'] === undefined ? false : conf['isAddAddress'];
 };
 
 PaypalButton.prototype.initButton = function () {
@@ -109,6 +110,9 @@ PaypalButton.prototype.getIdOrder = function () {
 
   if (this.needSaveAccount()) {
     postData['savePaypalAccount'] = '1';
+  }
+  if (this.isAddAddress) {
+    postData['addAddress'] = true;
   }
 
   return fetch(url.toString(), {

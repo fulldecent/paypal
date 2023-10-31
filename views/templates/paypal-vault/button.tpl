@@ -57,7 +57,8 @@
               style: {
                 height: 35
               },
-              isMoveButtonAtEnd: '{$isMoveButtonAtEnd|default:''|escape:'htmlall':'utf-8'}'
+              isMoveButtonAtEnd: '{$isMoveButtonAtEnd|default:''|escape:'htmlall':'utf-8'}',
+              isAddAddress: true
             });
             button.initButton();
             button.hideElementTillPaymentOptionChecked(
