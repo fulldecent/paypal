@@ -96,14 +96,6 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
 
     public function initContent()
     {
-        if ($this->method->isConfigured()) {
-            if ($this->vaultingFunctionality->isAvailable() && $this->vaultingFunctionality->isEnabled()) {
-                if (false == $this->vaultingFunctionality->isCapabilityAvailable(true)) {
-                    $this->errors[] = $this->module->l('You enabled vault functionality but capability is missing. Please, reset connection', 'AdminPaypalConfigurationController');
-                }
-            }
-        }
-
         $this->content .= $this->renderConfiguration();
         parent::initContent();
     }

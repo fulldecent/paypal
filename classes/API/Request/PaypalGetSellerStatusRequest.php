@@ -63,7 +63,9 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
 
         $response->setSuccess(true);
         $response->setCapabilities($this->getCapabilities($exec));
+        $response->setCapabilitiesFull($this->getCapabilitiesFull($exec));
         $response->setProducts($this->getProducts($exec));
+        $response->setProductsFull($this->getProductsFull($exec));
         $response->setData($exec);
 
         return $response;
@@ -133,5 +135,47 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         }
 
         return $products;
+    }
+
+    protected function getProductsFull(\PayPalHttp\HttpResponse $exec)
+    {
+        if (empty($data->result->products)) {
+            return [];
+        }
+
+        try {
+            $products = json_decode(json_encode($data->result->products), true);
+        } catch (Throwable $e) {
+            return [];
+        } catch (Exception $e) {
+            return [];
+        }
+
+        if (empty($products)) {
+            return [];
+        }
+
+        return $products;
+    }
+
+    protected function getCapabilitiesFull(\PayPalHttp\HttpResponse $exec)
+    {
+        if (empty($data->result->capabilities)) {
+            return [];
+        }
+
+        try {
+            $capabilities = json_decode(json_encode($data->result->capabilities), true);
+        } catch (Throwable $e) {
+            return [];
+        } catch (Exception $e) {
+            return [];
+        }
+
+        if (empty($capabilities)) {
+            return [];
+        }
+
+        return $capabilities;
     }
 }

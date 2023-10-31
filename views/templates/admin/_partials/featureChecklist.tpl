@@ -102,6 +102,17 @@
           }
           {l s='Tracking enabled' mod='paypal'}
       </li>
+
+      {if isset($vars.vaultingStatusMessage)}
+        <li class="d-flex align-items-center">
+            {include
+            file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+            isSuccess=$vars.isVaultingCapabilityAvailable|default:false
+            }
+            {$vars.vaultingStatusMessage}
+        </li>
+      {/if}
+
     </ul>
   </div>
 
