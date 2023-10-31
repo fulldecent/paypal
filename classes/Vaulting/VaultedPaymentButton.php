@@ -87,7 +87,7 @@ class VaultedPaymentButton
     protected function getJS()
     {
         $JSscripts = [];
-        $srcLib = $this->method->getUrlJsSdkLib();
+        $srcLib = $this->method->getUrlJsSdkLib(['components' => 'buttons,marks']);
 
         if ($this->method->isSandbox()) {
             if ($buyerCountry = $this->getBuyerCountry()) {

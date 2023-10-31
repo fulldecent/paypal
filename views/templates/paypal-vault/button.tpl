@@ -63,11 +63,17 @@
             button.hideElementTillPaymentOptionChecked(
               '[data-module-name="paypal"]',
               '#payment-confirmation'
-          );
-          button.showElementIfPaymentOptionChecked(
-            '[data-module-name="paypal"]',
-            '#paypal-{$sdkNameSpace|escape:'htmlall':'UTF-8'}'
-          );
+            );
+            button.showElementIfPaymentOptionChecked(
+              '[data-module-name="paypal"]',
+              '#paypal-{$sdkNameSpace|escape:'htmlall':'UTF-8'}'
+            );
+            button.addMarkTo(
+                document.querySelector('[data-module-name="paypal"]').closest('.payment-option'),
+                {
+                  display: "table-cell"
+                }
+            );
           }
 
         waitPaypalSDKIsLoaded();
