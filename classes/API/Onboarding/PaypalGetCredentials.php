@@ -82,11 +82,15 @@ class PaypalGetCredentials
                 ->setData($returnResponse);
         } catch (Throwable $e) {
             $error = new Error();
-            $error->setMessage($e->getMessage())->setErrorCode($e->getCode());
+            $error
+                ->setMessage($e->getMessage())
+                ->setErrorCode(empty($e->statusCode) ? $e->getCode() : $e->statusCode);
             $returnResponse->setError($error)->setSuccess(false);
         } catch (Exception $e) {
             $error = new Error();
-            $error->setMessage($e->getMessage())->setErrorCode($e->getCode());
+            $error
+                ->setMessage($e->getMessage())
+                ->setErrorCode(empty($e->statusCode) ? $e->getCode() : $e->statusCode);
             $returnResponse->setError($error)->setSuccess(false);
         }
 

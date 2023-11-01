@@ -99,6 +99,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     const NEED_INSTALL_EXTENSIONS = 'PAYPAL_NEED_INSTALL_EXTENSIONS';
 
+    const PAYPAL_STATUS_CODE_TOO_MANY_REQUEST = 429;
+
     const SCA_LIABILITY_SHIFT_POSSIBLE = 'POSSIBLE';
 
     const SCA_LIABILITY_SHIFT_NO = 'NO';
