@@ -644,6 +644,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if ($this->context->customer->isLogged() || $this->context->customer->is_guest) {
             return '';
         }
+        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+            return '';
+        }
 
         $content = $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP]);
         $content .= $this->displayShortcutButton([
