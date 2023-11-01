@@ -30,7 +30,10 @@ import Form from './admin/form';
 import Section from './admin/section';
 
 window.addEventListener('load', () => {
-  $('#modal-configuration').modal('show');
+  $('#modal-configuration').modal({show: true, backdrop: 'static', keyboard: false});
+  $('#modal-configuration').on('hidden.bs.modal', function (e) {
+    document.location.reload();
+  })
 
   const steps = new Steps('#modal-configuration-steps');
   steps.init();

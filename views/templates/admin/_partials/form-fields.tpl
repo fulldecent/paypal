@@ -34,19 +34,19 @@
     'form-group-dynamic' => $dynamicField && ($field.name == $dynamicField.name|default:false)
   ]|classnames}"
        {if $dynamicField.name|default:false}
-         group-name="{$dynamicField.name}"
+         group-name="{$dynamicField.name|escape:'htmlall':'UTF-8'}"
        {/if}
   >
     <label class="form-control-label {[
       'form-control-label-check' => $field.type == 'switch',
-      'col-3' => $form.id_form !== 'pp_installment_form',
-      'col-2' => $form.id_form === 'pp_installment_form'
-    ]|classnames}" for="{$field.name}">{$field.label}</label>
+      'col-3' => strpos($form.id_form, 'pp_installment_') === false,
+      'col-2' => strpos($form.id_form, 'pp_installment_') !== false
+    ]|classnames}" for="{$field.name|escape:'htmlall':'UTF-8'}">{$field.label|escape:'htmlall':'UTF-8'}</label>
 
     <div class="{[
       'col-9' => $withColor || $isModal,
-      'col-7' => $form.id_form !== 'pp_installment_form',
-      'col-10' => $form.id_form === 'pp_installment_form'
+      'col-7' => strpos($form.id_form, 'pp_installment_') === false,
+      'col-10' => strpos($form.id_form, 'pp_installment_') !== false
     ]|classnames}">
       <div>
 {/if}
@@ -55,44 +55,46 @@
         {* Type text *}
         <input
           type="text"
-          name="{$field.name}"
-          id="{$field.name}"
+          name="{$field.name|escape:'htmlall':'UTF-8'}"
+          id="{$field.name|escape:'htmlall':'UTF-8'}"
           class="form-control {[
             'form-control-primary' => $variant == 'primary'
           ]|classnames}"
           {if $field.placeholder|default:false}
-            placeholder="{$field.placeholder}"
+            placeholder="{$field.placeholder|escape:'htmlall':'UTF-8'}"
           {/if}
-          value="{$field.value|default:''}"
+          value="{$field.value|default:''|escape:'htmlall':'UTF-8'}"
           {if $field.data_type|default:false}
-            data-type="{$field.data_type}"
+            data-type="{$field.data_type|escape:'htmlall':'UTF-8'}"
           {/if}
         >
       {elseif $field.type === 'widget-code'}
         <div class="input-group">
-          <input type="text" readonly class="form-control"  aria-describedby="basic-addon2" id="{$field.name}" value="{$field.code|default:''}">
-          <div class="input-group-append" style="cursor: pointer" onclick="document.getElementById('{if isset($field.name)}{$field.name}{/if}').select(); document.execCommand('copy')">
+          <input type="text" readonly class="form-control"  aria-describedby="basic-addon2" id="{$field.name|escape:'htmlall':'UTF-8'}" value="{$field.code|default:''|escape:'htmlall':'UTF-8'}">
+          <div class="input-group-append" style="cursor: pointer" onclick="document.getElementById('{if isset($field.name)}{$field.name|escape:'htmlall':'UTF-8'}{/if}').select(); document.execCommand('copy')">
             <span class="input-group-text" id="basic-addon2"><i class="icon-copy"></i></span>
           </div>
         </div>
+      {elseif $field.type === 'hidden'}
+        <input type="hidden" id="{$field.name|escape:'htmlall':'UTF-8'}" name="{$field.name|escape:'htmlall':'UTF-8'}" value="{$field.value|escape:'htmlall':'UTF-8'}" />
       {elseif $field.type === 'select'}
         {* Type select *}
         <select
           class="form-control custom-select {[
             'custom-select-primary' => $variant == 'primary'
           ]|classnames}"
-          name="{$field.name}"
-          id="{$field.name}"
+          name="{$field.name|escape:'htmlall':'UTF-8'}"
+          id="{$field.name|escape:'htmlall':'UTF-8'}"
           {if $field.data_type|default:false}
-            data-type="{$field.data_type}"
+            data-type="{$field.data_type|escape:'htmlall':'UTF-8'}"
           {/if}
           >
           {foreach from=$field.options item=option}
             <option
-              value="{$option.value|default:''}"
+              value="{$option.value|default:''|escape:'htmlall':'UTF-8'}"
               {if isset($option.value) && isset($field.value) && $option.value == $field.value} selected {/if}
-              {if $option.color|default:false}data-color="{$option.color}"{/if}
-            >{$option.title|default:''}</option>
+              {if $option.color|default:false}data-color="{$option.color|escape:'htmlall':'UTF-8'}"{/if}
+            >{$option.title|default:''|escape:'htmlall':'UTF-8'}</option>
           {/foreach}
         </select>
 
@@ -115,8 +117,8 @@
         <div class="custom-control custom-switch {[
           'custom-switch-secondary' => $variant == 'secondary'
         ]|classnames}">
-          <input type="checkbox" class="custom-control-input" id="{$field.name}" name="{$field.name}" value="1" {if $field.value|default:false}checked{/if}>
-          <label class="custom-control-label form-control-label-check" for="{$field.name}">{l s='Enabled' mod='paypal'}</label>
+          <input type="checkbox" class="custom-control-input" id="{$field.name|escape:'htmlall':'UTF-8'}" name="{$field.name|escape:'htmlall':'UTF-8'}" value="1" {if $field.value|default:false}checked{/if}>
+          <label class="custom-control-label form-control-label-check" for="{$field.name|escape:'htmlall':'UTF-8'}">{l s='Enabled' mod='paypal'}</label>
         </div>
       {elseif $field.type === 'checkbox'}
 
@@ -126,16 +128,16 @@
             <input
               class="custom-control-input"
               type="checkbox"
-              id="{$field.name}"
-              name="{$field.name}"
-              value="{$field.value|default:''}"
+              id="{$field.name|escape:'htmlall':'UTF-8'}"
+              name="{$field.name|escape:'htmlall':'UTF-8'}"
+              value="{$field.value|default:''|escape:'htmlall':'UTF-8'}"
               {if $field.checked}checked{/if}>
-            <label class="custom-control-label" for="{$field.name}">
+            <label class="custom-control-label" for="{$field.name|escape:'htmlall':'UTF-8'}">
               <span class="label">
-                {$field.label}
+                {$field.label|escape:'htmlall':'UTF-8'}
               </span>
               {if isset($field.image)}
-                <img src="{$field.image}"  alt="location">
+                <img src="{$field.image|escape:'htmlall':'UTF-8'}"  alt="location">
               {/if}
 
             </label>

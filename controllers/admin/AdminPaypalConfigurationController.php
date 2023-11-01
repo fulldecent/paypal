@@ -32,6 +32,7 @@ use PaypalAddons\classes\Form\AccountForm;
 use PaypalAddons\classes\Form\CheckoutForm;
 use PaypalAddons\classes\Form\FeatureChecklistForm;
 use PaypalAddons\classes\Form\FormInstallment;
+use PaypalAddons\classes\Form\FormInstallmentMessaging;
 use PaypalAddons\classes\Form\OrderStatusForm;
 use PaypalAddons\classes\Form\ShortcutConfigurationForm;
 use PaypalAddons\classes\Form\TechnicalChecklistForm;
@@ -42,11 +43,7 @@ use PaypalAddons\classes\Shortcut\ShortcutPreview;
 use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
-
-class AdminPaypalConfigurationController extends \ModuleAdminController
+class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayPalController
 {
     public $bootstrap = false;
 
@@ -57,10 +54,15 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
     /** @var VaultingFunctionality */
     protected $vaultingFunctionality;
 
+    private $is_shown_modal;
+
     public function __construct()
     {
         parent::__construct();
-
+        $this->is_shown_modal = (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION);
+        if ((bool) Tools::getValue('isModal') === true) {
+            $this->is_shown_modal = 1;
+        }
         $this->initForms();
         $this->method = AbstractMethodPaypal::load();
         $this->vaultingFunctionality = new VaultingFunctionality();
@@ -73,7 +75,11 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $this->forms['trackingForm'] = new TrackingParametersForm();
 
         if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {
-            $this->forms['formInstallment'] = new FormInstallment();
+            $this->forms['formInstallment'] = new FormInstallment((bool) $this->is_shown_modal);
+
+            if ((bool) $this->is_shown_modal === false) {
+                $this->forms['formInstallmentMessaging'] = new FormInstallmentMessaging();
+            }
         }
 
         $this->forms['whiteListForm'] = new WhiteListForm();
@@ -89,8 +95,16 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         parent::setMedia($isNewTheme);
         \Media::addJsDef([
             'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name),
+            'paypal' => [
+                'locale' => str_replace('-', '_', Context::getContext()->language->locale),
+                'merchantId' => $this->method->getClientId($this->method->isSandbox()),
+                'partnerName' => $this->getPartnerId(false),
+                'partnerClientId' => $this->getPartnerId(true),
+                'messagingConfig' => Configuration::get(ConfigurationMap::MESSENGING_CONFIG, null, null, null, '{}'),
+            ],
         ]);
         $this->addJS(_PS_MODULE_DIR_ . 'paypal/views/js/admin.js');
+        $this->addJS('https://www.paypalobjects.com/merchant-library/merchant-configurator.js', false);
         $this->addCSS(_PS_MODULE_DIR_ . 'paypal/views/css/paypal_bo.css');
     }
 
@@ -111,7 +125,7 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $tpl->assign([
             'moduleDir' => _MODULE_DIR_ . $this->module->name,
             'moduleFullDir' => _PS_MODULE_DIR_ . $this->module->name,
-            'isShowModalConfiguration' => (int) Configuration::get(PaypalConfigurations::SHOW_MODAL_CONFIGURATION),
+            'isShowModalConfiguration' => $this->is_shown_modal,
             'diagnosticPage' => $this->context->link->getAdminLink('AdminPaypalDiagnostic'),
             'loggerPage' => $this->context->link->getAdminLink('AdminPaypalProcessLogger'),
             'isConfigured' => $this->method->isConfigured(),
@@ -120,6 +134,20 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         ]);
 
         return $tpl->fetch();
+    }
+
+    protected function getPartnerId($clientId = false)
+    {
+        $isSandBox = $this->method->isSandbox();
+        if ($clientId === true) {
+            return $isSandBox === true
+                ? PayPal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX
+                : PayPal::PAYPAL_PARTNER_CLIENT_ID_LIVE;
+        }
+
+        return $isSandBox === true
+            ? PayPal::PAYPAL_PARTNER_ID_SANDBOX
+            : PayPal::PAYPAL_PARTNER_ID_LIVE;
     }
 
     public function ajaxProcessSaveForm()
@@ -178,9 +206,15 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             ),
         ];
         $errorMessages[] = $this->module->l('More details: ', 'AdminPaypalConfigurationController', $locale);
+        $tooManyRequestMessage = $this->module->l('Client error response [url]https://api.paypal.com/v1/oauth2/token [status code] 429 [reason phrase] Too many Requests. 429 Unsual activity from this IP address. Too many request to PayPal systems. This could come from a shared infrastructure', 'AdminPaypalConfigurationController', $locale);
 
         if ($result->isSuccess() == false) {
-            $errorMessages[] = $result->getError()->getMessage();
+            if ((int) $result->getError()->getCode() === PayPal::PAYPAL_STATUS_CODE_TOO_MANY_REQUEST) {
+                $errorMessage[] = $tooManyRequestMessage;
+            } else {
+                $errorMessage[] = $result->getError()->getMessage();
+            }
+
             $this->errorTemplate($response, $errorMessages);
         }
 
@@ -191,7 +225,12 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
         $result = $paypalGetCredentials->execute();
 
         if ($result->isSuccess() == false) {
-            $errorMessage[] = $result->getError()->getMessage();
+            if ((int) $result->getError()->getCode() === PayPal::PAYPAL_STATUS_CODE_TOO_MANY_REQUEST) {
+                $errorMessage[] = $tooManyRequestMessage;
+            } else {
+                $errorMessage[] = $result->getError()->getMessage();
+            }
+
             $this->errorTemplate($response, $errorMessages);
         }
 
@@ -337,6 +376,32 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
             'content' => $template->fetch(),
         ]);
         $response->send();
+        exit;
+    }
+
+    public function ajaxProcessGetMessagingConfig()
+    {
+        $jsonResponse = new JsonResponse();
+
+        if (false === $this->method->isConfigured()) {
+            $jsonResponse->setData(['success' => false])->send();
+            exit;
+        }
+
+        $messagingConfig = [
+            'placements' => ['product', 'homepage', 'cart', 'checkout', 'category'],
+            'merchantIdentifier' => $this->method->getClientId(),
+            'partnerClientId' => ($this->method->isSandbox() ? PayPal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX : PayPal::PAYPAL_PARTNER_CLIENT_ID_LIVE),
+            'partnerName' => ($this->method->isSandbox() ? PayPal::PAYPAL_PARTNER_ID_SANDBOX : PayPal::PAYPAL_PARTNER_ID_LIVE),
+            'bnCode' => $this->method->getPaypalPartnerId(),
+            'locale' => str_replace('-', '_', Context::getContext()->language->locale),
+            'config' => json_decode(
+                Configuration::get(ConfigurationMap::MESSENGING_CONFIG, null, null, null, '{}'),
+                true
+            ),
+        ];
+
+        $jsonResponse->setData(['success' => true, 'config' => $messagingConfig])->send();
         exit;
     }
 

@@ -103,6 +103,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     const NEED_INSTALL_EXTENSIONS = 'PAYPAL_NEED_INSTALL_EXTENSIONS';
 
+    const PAYPAL_STATUS_CODE_TOO_MANY_REQUEST = 429;
+
+    const SCA_LIABILITY_SHIFT_POSSIBLE = 'POSSIBLE';
+
+    const SCA_LIABILITY_SHIFT_NO = 'NO';
+
+    const SCA_BANK_NOT_READY = 'N';
+
+    const SCA_UNAVAILABLE = 'U';
+
+    const SCA_BYPASSED = 'B';
+
     public static $dev = true;
     public $express_checkout;
     public $message;
@@ -374,6 +386,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             WebHookConf::ENABLE => 1,
             PaypalConfigurations::SHOW_MODAL_CONFIGURATION => 1,
+            PaypalConfigurations::PUI_ENABLED => 1,
+            PaypalConfigurations::SEPA_ENABLED => 1,
+            PaypalConfigurations::GIROPAY_ENABLED => 1,
+            PaypalConfigurations::SOFORT_ENABLED => 1,
+            PaypalConfigurations::ACDC_OPTION => 1,
         ];
 
         if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
@@ -644,6 +661,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if ($this->context->customer->isLogged() || $this->context->customer->is_guest) {
             return '';
         }
+        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+            return '';
+        }
 
         $content = $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP]);
         $content .= $this->displayShortcutButton([
@@ -661,6 +681,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable()) {
+                if ($this->context->controller instanceof CategoryController) {
+                    return $bannerManager->renderBanner('category');
+                }
+
                 return $bannerManager->renderForHomePage();
             }
         }
@@ -781,8 +805,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
 
                 if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
-                    if ($this->initPuiFunctionality()->isAvailable(false) && $this->initPuiFunctionality()->isEligibleContext($this->context)) {
-                        $payments_options[] = $this->renderPuiOption($params);
+                    if ($this->initPuiFunctionality()->isAvailable(false)) {
+                        if ($this->initPuiFunctionality()->isEnabled()) {
+                            if ($this->initPuiFunctionality()->isEligibleContext($this->context)) {
+                                $payments_options[] = $this->renderPuiOption($params);
+                            }
+                        }
                     }
                 }
             }
@@ -1506,7 +1534,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
     }
 
     public function validateOrder(
-        $id_cart, $id_order_state,
+        $id_cart,
+        $id_order_state,
         $amount_paid,
         $payment_method = 'Unknown',
         $message = null,
@@ -1962,13 +1991,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         $installmentTab->name[$language['id_lang']] = 'Pay in 4';
                         break;
                     case 'uk':
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                     case 'us':
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                     default:
-                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        $installmentTab->name[$language['id_lang']] = 'PayPal Pay Later';
                         break;
                 }
             }

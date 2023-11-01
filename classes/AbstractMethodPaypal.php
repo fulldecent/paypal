@@ -277,23 +277,45 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     {
         /** @var ResponseOrderGet $getOrderResponse */
         $getOrderResponse = $this->paypalApiManager->getOrderGetRequest($this->getPaymentId())->execute();
+        $response = new ResponseOrderCapture();
+        // Make sure that the order is eligible for capture when the buyer was passed by security customer authentication
+        if (!empty($getOrderResponse->getData()->result->payment_source->card->authentication_result)) {
+            $authResult = $getOrderResponse->getData()->result->payment_source->card->authentication_result;
+            $isSuccessSCA = false;
 
-        if ($this instanceof MethodMB || $getOrderResponse->getStatus() === 'APPROVED') {
+            if (!empty($authResult->liability_shift)) {
+                if ($authResult->liability_shift === PayPal::SCA_LIABILITY_SHIFT_POSSIBLE) {
+                    $isSuccessSCA = true;
+                }
+                if ($authResult->liability_shift === PayPal::SCA_LIABILITY_SHIFT_NO) {
+                    if (!empty($authResult->three_d_secure->enrollment_status)) {
+                        $isSuccessSCA = in_array(
+                            $authResult->three_d_secure->enrollment_status,
+                            [
+                                PayPal::SCA_BANK_NOT_READY,
+                                PayPal::SCA_UNAVAILABLE,
+                                PayPal::SCA_BYPASSED,
+                            ]
+                        );
+                    }
+                }
+            }
+
+            if ($isSuccessSCA === false) {
+                $error = new Error();
+                $error->setMessage('3DS verification is failed');
+                $response->setError($error)->setSuccess(false);
+
+                return $response;
+            }
+        }
+
+        if ($this instanceof MethodMB || $getOrderResponse->getStatus() !== 'COMPLETED') {
             if ($this->getIntent() == 'CAPTURE') {
                 return $this->paypalApiManager->getOrderCaptureRequest($this->getPaymentId())->execute();
             } else {
                 return $this->paypalApiManager->getOrderAuthorizeRequest($this->getPaymentId())->execute();
             }
-        }
-
-        $response = new ResponseOrderCapture();
-
-        if ($getOrderResponse->getStatus() !== 'COMPLETED') {
-            $error = new Error();
-            $error->setMessage('Payment was not approved');
-            $response->setError($error)->setSuccess(false);
-
-            return $response;
         }
 
         $response->setSuccess(true)
