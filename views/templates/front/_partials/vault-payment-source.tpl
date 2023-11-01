@@ -40,7 +40,7 @@
       style="border-top: solid 0.5px; padding: 10px; cursor: pointer; display: flex; align-items: center;"
       remove-payment-source
       account="{$vault.paymentSource->getEmail()|escape:'htmlall':'UTF-8'}"
-      id-paypal-vaulting="{$vault.id|default:''}"><i class="material-icons">delete</i>Delete</div>
+      id-paypal-vaulting="{$vault.id|default:''|escape:'htmlall':'UTF-8'}"><i class="material-icons">delete</i>Delete</div>
   </div>
 </div>
 

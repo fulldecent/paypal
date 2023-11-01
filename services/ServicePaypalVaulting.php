@@ -174,7 +174,7 @@ class ServicePaypalVaulting
         $query->from(\PaypalVaulting::$definition['table']);
         $query->where('id_customer = ' . (int) $idCustomer);
         $query->where('sandbox = ' . (int) $mode);
-        $query->where(sprintf('profile_key = "%s"', $this->getProfileKey((int) $mode)));
+        $query->where(sprintf('profile_key = "%s"', pSQL($this->getProfileKey((int) $mode))));
         $query->where('vault_id <> ""');
         $query->where('vault_id IS NOT NULL');
 
