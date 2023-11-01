@@ -101,6 +101,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     const PAYPAL_STATUS_CODE_TOO_MANY_REQUEST = 429;
 
+    const SCA_LIABILITY_SHIFT_POSSIBLE = 'POSSIBLE';
+
+    const SCA_LIABILITY_SHIFT_NO = 'NO';
+
+    const SCA_BANK_NOT_READY = 'N';
+
+    const SCA_UNAVAILABLE = 'U';
+
+    const SCA_BYPASSED = 'B';
+
     public static $dev = true;
     public $express_checkout;
     public $message;
@@ -371,6 +381,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             WebHookConf::ENABLE => 1,
             PaypalConfigurations::SHOW_MODAL_CONFIGURATION => 1,
+            PaypalConfigurations::PUI_ENABLED => 1,
+            PaypalConfigurations::SEPA_ENABLED => 1,
+            PaypalConfigurations::GIROPAY_ENABLED => 1,
+            PaypalConfigurations::SOFORT_ENABLED => 1,
+            PaypalConfigurations::ACDC_OPTION => 1,
         ];
 
         if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
@@ -641,6 +656,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if ($this->context->customer->isLogged() || $this->context->customer->is_guest) {
             return '';
         }
+        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+            return '';
+        }
 
         $content = $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP]);
         $content .= $this->displayShortcutButton([
@@ -782,8 +800,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
 
                 if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
-                    if ($this->initPuiFunctionality()->isAvailable(false) && $this->initPuiFunctionality()->isEligibleContext($this->context)) {
-                        $payments_options[] = $this->renderPuiOption($params);
+                    if ($this->initPuiFunctionality()->isAvailable(false)) {
+                        if ($this->initPuiFunctionality()->isEnabled()) {
+                            if ($this->initPuiFunctionality()->isEligibleContext($this->context)) {
+                                $payments_options[] = $this->renderPuiOption($params);
+                            }
+                        }
                     }
                 }
             }
