@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,59 +22,63 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 
 namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\ExtensionSDK\VaultPaymentTokens;
+use PaypalAddons\classes\API\Model\VaultInfo;
 use PaypalAddons\classes\API\Response\Error;
-use PaypalAddons\classes\API\Response\ResponseOrderCreate;
-use PaypalAddons\services\Builder\BuilderInterface;
-use PaypalAddons\services\Builder\OrderCreateBody;
+use PaypalAddons\classes\API\Response\ResponseVaultPaymentToken;
+use PaypalAddons\classes\Constants\Vaulting;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use PayPalHttp\HttpException;
+use PayPalHttp\HttpResponse;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class PaypalOrderCreateRequest extends RequestAbstract
+class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
 {
-    /** @var BuilderInterface */
-    protected $bodyBuilder;
+    /** @var string */
+    protected $tokenId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
+    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, string $tokenId)
     {
         parent::__construct($client, $method);
 
-        $this->bodyBuilder = $this->initBodyBuilder();
+        $this->tokenId = $tokenId;
     }
 
     public function execute()
     {
-        $response = new ResponseOrderCreate();
-        $order = new OrdersCreateRequest();
-        $order->body = $this->buildRequestBody();
-        $order->headers = array_merge($this->getHeaders(), $order->headers);
+        $response = new ResponseVaultPaymentToken();
+        $request = new VaultPaymentTokens($this->tokenId);
 
         try {
-            $exec = $this->client->execute($order);
+            $exec = $this->client->execute($request);
+            $response->setData($exec);
 
-            if (in_array($exec->statusCode, [200, 201, 202])) {
-                $response->setSuccess(true)
-                    ->setData($exec)
-                    ->setPaymentId($exec->result->id)
-                    ->setStatusCode($exec->statusCode)
-                    ->setApproveLink($this->getLink('approve', $exec->result->links));
-            } elseif ($exec->statusCode == 204) {
+            if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
                 $response->setSuccess(true);
+                $vaultInfo = $this->getVaultInfo($exec);
+
+                if ($vaultInfo instanceof VaultInfo) {
+                    $response->setVaultInfo($vaultInfo);
+                }
             } else {
                 $error = new Error();
-                $resultDecoded = json_decode($exec->message);
-                $error->setMessage($resultDecoded->message);
+
+                if (false === empty($exec->message)) {
+                    $resultDecoded = json_decode($exec->message, true);
+                    $error->setMessage(empty($resultDecoded['message']) ? '' : $resultDecoded['message']);
+                }
+
                 $response->setSuccess(false)
                     ->setError($error);
             }
@@ -108,32 +112,20 @@ class PaypalOrderCreateRequest extends RequestAbstract
     }
 
     /**
-     * @param $nameLink string
-     * @param $links array
-     *
-     * @return string
+     * @return VaultInfo
      */
-    protected function getLink($nameLink, $links)
+    protected function getVaultInfo(HttpResponse $response)
     {
-        foreach ($links as $link) {
-            if ($link->rel == $nameLink) {
-                return $link->href;
-            }
+        $vaultInfo = new VaultInfo();
+        $vaultInfo->setPaymentSource(Vaulting::PAYMENT_SOURCE_PAYPAL);
+
+        if (false === empty($response->result->id)) {
+            $vaultInfo->setVaultId((string) $response->result->id);
+        }
+        if (false === empty($response->result->customer->id)) {
+            $vaultInfo->setCustomerId((string) $response->result->customer->id);
         }
 
-        return '';
-    }
-
-    /**
-     * @return array
-     */
-    protected function buildRequestBody()
-    {
-        return $this->bodyBuilder->build();
-    }
-
-    protected function initBodyBuilder()
-    {
-        return new OrderCreateBody($this->context, $this->method);
+        return $vaultInfo;
     }
 }

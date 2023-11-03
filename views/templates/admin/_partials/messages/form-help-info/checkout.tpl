@@ -62,3 +62,9 @@
 <p>
     {{l s='[b]Brand name[/b] shown on top left during PayPal checkout: A label that overrides the business name in the PayPal account on the PayPal pages. If you are using PayPal Checkout redirect, you can also customize your shop logo. The logo can be changed via your business profile settings.' mod='paypal'}|paypalreplace:[]}
 </p>
+
+{if $isShowVaultingFunctionality|default:false}
+    <p>
+      {{l s='[b]The PayPal save payments[/b] allows merchants to securely store their customer’s payment methods. This helps reduce a merchant’s exposure to security and compliance risks. And also provides a quick and easy checkout experience for repeat buyers.' mod='paypal'}|paypalreplace:[]}
+    </p>
+{/if}

@@ -37,6 +37,7 @@ use PaypalAddons\classes\APM\ApmCollection;
 use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\APM;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -57,6 +58,8 @@ use PaypalAddons\classes\SEPA\SepaFunctionality;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Vaulting\VaultedPaymentButtonCollection;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\classes\Venmo\VenmoButton;
 use PaypalAddons\classes\Venmo\VenmoFunctionality;
 use PaypalAddons\classes\Webhook\WebhookOption;
@@ -66,6 +69,7 @@ use PaypalAddons\classes\Widget\ShortcutWidget;
 use PaypalAddons\services\PaymentRefundAmount;
 use PaypalAddons\services\PaypalContext;
 use PaypalAddons\services\ServicePaypalOrder;
+use PaypalAddons\services\ServicePaypalVaulting;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\AbstractModuleExtension;
@@ -255,6 +259,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'displayNavFullWidth',
         'actionLocalizationPageSave',
         'actionAdminOrdersTrackingNumberUpdate',
+        'displayCustomerAccount',
         ShortcutConfiguration::HOOK_REASSURANCE,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS,
@@ -828,6 +833,28 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $payments_options;
     }
 
+    public function hookDisplayCustomerAccount()
+    {
+        $paypalVaultingService = $this->initPaypalVaultingService();
+        $vaultList = $paypalVaultingService->getVaultListByCustomer($this->context->customer->id);
+
+        if (false === empty($vaultList)) {
+            $template = $this->context->smarty->createTemplate('module:paypal/views/templates/hook/my-account.tpl');
+            $template->assign(
+                'vaultListUrl',
+                $this->context->link->getModuleLink(
+                    $this->name,
+                    'vaultList',
+                    [
+                        'token' => $this->context->customer->secure_key,
+                    ]
+                )
+            );
+
+            return $template->fetch();
+        }
+    }
+
     protected function buildVenmoPaymentOption($params = [])
     {
         $paymentOption = new PaymentOption();
@@ -1027,6 +1054,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paymentOptions = [];
         $is_virtual = 0;
         $additionalInformation = '';
+        $vaultingFunctionality = $this->initVaultingFunctionality();
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
                 $is_virtual = 1;
@@ -1051,6 +1079,23 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
             $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
+        }
+        if ($vaultingFunctionality->isAvailable()) {
+            if ($vaultingFunctionality->isEnabled()) {
+                if ($vaultingFunctionality->isCapabilityAvailable(false)) {
+                    $vaultedButtonCollection = new VaultedPaymentButtonCollection(
+                        (int) $this->context->customer->id,
+                        Vaulting::PAYMENT_SOURCE_PAYPAL
+                    );
+                    $vaultedButtons = $vaultedButtonCollection->render();
+
+                    if (false === empty($vaultedButtons)) {
+                        $additionalInformation = $vaultedButtons;
+                    }
+
+                    $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
+                }
+            }
         }
 
         $paymentOption->setAdditionalInformation($additionalInformation);
@@ -3051,5 +3096,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initSepaFunctionality()
     {
         return new SepaFunctionality();
+    }
+
+    protected function initVaultingFunctionality()
+    {
+        return new VaultingFunctionality();
+    }
+
+    protected function initPaypalVaultingService()
+    {
+        return new ServicePaypalVaulting();
     }
 }

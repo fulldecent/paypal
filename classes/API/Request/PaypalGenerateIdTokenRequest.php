@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,6 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 
 namespace PaypalAddons\classes\API\Request;
@@ -29,52 +30,54 @@ namespace PaypalAddons\classes\API\Request;
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error;
-use PaypalAddons\classes\API\Response\ResponseOrderCreate;
-use PaypalAddons\services\Builder\BuilderInterface;
-use PaypalAddons\services\Builder\OrderCreateBody;
+use PaypalAddons\classes\API\Response\ResponseGenerateIdToken;
+use PayPalCheckoutSdk\Core\AccessTokenRequest;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use PayPalHttp\HttpException;
+use PayPalHttp\HttpResponse;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class PaypalOrderCreateRequest extends RequestAbstract
+class PaypalGenerateIdTokenRequest extends RequestAbstract
 {
-    /** @var BuilderInterface */
-    protected $bodyBuilder;
+    /** @var string */
+    protected $paypalCustomerId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
+    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, string $paypalCustomerId)
     {
         parent::__construct($client, $method);
 
-        $this->bodyBuilder = $this->initBodyBuilder();
+        $this->paypalCustomerId = $paypalCustomerId;
     }
 
     public function execute()
     {
-        $response = new ResponseOrderCreate();
-        $order = new OrdersCreateRequest();
-        $order->body = $this->buildRequestBody();
-        $order->headers = array_merge($this->getHeaders(), $order->headers);
+        $response = new ResponseGenerateIdToken();
+        $request = new AccessTokenRequest($this->client->environment);
+        $request->body = [
+            'grant_type' => 'client_credentials',
+            'response_type' => 'id_token',
+            'target_customer_id' => $this->paypalCustomerId,
+        ];
 
         try {
-            $exec = $this->client->execute($order);
+            $exec = $this->client->execute($request);
+            $response->setData($exec);
 
-            if (in_array($exec->statusCode, [200, 201, 202])) {
-                $response->setSuccess(true)
-                    ->setData($exec)
-                    ->setPaymentId($exec->result->id)
-                    ->setStatusCode($exec->statusCode)
-                    ->setApproveLink($this->getLink('approve', $exec->result->links));
-            } elseif ($exec->statusCode == 204) {
+            if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
                 $response->setSuccess(true);
+                $response->setIdToken($this->getIdToken($exec));
             } else {
                 $error = new Error();
-                $resultDecoded = json_decode($exec->message);
-                $error->setMessage($resultDecoded->message);
+
+                if (false === empty($exec->message)) {
+                    $resultDecoded = json_decode($exec->message, true);
+                    $error->setMessage(empty($resultDecoded['message']) ? '' : $resultDecoded['message']);
+                }
+
                 $response->setSuccess(false)
                     ->setError($error);
             }
@@ -107,33 +110,12 @@ class PaypalOrderCreateRequest extends RequestAbstract
         return $response;
     }
 
-    /**
-     * @param $nameLink string
-     * @param $links array
-     *
-     * @return string
-     */
-    protected function getLink($nameLink, $links)
+    protected function getIdToken(HttpResponse $response)
     {
-        foreach ($links as $link) {
-            if ($link->rel == $nameLink) {
-                return $link->href;
-            }
+        if (empty($response->result->id_token)) {
+            return '';
         }
 
-        return '';
-    }
-
-    /**
-     * @return array
-     */
-    protected function buildRequestBody()
-    {
-        return $this->bodyBuilder->build();
-    }
-
-    protected function initBodyBuilder()
-    {
-        return new OrderCreateBody($this->context, $this->method);
+        return $response->result->id_token;
     }
 }

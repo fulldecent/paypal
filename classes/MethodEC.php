@@ -317,4 +317,9 @@ class MethodEC extends AbstractMethodPaypal
             return Configuration::get('PAYPAL_EC_MERCHANT_ID_LIVE');
         }
     }
+
+    public function getSellerStatus()
+    {
+        return $this->paypalApiManager->getSellerStatusRequest()->execute();
+    }
 }

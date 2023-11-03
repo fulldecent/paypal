@@ -36,6 +36,10 @@ class ResponseGetSellerStatus extends Response
 
     protected $capabilities = [];
 
+    protected $productsFull = [];
+
+    protected $capabilitiesFull = [];
+
     /**
      * @return array
      */
@@ -80,6 +84,54 @@ class ResponseGetSellerStatus extends Response
         }
 
         $this->capabilities = $capabilities;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProductsFull()
+    {
+        return $this->productsFull;
+    }
+
+    /**
+     * @param array $productsFull
+     *
+     * @return ResponseGetSellerStatus
+     */
+    public function setProductsFull($productsFull)
+    {
+        if (false == is_array($productsFull)) {
+            return $this;
+        }
+
+        $this->productsFull = $productsFull;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCapabilitiesFull()
+    {
+        return $this->capabilitiesFull;
+    }
+
+    /**
+     * @param array $capabilitiesFull
+     *
+     * @return ResponseGetSellerStatus
+     */
+    public function setCapabilitiesFull($capabilitiesFull)
+    {
+        if (false == is_array($capabilitiesFull)) {
+            return $this;
+        }
+
+        $this->capabilitiesFull = $capabilitiesFull;
 
         return $this;
     }

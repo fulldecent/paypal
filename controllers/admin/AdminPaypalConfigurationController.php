@@ -40,6 +40,7 @@ use PaypalAddons\classes\Form\TrackingParametersForm;
 use PaypalAddons\classes\Form\WhiteListForm;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayPalController
@@ -49,6 +50,9 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
     protected $forms = [];
 
     protected $method;
+
+    /** @var VaultingFunctionality */
+    protected $vaultingFunctionality;
 
     private $is_shown_modal;
 
@@ -61,6 +65,7 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
         }
         $this->initForms();
         $this->method = AbstractMethodPaypal::load();
+        $this->vaultingFunctionality = new VaultingFunctionality();
     }
 
     protected function initForms()

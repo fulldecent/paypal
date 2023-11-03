@@ -35,6 +35,7 @@ use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLOption;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use Tools;
 
 if (!defined('_PS_VERSION_')) {
@@ -48,12 +49,15 @@ class FeatureChecklistForm implements FormInterface
     protected $method;
 
     protected $module;
+    /** @var VaultingFunctionality */
+    protected $vaultingFunctionality;
 
     public function __construct()
     {
         $this->bnplOption = new BNPLOption();
         $this->method = AbstractMethodPaypal::load();
         $this->module = Module::getInstanceByName('paypal');
+        $this->vaultingFunctionality = new VaultingFunctionality();
     }
 
     /**
@@ -79,6 +83,11 @@ class FeatureChecklistForm implements FormInterface
 
         if (false === in_array(Tools::strtoupper($isoCountryDefault), $this->module->countriesApiCartUnavailable)) {
             $vars['isCreditCardEnabled'] = $this->isCreditCardEnabled();
+        }
+
+        if ($this->vaultingFunctionality->isAvailable() && $this->vaultingFunctionality->isEnabled()) {
+            $vars['isVaultingCapabilityAvailable'] = $this->vaultingFunctionality->isCapabilityAvailable();
+            $vars['vaultingStatusMessage'] = $this->vaultingFunctionality->getStatusMessage();
         }
 
         return [

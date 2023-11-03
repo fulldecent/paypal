@@ -24,9 +24,13 @@
  *
  *}
 
-<a class="col-lg-4 col-md-6 col-sm-6 col-xs-12" id="paypal-link" href="{$vaultListUrl|escape:'html':'UTF-8'}" title="{l s='Saved PayPal account' mod='paypal'}">
-  <span class="link-item">
-    <i class="material-icons">credit_card</i>
-      {l s='Saved PayPal account' mod='paypal'}
-  </span>
-</a>
+{extends file='page.tpl'}
+
+{block name='page_content_container'}
+  {if false === empty($vaultList)}
+      <h1>Saved PayPal accounts</h1>
+      {foreach from=$vaultList item=vault}
+          {include file = "module:paypal/views/templates/front/_partials/vault-payment-source.tpl" vault=$vault}
+      {/foreach}
+  {/if}
+{/block}

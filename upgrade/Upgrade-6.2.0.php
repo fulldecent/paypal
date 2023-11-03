@@ -1,4 +1,5 @@
-{**
+<?php
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,11 +23,22 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  *
- *}
+ */
 
-<a class="col-lg-4 col-md-6 col-sm-6 col-xs-12" id="paypal-link" href="{$vaultListUrl|escape:'html':'UTF-8'}" title="{l s='Saved PayPal account' mod='paypal'}">
-  <span class="link-item">
-    <i class="material-icons">credit_card</i>
-      {l s='Saved PayPal account' mod='paypal'}
-  </span>
-</a>
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+/**
+ * @param $module PayPal
+ *
+ * @return bool
+ */
+function upgrade_module_6_2_0($module)
+{
+    $installer = new \PaypalPPBTlib\Install\ModuleInstaller($module);
+    $installer->installObjectModels();
+    $installer->registerHooks();
+
+    return true;
+}

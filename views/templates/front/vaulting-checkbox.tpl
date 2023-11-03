@@ -24,9 +24,10 @@
  *
  *}
 
-<a class="col-lg-4 col-md-6 col-sm-6 col-xs-12" id="paypal-link" href="{$vaultListUrl|escape:'html':'UTF-8'}" title="{l s='Saved PayPal account' mod='paypal'}">
-  <span class="link-item">
-    <i class="material-icons">credit_card</i>
-      {l s='Saved PayPal account' mod='paypal'}
-  </span>
-</a>
+
+<div style="margin-bottom: 20px">
+  <label>
+    <input type="checkbox" save-paypal-account checked>
+    {l s='Save my PayPal account for future payments' mod='paypal'}
+  </label>
+</div>
