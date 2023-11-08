@@ -23,6 +23,11 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+include_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
