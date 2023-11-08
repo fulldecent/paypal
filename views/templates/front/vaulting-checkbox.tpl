@@ -27,7 +27,7 @@
 
 <div style="margin-bottom: 20px">
   <label>
-    <input type="checkbox" save-paypal-account checked>
+    <input type="checkbox" save-paypal-account>
     {l s='Save my PayPal account for future payments' mod='paypal'}
   </label>
 </div>
