@@ -133,11 +133,11 @@ class VaultingFunctionality
         }
 
         foreach ($sellerStatus->getProductsFull() as $product) {
-            if (empty($product['name'])) {
+            if (empty($product['capabilities']) || empty($product['name'])) {
                 continue;
             }
 
-            if (Tools::strtoupper($product['name']) === Vaulting::PRODUCT) {
+            if ($product['name'] === Vaulting::PRODUCT || in_array(Vaulting::CAPABILITY, $product['capabilities'])) {
                 if (isset($product['vetting_status'])) {
                     $status = Tools::strtoupper($product['vetting_status']);
                 } elseif (isset($product['status'])) {
