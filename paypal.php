@@ -1091,9 +1091,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
                     if (false === empty($vaultedButtons)) {
                         $additionalInformation = $vaultedButtons;
+                    } else {
+                        $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
                     }
-
-                    $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
                 }
             }
         }
