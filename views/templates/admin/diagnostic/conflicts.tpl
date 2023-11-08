@@ -44,7 +44,7 @@
               <div class="form-wrapper justify-content-center col-xl-12 mt-3 {if empty($conflicts.data)}d-none{/if}">
                 <ul>
                   {foreach $conflicts.data as $conflict}
-                      <li>{$conflict|escape:'html':'UTF-8'}</li>
+                      <li>{$conflict}</li>
                   {/foreach}
                 </ul>
               </div>

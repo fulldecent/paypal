@@ -217,7 +217,7 @@ $_MODULE['<{paypal}prestashop>help_1424e5d76b0e3801869d7a836bd0665f'] = 'Do you 
 $_MODULE['<{paypal}prestashop>help_912a3ccf91f42349c62b4554d1be68d5'] = 'Contact us. We\'ll be delighted to help.';
 $_MODULE['<{paypal}prestashop>help_2acdeed6c94ace0992251cb5a62e0733'] = 'Contact our product team if you have any functional questions';
 $_MODULE['<{paypal}prestashop>help_56d22c91f2838214164c233e7d4659a3'] = 'Contact our technical support';
-$_MODULE['<{paypal}prestashop>block_info_0f1f01f9c2def9ea0e53bd7cc51934cb'] = 'If you encounter rounding issues with your orders, please change the PrestaShop rounding mode in [a @href1@]Preferences > General[/a] to:';
+$_MODULE['<{paypal}prestashop>block_info_0f1f01f9c2def9ea0e53bd7cc51934cb'] = 'If you encounter rounding issues with your orders, please change the PrestaShop rounding mode in  Preferences > General  to:';
 $_MODULE['<{paypal}prestashop>block_info_e287d4ed564774c343fdaf3bd1494ad6'] = 'Round mode: \"Round up away from zero, when it is half way there (recommended) \"';
 $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'Round type: \"Round on each item\"';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_075ee17d7f295d8a872482181a3a285d'] = 'PayPal account';
@@ -470,7 +470,7 @@ $_MODULE['<{paypal}prestashop>colordescriptions_ebe803ed571317d95ff3e019224a8456
 $_MODULE['<{paypal}prestashop>colordescriptions_b7b662bba6e3116e7a5fdcfe884966c0'] = 'If gold does not work for your site, try the PayPal blue button. Research shows that people know it is our brand color, which provides a halo of trust and security to your experience.';
 $_MODULE['<{paypal}prestashop>colordescriptions_b9e4d2f15dbab8b7228079f3062dfaa9'] = 'If gold or blue does not work for your site design or aesthetic, try the silver, white, or black buttons. Because these colors are less capable of drawing people’s attention, we recommend these button colors as a second alternative.';
 $_MODULE['<{paypal}prestashop>customizestylesection_63a78ed4647f7c63c2929e35ec1c95e3'] = 'Customize';
-$_MODULE['<{paypal}prestashop>roundingsettingsmessage_89cf2180690c10af20c8ebc29a1da518'] = 'Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode in [a @href1@] Preferences > General[/a] to:';
+$_MODULE['<{paypal}prestashop>roundingsettingsmessage_89cf2180690c10af20c8ebc29a1da518'] = 'Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode in  Preferences > General  to:';
 $_MODULE['<{paypal}prestashop>payment_infos_4a7c47c43f11a84f00ea356680340c92'] = 'Safer and more protected';
 $_MODULE['<{paypal}prestashop>payment_infos_581225f25ef2cf75e9522b4f600781f3'] = 'Buyer protection and free return shipping covers eligible purchase.';
 $_MODULE['<{paypal}prestashop>payment_infos_8024391592accadb8810eaade5005a3f'] = 'Simple and convenient';

@@ -152,7 +152,7 @@ $_MODULE['<{paypal}prestashop>roundingsettings_e287d4ed564774c343fdaf3bd1494ad6'
 $_MODULE['<{paypal}prestashop>roundingsettings_27a3066cd34cd1e683f1c2d04483163a'] = 'Type d\'arrondi : \"Round sur chaque point\"';
 $_MODULE['<{paypal}prestashop>roundingsettings_f1aea93e3ab1791e7f651b86c1448797'] = 'Changement automatique des paramètres d\'arrondi';
 $_MODULE['<{paypal}prestashop>roundingsettings_432d66b8d9f1c4c595ab6089c5603f8a'] = 'Vérifier les exigences';
-$_MODULE['<{paypal}prestashop>roundingsettingsmessage_89cf2180690c10af20c8ebc29a1da518'] = 'Vos paramètres d\'arrondi ne sont pas entièrement compatibles avec les exigences de PayPal. Afin d\'éviter que certaines transactions échouent, veuillez changer le mode d\'arrondi de PrestaShop dans [a @href1@] Préférences > Général [/a] en :';
+$_MODULE['<{paypal}prestashop>roundingsettingsmessage_89cf2180690c10af20c8ebc29a1da518'] = 'Vos paramètres d\'arrondi ne sont pas entièrement compatibles avec les exigences de PayPal. Afin d\'éviter que certaines transactions échouent, veuillez changer le mode d\'arrondi de PrestaShop dans Préférences > Général en :';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_075ee17d7f295d8a872482181a3a285d'] = 'Compte PayPal';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_84931c71e4f4b4f78a594109145263a4'] = 'Pour activer ce module, vous devez vous connecter à votre compte PayPal existant ou en ouvrir un nouveau.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_7f14d6041f61f946ecda3a1748b8a6f0'] = 'Compte connecté';
@@ -568,7 +568,7 @@ $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Liste des IPs autorisées';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{paypal}prestashop>statusblock_32d5facdc889dd6e687606994a04bce9'] = 'L\'extention PHP cURL est activé sur votre serveur';
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Vos paramètres d\'arrondi ne sont pas entièrement compatibles avec les exigences de PayPal. Afin d\'éviter que certaines transactions échouent, veuillez changer le mode d\'arrondi de PrestaShop dans [a @href1@] Préférences > Général [/a] en :';
+$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Vos paramètres d\'arrondi ne sont pas entièrement compatibles avec les exigences de PayPal. Afin d\'éviter que certaines transactions échouent, veuillez changer le mode d\'arrondi de PrestaShop dans Préférences > Général en :';
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'Accepter les paiements PayPal';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';

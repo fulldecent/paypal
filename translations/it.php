@@ -146,7 +146,7 @@ $_MODULE['<{paypal}prestashop>help_1424e5d76b0e3801869d7a836bd0665f'] = 'Hai anc
 $_MODULE['<{paypal}prestashop>help_912a3ccf91f42349c62b4554d1be68d5'] = 'Contattaci, saremo lieti di aiutarti.';
 $_MODULE['<{paypal}prestashop>help_2acdeed6c94ace0992251cb5a62e0733'] = 'Contatta il nostro team di prodotto per eventuali domande sulle funzionalità';
 $_MODULE['<{paypal}prestashop>help_56d22c91f2838214164c233e7d4659a3'] = 'Contatta la nostra Assistenza tecnica';
-$_MODULE['<{paypal}prestashop>block_info_0f1f01f9c2def9ea0e53bd7cc51934cb'] = 'Se si verificano problemi di arrotondamento con gli ordini, modifica la modalità di arrotondamento PrestaShop in \"[a @href1@]Preferences > General[/a]\" (Preferenze > Generale) quindi modifica come segue:';
+$_MODULE['<{paypal}prestashop>block_info_0f1f01f9c2def9ea0e53bd7cc51934cb'] = 'Se si verificano problemi di arrotondamento con gli ordini, modifica la modalità di arrotondamento PrestaShop in \" Preferences > General \" (Preferenze > Generale) quindi modifica come segue:';
 $_MODULE['<{paypal}prestashop>block_info_e287d4ed564774c343fdaf3bd1494ad6'] = 'Modalità rotonda: \"arrotondare a zero, quando è a metà strada (opzione consigliata)\"';
 $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'Arrotondamento: \"Arrotonda per tutti gli articoli\"';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_075ee17d7f295d8a872482181a3a285d'] = 'Conto PayPal';
@@ -566,7 +566,7 @@ $_MODULE['<{paypal}prestashop>trackingparametersform_c9cc8cce247e49bae79f15173ce
 $_MODULE['<{paypal}prestashop>whitelistform_3d4176b5773ebb35988eab171f78be02'] = 'Elenco degli IP';
 $_MODULE['<{paypal}prestashop>whitelistform_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
 $_MODULE['<{paypal}prestashop>statusblock_32d5facdc889dd6e687606994a04bce9'] = 'L\'estensione PHP cURL è abilitata sul tuo server';
-$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Le vostre impostazioni di arrotondamento non sono completamente compatibili con i requisiti di PayPal. Per evitare il fallimento di alcune transazioni, cambia la modalità di arrotondamento di PrestaShop in [a @href1@] Preferenze > Generale[/a] a:';
+$_MODULE['<{paypal}prestashop>paypal_81b73a9f2538ea8aa926110fd35feabb'] = 'Le vostre impostazioni di arrotondamento non sono completamente compatibili con i requisiti di PayPal. Per evitare il fallimento di alcune transazioni, cambia la modalità di arrotondamento di PrestaShop in Preferenze > Generale a:';
 $_MODULE['<{paypal}prestashop>accountform_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
 $_MODULE['<{paypal}prestashop>checkoutform_59b37f9326ef153c40b3ef20295016af'] = 'Accetta i pagamenti con PayPal';
 $_MODULE['<{paypal}prestashop>checkoutform_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Attivato';
