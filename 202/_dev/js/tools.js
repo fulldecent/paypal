@@ -70,7 +70,11 @@ export const Tools = {
       return;
     }
 
-    Tools.disable(disabledElement);
+    if (checkBox.checked) {
+      Tools.enable(disabledElement);
+    } else {
+      Tools.disable(disabledElement);
+    }
 
     checkBox.addEventListener('click', function() {
       Tools.hideElementTillChecked();
