@@ -486,9 +486,9 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $vaultingFunctionality = $this->initVaultingFunctionality();
 
         if ($sandbox) {
-            $urlLink .= 'https://www.sandbox.paypal.com/merchantsignup/partner/onboardingentry?';
+            $urlLink .= 'https://www.sandbox.paypal.com/bizsignup/partner/entry?';
         } else {
-            $urlLink .= 'https://www.paypal.com/merchantsignup/partner/onboardingentry?';
+            $urlLink .= 'https://www.paypal.com/bizsignup/partner/entry?';
         }
 
         $params = [
