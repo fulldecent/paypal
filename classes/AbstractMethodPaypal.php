@@ -503,7 +503,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         if ($vaultingFunctionality->isAvailable()) {
             $params['features'] = 'PAYMENT,REFUND,VAULT,BILLING_AGREEMENT';
             $params['product'] = 'EXPRESS_CHECKOUT';
-            $params['secondaryProducts'] = 'ADVANCED_VAULTING';
+            $params['secondaryProducts'] = 'advanced_vaulting';
             $params['capabilities'] = 'PAYPAL_WALLET_VAULTING_ADVANCED';
         }
 
