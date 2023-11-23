@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\Constants;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Vaulting
 {
     const ACCOUNT_VAULTING_STATE = 'PAYPAL_ACCOUNT_VAULTING_STATE';

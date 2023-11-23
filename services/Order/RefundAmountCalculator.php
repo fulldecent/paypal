@@ -26,6 +26,10 @@
 
 namespace PaypalAddons\services\Order;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use Order;
 use PayPal;
 

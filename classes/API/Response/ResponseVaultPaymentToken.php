@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\API\Response;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use PaypalAddons\classes\API\Model\PaymentSourceInfo;
 use PaypalAddons\classes\API\Model\VaultInfo;
 
