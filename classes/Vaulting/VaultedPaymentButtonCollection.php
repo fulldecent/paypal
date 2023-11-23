@@ -31,6 +31,10 @@ use Context;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\services\ServicePaypalVaulting;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class VaultedPaymentButtonCollection
 {
     /** @var Context */

@@ -133,11 +133,11 @@ class VaultingFunctionality
         }
 
         foreach ($sellerStatus->getProductsFull() as $product) {
-            if (empty($product['name'])) {
+            if (empty($product['capabilities']) || empty($product['name'])) {
                 continue;
             }
 
-            if (Tools::strtoupper($product['name']) === Vaulting::PRODUCT) {
+            if ($product['name'] === Vaulting::PRODUCT || in_array(Vaulting::CAPABILITY, $product['capabilities'])) {
                 if (isset($product['vetting_status'])) {
                     $status = Tools::strtoupper($product['vetting_status']);
                 } elseif (isset($product['status'])) {
@@ -147,7 +147,7 @@ class VaultingFunctionality
                 }
 
                 if (in_array($status, [Vaulting::PRODUCT_STATUS_ACTIVE, Vaulting::PRODUCT_STATUS_APPROVED, Vaulting::PRODUCT_STATUS_SUBSCRIBED])) {
-                    return $this->module->l('PayPal account vaulting/save payments');
+                    return $this->module->l('PayPal account vaulting/save payments enabled');
                 }
                 if (in_array($status, [Vaulting::PRODUCT_STATUS_NEED_MORE_DATA, Vaulting::PRODUCT_STATUS_PENDING, Vaulting::PRODUCT_STATUS_IN_REVIEW])) {
                     return $this->module->l('PayPal account vaulting/ save payments capability is pending PayPal approval, click [b]here[/b] to update status. PayPal may contact you by email if more information is needed.');

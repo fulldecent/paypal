@@ -26,6 +26,7 @@
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\PaypalApiManager;
+use PaypalAddons\classes\API\Response\ResponseGetSellerStatus;
 use PaypalAddons\classes\WhiteList\WhiteListService;
 
 if (!defined('_PS_VERSION_')) {
@@ -320,6 +321,13 @@ class MethodEC extends AbstractMethodPaypal
 
     public function getSellerStatus()
     {
+        if (empty($this->getMerchantId())) {
+            $response = new ResponseGetSellerStatus();
+            $response->setSuccess(false);
+
+            return $response;
+        }
+
         return $this->paypalApiManager->getSellerStatusRequest()->execute();
     }
 }

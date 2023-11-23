@@ -486,9 +486,9 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $vaultingFunctionality = $this->initVaultingFunctionality();
 
         if ($sandbox) {
-            $urlLink .= 'https://www.sandbox.paypal.com/merchantsignup/partner/onboardingentry?';
+            $urlLink .= 'https://www.sandbox.paypal.com/bizsignup/partner/entry?';
         } else {
-            $urlLink .= 'https://www.paypal.com/merchantsignup/partner/onboardingentry?';
+            $urlLink .= 'https://www.paypal.com/bizsignup/partner/entry?';
         }
 
         $params = [
@@ -503,7 +503,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         if ($vaultingFunctionality->isAvailable()) {
             $params['features'] = 'PAYMENT,REFUND,VAULT,BILLING_AGREEMENT';
             $params['product'] = 'EXPRESS_CHECKOUT';
-            $params['secondaryProducts'] = 'ADVANCED_VAULTING';
+            $params['secondaryProducts'] = 'advanced_vaulting';
             $params['capabilities'] = 'PAYPAL_WALLET_VAULTING_ADVANCED';
         }
 

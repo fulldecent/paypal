@@ -1091,9 +1091,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
                     if (false === empty($vaultedButtons)) {
                         $additionalInformation = $vaultedButtons;
+                    } else {
+                        $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
                     }
-
-                    $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
                 }
             }
         }
@@ -1572,10 +1572,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $secure_key,
                 $shop
             );
-        } catch (Exception $e) {
-            $log = 'Order validation error : ' . $e->getMessage() . ';';
-            $log .= ' File: ' . $e->getFile() . ';';
-            $log .= ' Line: ' . $e->getLine() . ';';
+        } catch (Exception $validateOrderException) {
+        } catch (Throwable $validateOrderException) {
+        }
+
+        if (isset($validateOrderException)) {
+            $log = 'Order validation error : ' . $validateOrderException->getMessage() . ';';
+            $log .= ' File: ' . $validateOrderException->getFile() . ';';
+            $log .= ' Line: ' . $validateOrderException->getLine() . ';';
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
                 $log,
@@ -1592,7 +1596,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $this->currentOrder = (int) Order::getIdByCartId((int) $id_cart);
 
             if ($this->currentOrder == false) {
-                $msg = $this->l('Order validation error : ') . $e->getMessage() . '. ';
+                $msg = $this->l('Order validation error : ') . $validateOrderException->getMessage() . '. ';
                 if (isset($transaction['transaction_id']) && $id_order_state != Configuration::get('PS_OS_ERROR')) {
                     $msg .= $this->l('Attention, your payment is made. Please, contact customer support. Your transaction ID is  : ') . $transaction['transaction_id'];
                 }
@@ -3079,7 +3083,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (\Configuration::get('PS_ROUND_TYPE') != \Order::ROUND_ITEM
             || \Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP
             || (\Configuration::get('PS_PRICE_DISPLAY_PRECISION') && \Configuration::get('PS_PRICE_DISPLAY_PRECISION') != 2)) {
-            $conflicts[] = $this->l('Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode.');
+            $conflicts[] = $this->l('Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode in Preferences > General to: Round on each item');
         }
 
         return $conflicts;

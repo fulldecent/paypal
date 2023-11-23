@@ -29,10 +29,6 @@
     <div style="padding: 20px 10px">
         {if $vault.paymentSource->getType() === 'paypal'}
           <div><b>{$vault.paymentSource->getEmail()|escape:'htmlall':'UTF-8'}</b></div>
-          <div>{$vault.paymentSource->getAddress()|escape:'htmlall':'UTF-8'}</div>
-          <div>{$vault.paymentSource->getPostcode()|escape:'htmlall':'UTF-8'}</div>
-          <div>{$vault.paymentSource->getCity()|escape:'htmlall':'UTF-8'}</div>
-          <div>{$vault.paymentSource->getCountry()|escape:'htmlall':'UTF-8'}</div>
         {/if}
     </div>
 
