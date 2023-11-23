@@ -1724,7 +1724,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         /* @var $paypal_order PaypalOrder */
         $id_order = $params['id_order'];
         $order = new Order((int) $id_order);
-        $paypal_msg = "<div class='module_warning'>";
+        $paypal_msg = '';
         $paypal_order = PaypalOrder::loadByOrderId($id_order);
         $paypal_capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
 
@@ -1771,88 +1771,90 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
-            $tmpMessage = "<p class='paypal-warning'>";
-            $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . '</br>';
-            $tmpMessage .= $this->l('Starting from v5.0.0 of PayPal module, Braintree payment solution won\'t be available via PayPal module anymore. You can continue using Braintree by installing the new Braintree module available via ') . "<a href='https://addons.prestashop.com/' target='_blank'>" . $this->l('addons.prestashop') . '</a>' . '</br>';
+            $tmpMessage = $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ');
+            $tmpMessage .= $this->l('Starting from v5.0.0 of PayPal module, Braintree payment solution won\'t be available via PayPal module anymore. You can continue using Braintree by installing the new Braintree module available via');
             $tmpMessage .= $this->l('All actions on this order will not be processed by Braintree until you install the new module (ex: you cannot refund this order automatically by changing order status).');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
         if ($paypal_order->sandbox) {
-            $tmpMessage = "<p class='paypal-warning'>";
-            $tmpMessage .= $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $tmpMessage = $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
         if (isset($_SESSION['need_refund']) && $_SESSION['need_refund']) {
             unset($_SESSION['need_refund']);
-            $tmpMessage = "<p class='paypal-warning'>";
-            $tmpMessage .= $this->l('The order should be refunded before the cancellation. Please select the status "Refunded".');
+            $tmpMessage = $this->l('The order should be refunded before the cancellation. Please select the status "Refunded".');
             $tmpMessage .= $this->l('You can cancel the order after. If you don\'t want to generate a refund automatically on PayPal when you change the status, you can disable it via the module settings: "Experience -> Advanced settings - Customize order status", select "no action".');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
         if (isset($_SESSION['not_payed_capture']) && $_SESSION['not_payed_capture']) {
             unset($_SESSION['not_payed_capture']);
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('You can\'t refund order as it hasn\'t be paid yet.') . '</p>'
+                $this->l('You can\'t refund order as it hasn\'t be paid yet.'),
+                true,
+                false,
+                'paypal-warning'
             );
         }
         if (Tools::getValue('error_refund')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.') . '</p>'
+                $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.'),
+                true,
+                false,
+                'paypal-warning'
             );
         }
         if (Tools::getValue('cancel_failed')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during cancel operation. For more details please see the \'PayPal\' tab in the order details.') . '</p>'
+                $this->l('We encountered an unexpected problem during cancel operation. For more details please see the \'PayPal\' tab in the order details.'),
+                true,
+                false,
+                'paypal-warning'
             );
         }
         if ($order->current_state == Configuration::get('PS_OS_REFUND') && $paypal_order->payment_status == 'Refunded') {
             $msg = $this->l('Your order is fully refunded by PayPal.');
-            $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $msg . '</p>'
-            );
+            $paypal_msg .= $this->displayWarning($msg, true, false, 'paypal-warning');
         }
 
         if ($order->getCurrentOrderState()->paid == 1 && Validate::isLoadedObject($paypal_capture) && $paypal_capture->id_capture) {
             $msg = $this->l('Your order is captured by PayPal.');
-            $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $msg . '</p>'
-            );
+            $paypal_msg .= $this->displayWarning($msg, true, false, 'paypal-warning');
         }
         if (Tools::getValue('error_capture')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during capture operation. See messages for more details.') . '</p>'
+                $this->l('We encountered an unexpected problem during capture operation. See messages for more details.'),
+                true,
+                false,
+                'paypal-warning'
             );
         }
 
         if ($paypal_order->total_paid != $paypal_order->total_prestashop) {
-            $preferences = $this->context->link->getAdminLink('AdminPreferences', true);
-            $paypal_msg .= $this->displayWarning('<p class="paypal-warning">' . $this->l('Product pricing has been modified as your rounding settings aren\'t compliant with PayPal.') . ' ' .
-                $this->l('To avoid automatic rounding to customer for PayPal payments, please update your rounding settings.') . ' ' .
-                '<a target="_blank" href="' . $preferences . '">' . $this->l('Read more.') . '</a></p>');
+            $paypal_msg .= $this->displayWarning(
+                $this->l('Product pricing has been modified as your rounding settings aren\'t compliant with PayPal.') . ' ' .
+                $this->l('To avoid automatic rounding to customer for PayPal payments, please update your rounding settings.'),
+                true,
+                false,
+                'paypal-warning'
+            );
         }
 
         if (isset($_SESSION['paypal_transaction_already_refunded']) && $_SESSION['paypal_transaction_already_refunded']) {
             unset($_SESSION['paypal_transaction_already_refunded']);
-            $tmpMessage = '<p class="paypal-warning">';
-            $tmpMessage .= $this->l('The order status was changed but this transaction has already been fully refunded.');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $tmpMessage = $this->l('The order status was changed but this transaction has already been fully refunded.');
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
 
         if (isset($_SESSION['paypal_partial_refund_successful']) && $_SESSION['paypal_partial_refund_successful']) {
             unset($_SESSION['paypal_partial_refund_successful']);
-            $tmpMessage = '<p class="paypal-warning">';
-            $tmpMessage .= $this->l('A refund request has been sent to PayPal.');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $tmpMessage = $this->l('A refund request has been sent to PayPal.');
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
 
-        $paypal_msg .= '</div>';
+        $tpl = $this->context->smarty->createTemplate('module:paypal/views/templates/hook/paypal_order.tpl');
+        $tpl->assign('paypal_msg', $paypal_msg);
 
-        return $paypal_msg . $this->display(__FILE__, 'views/templates/hook/paypal_order.tpl');
+        return $tpl->fetch();
     }
 
     public function hookActionCartUpdateQuantityBefore($params)
