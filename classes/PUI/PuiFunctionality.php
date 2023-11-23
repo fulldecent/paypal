@@ -31,6 +31,7 @@ use Configuration;
 use Context;
 use Country;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\Constants\PUI;
 use Tools;
 
@@ -91,5 +92,10 @@ class PuiFunctionality
         $address = new Address($context->cart->id_address_delivery);
 
         return 'de' == Tools::strtolower(Country::getIsoById($address->id_country));
+    }
+
+    public function isEnabled()
+    {
+        return (bool) Configuration::get(PaypalConfigurations::PUI_ENABLED);
     }
 }

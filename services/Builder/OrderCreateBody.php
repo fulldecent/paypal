@@ -32,6 +32,8 @@ use Customer;
 use Module;
 use Paypal;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\Vaulting;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\services\FormatterPaypal;
 use PaypalAddons\services\PaypalContext;
 
@@ -57,6 +59,9 @@ class OrderCreateBody implements BuilderInterface
 
     protected $useTax = null;
 
+    /** @var VaultingFunctionality */
+    protected $vaultingFunctionality;
+
     public function __construct($context = null, $method = null)
     {
         if ($context instanceof Context) {
@@ -73,6 +78,7 @@ class OrderCreateBody implements BuilderInterface
 
         $this->module = Module::getInstanceByName('paypal');
         $this->formatter = new FormatterPaypal();
+        $this->vaultingFunctionality = new VaultingFunctionality();
     }
 
     public function build()
@@ -81,6 +87,7 @@ class OrderCreateBody implements BuilderInterface
         $items = $this->getItems($currency);
         $payer = $this->getPayer();
         $shippingInfo = $this->getShippingInfo();
+        $paymentSource = $this->getPaymentSource();
 
         $body = [
             'intent' => $this->getIntent(),
@@ -104,6 +111,10 @@ class OrderCreateBody implements BuilderInterface
 
         if ($this->getProcessingInstruction()) {
             $body['processing_instruction'] = $this->getProcessingInstruction();
+        }
+
+        if (false === empty($paymentSource)) {
+            $body['payment_source'] = $paymentSource;
         }
 
         return $body;
@@ -494,5 +505,37 @@ class OrderCreateBody implements BuilderInterface
     protected function getProcessingInstruction()
     {
         return PaypalContext::getContext()->get('processing_instruction', '');
+    }
+
+    protected function getPaymentSource()
+    {
+        if (false === PaypalContext::getContext()->get('savePaypalAccount', false)) {
+            return [];
+        }
+
+        if (false === $this->vaultingFunctionality->isAvailable()) {
+            return [];
+        }
+
+        if (false === $this->vaultingFunctionality->isEnabled()) {
+            return [];
+        }
+
+        if (false === $this->vaultingFunctionality->isCapabilityAvailable(false)) {
+            return [];
+        }
+
+        return [
+            'paypal' => [
+                'attributes' => [
+                    'vault' => [
+                        'permit_multiple_payment_tokens' => false,
+                        'store_in_vault' => Vaulting::STORE_IN_VAULT_ON_SUCCESS,
+                        'usage_type' => Vaulting::USAGE_TYPE_MERCHANT,
+                        'customer_type' => Vaulting::CUSTOMER_TYPE_CONSUMER,
+                    ],
+                ],
+            ],
+        ];
     }
 }

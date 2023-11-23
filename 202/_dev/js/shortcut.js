@@ -48,6 +48,8 @@ const Shortcut = {
 
   isMoveButtonAtEnd: null,
 
+  savePaypalAccount: false,
+
   init() {
     this.updateInfo();
     prestashop.on('updatedProduct', function(e, xhr, settings) {
@@ -59,6 +61,7 @@ const Shortcut = {
     this.page = $('[data-container-express-checkout]').data('paypal-source-page');
     this.button = document.querySelector('[paypal-button-container]');
     let isAddAddress = document.querySelector('[data-container-express-checkout] [name="isAddAddress"]');
+    const vaultCheckbox = document.querySelector('[save-paypal-account]');
 
     if (this.page == 'product') {
       this.productQuantity = $('input[name="qty"]').val();
@@ -68,6 +71,12 @@ const Shortcut = {
 
     if (isAddAddress) {
       this.isAddAddress = (isAddAddress.value == '1');
+    }
+
+    if (vaultCheckbox instanceof HTMLInputElement) {
+      this.savePaypalAccount = vaultCheckbox.checked;
+    } else {
+      this.savePaypalAccount = false;
     }
   },
 
@@ -163,6 +172,10 @@ const Shortcut = {
 
     if (this.isAddAddress) {
       data['addAddress'] = true;
+    }
+
+    if (this.savePaypalAccount) {
+      data['savePaypalAccount'] = true;
     }
 
     return fetch(url.toString(), {

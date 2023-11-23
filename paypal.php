@@ -37,6 +37,7 @@ use PaypalAddons\classes\APM\ApmCollection;
 use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\APM;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -57,6 +58,8 @@ use PaypalAddons\classes\SEPA\SepaFunctionality;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Vaulting\VaultedPaymentButtonCollection;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\classes\Venmo\VenmoButton;
 use PaypalAddons\classes\Venmo\VenmoFunctionality;
 use PaypalAddons\classes\Webhook\WebhookOption;
@@ -66,6 +69,7 @@ use PaypalAddons\classes\Widget\ShortcutWidget;
 use PaypalAddons\services\PaymentRefundAmount;
 use PaypalAddons\services\PaypalContext;
 use PaypalAddons\services\ServicePaypalOrder;
+use PaypalAddons\services\ServicePaypalVaulting;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\AbstractModuleExtension;
@@ -98,6 +102,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
     const NEED_INSTALL_MODELS = 'PAYPAL_NEED_INSTALL_MODELS';
 
     const NEED_INSTALL_EXTENSIONS = 'PAYPAL_NEED_INSTALL_EXTENSIONS';
+
+    const PAYPAL_STATUS_CODE_TOO_MANY_REQUEST = 429;
+
+    const SCA_LIABILITY_SHIFT_POSSIBLE = 'POSSIBLE';
+
+    const SCA_LIABILITY_SHIFT_NO = 'NO';
+
+    const SCA_BANK_NOT_READY = 'N';
+
+    const SCA_UNAVAILABLE = 'U';
+
+    const SCA_BYPASSED = 'B';
 
     public static $dev = true;
     public $express_checkout;
@@ -243,6 +259,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'displayNavFullWidth',
         'actionLocalizationPageSave',
         'actionAdminOrdersTrackingNumberUpdate',
+        'displayCustomerAccount',
         ShortcutConfiguration::HOOK_REASSURANCE,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS,
@@ -369,6 +386,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             WebHookConf::ENABLE => 1,
             PaypalConfigurations::SHOW_MODAL_CONFIGURATION => 1,
+            PaypalConfigurations::PUI_ENABLED => 1,
+            PaypalConfigurations::SEPA_ENABLED => 1,
+            PaypalConfigurations::GIROPAY_ENABLED => 1,
+            PaypalConfigurations::SOFORT_ENABLED => 1,
+            PaypalConfigurations::ACDC_OPTION => 1,
         ];
 
         if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
@@ -639,6 +661,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if ($this->context->customer->isLogged() || $this->context->customer->is_guest) {
             return '';
         }
+        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+            return '';
+        }
 
         $content = $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP]);
         $content .= $this->displayShortcutButton([
@@ -780,8 +805,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
 
                 if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
-                    if ($this->initPuiFunctionality()->isAvailable(false) && $this->initPuiFunctionality()->isEligibleContext($this->context)) {
-                        $payments_options[] = $this->renderPuiOption($params);
+                    if ($this->initPuiFunctionality()->isAvailable(false)) {
+                        if ($this->initPuiFunctionality()->isEnabled()) {
+                            if ($this->initPuiFunctionality()->isEligibleContext($this->context)) {
+                                $payments_options[] = $this->renderPuiOption($params);
+                            }
+                        }
                     }
                 }
             }
@@ -802,6 +831,28 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $payments_options;
+    }
+
+    public function hookDisplayCustomerAccount()
+    {
+        $paypalVaultingService = $this->initPaypalVaultingService();
+        $vaultList = $paypalVaultingService->getVaultListByCustomer($this->context->customer->id);
+
+        if (false === empty($vaultList)) {
+            $template = $this->context->smarty->createTemplate('module:paypal/views/templates/hook/my-account.tpl');
+            $template->assign(
+                'vaultListUrl',
+                $this->context->link->getModuleLink(
+                    $this->name,
+                    'vaultList',
+                    [
+                        'token' => $this->context->customer->secure_key,
+                    ]
+                )
+            );
+
+            return $template->fetch();
+        }
     }
 
     protected function buildVenmoPaymentOption($params = [])
@@ -1003,6 +1054,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paymentOptions = [];
         $is_virtual = 0;
         $additionalInformation = '';
+        $vaultingFunctionality = $this->initVaultingFunctionality();
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
                 $is_virtual = 1;
@@ -1027,6 +1079,23 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
             $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
+        }
+        if ($vaultingFunctionality->isAvailable()) {
+            if ($vaultingFunctionality->isEnabled()) {
+                if ($vaultingFunctionality->isCapabilityAvailable(false)) {
+                    $vaultedButtonCollection = new VaultedPaymentButtonCollection(
+                        (int) $this->context->customer->id,
+                        Vaulting::PAYMENT_SOURCE_PAYPAL
+                    );
+                    $vaultedButtons = $vaultedButtonCollection->render();
+
+                    if (false === empty($vaultedButtons)) {
+                        $additionalInformation = $vaultedButtons;
+                    } else {
+                        $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
+                    }
+                }
+            }
         }
 
         $paymentOption->setAdditionalInformation($additionalInformation);
@@ -1503,10 +1572,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $secure_key,
                 $shop
             );
-        } catch (Exception $e) {
-            $log = 'Order validation error : ' . $e->getMessage() . ';';
-            $log .= ' File: ' . $e->getFile() . ';';
-            $log .= ' Line: ' . $e->getLine() . ';';
+        } catch (Exception $validateOrderException) {
+        } catch (Throwable $validateOrderException) {
+        }
+
+        if (isset($validateOrderException)) {
+            $log = 'Order validation error : ' . $validateOrderException->getMessage() . ';';
+            $log .= ' File: ' . $validateOrderException->getFile() . ';';
+            $log .= ' Line: ' . $validateOrderException->getLine() . ';';
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
                 $log,
@@ -1523,7 +1596,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $this->currentOrder = (int) Order::getIdByCartId((int) $id_cart);
 
             if ($this->currentOrder == false) {
-                $msg = $this->l('Order validation error : ') . $e->getMessage() . '. ';
+                $msg = $this->l('Order validation error : ') . $validateOrderException->getMessage() . '. ';
                 if (isset($transaction['transaction_id']) && $id_order_state != Configuration::get('PS_OS_ERROR')) {
                     $msg .= $this->l('Attention, your payment is made. Please, contact customer support. Your transaction ID is  : ') . $transaction['transaction_id'];
                 }
@@ -3010,7 +3083,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (\Configuration::get('PS_ROUND_TYPE') != \Order::ROUND_ITEM
             || \Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP
             || (\Configuration::get('PS_PRICE_DISPLAY_PRECISION') && \Configuration::get('PS_PRICE_DISPLAY_PRECISION') != 2)) {
-            $conflicts[] = $this->l('Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode.');
+            $conflicts[] = $this->l('Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode in Preferences > General to: Round on each item');
         }
 
         return $conflicts;
@@ -3027,5 +3100,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initSepaFunctionality()
     {
         return new SepaFunctionality();
+    }
+
+    protected function initVaultingFunctionality()
+    {
+        return new VaultingFunctionality();
+    }
+
+    protected function initPaypalVaultingService()
+    {
+        return new ServicePaypalVaulting();
     }
 }

@@ -24,6 +24,7 @@
  *
  *}
 
+<h6>{l s='Customize order status' mod='paypal'}</h6>
 <p>
     {l s='You can refund the orders paid via PayPal directly via your PrestaShop BackOffice. Here, you can choose the order status that triggers the refund on PayPal. Choose the option "no actions" if you would like to change the order status without triggering the automatic refund on PayPal.' mod='paypal'}
 </p>

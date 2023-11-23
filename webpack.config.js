@@ -24,13 +24,13 @@
  *
  */
 const path = require('path');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const RemoveEmptyScripts = require('webpack-remove-empty-scripts');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const minimizers = [];
 const plugins = [
-  new FixStyleOnlyEntriesPlugin(),
+  new RemoveEmptyScripts(),
   new MiniCssExtractPlugin({
     filename: '[name].css',
   }),
@@ -53,6 +53,8 @@ const config = {
     'js/tools': './202/_dev/js/tools.js',
     'js/diagnostic/diagnostic': './202/_dev/js/diagnostic/diagnostic.js',
     'js/admin': './202/_dev/js/admin.js',
+    'js/vaultListPage': './202/_dev/js/vaultListPage.js',
+    'js/paypalButton': './202/_dev/js/paypalButton.js',
 
     'css/paypal_bo': './202/_dev/scss/paypal_bo.scss',
     'css/paypal_fo': './202/_dev/scss/paypal_fo.scss',

@@ -8,7 +8,9 @@ use Country;
 use Module;
 use PaypalAddons\classes\ACDC\AcdcFunctionality;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\classes\Venmo\VenmoFunctionality;
 use Tools;
 
@@ -25,6 +27,9 @@ class CheckoutForm implements FormInterface
 
     protected $acdcFunctionality;
 
+    /** @var VaultingFunctionality */
+    protected $vaultingFunctionality;
+
     protected $venmoFunctionality;
 
     public function __construct()
@@ -32,6 +37,7 @@ class CheckoutForm implements FormInterface
         $this->module = Module::getInstanceByName('paypal');
         $countryDefault = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Context::getContext()->language->id);
         $this->acdcFunctionality = new AcdcFunctionality();
+        $this->vaultingFunctionality = new VaultingFunctionality();
         $this->venmoFunctionality = new VenmoFunctionality();
 
         switch ($countryDefault->iso_code) {
@@ -386,6 +392,27 @@ class CheckoutForm implements FormInterface
             ];
         }
 
+        if ($this->vaultingFunctionality->isAvailable()) {
+            $fields[PaypalConfigurations::ACCOUNT_VAULTING] = [
+                'type' => 'switch',
+                'label' => $this->module->l('PayPal account vaulting/save payments', 'CheckoutForm'),
+                'name' => PaypalConfigurations::ACCOUNT_VAULTING,
+                'values' => [
+                    [
+                        'id' => PaypalConfigurations::ACCOUNT_VAULTING . '_on',
+                        'value' => Vaulting::ENABLED,
+                        'label' => $this->module->l('Enabled', 'AdminPayPalCustomizeCheckoutController'),
+                    ],
+                    [
+                        'id' => PaypalConfigurations::ACCOUNT_VAULTING . '_off',
+                        'value' => Vaulting::DISABLED,
+                        'label' => $this->module->l('Disabled', 'AdminPayPalCustomizeCheckoutController'),
+                    ],
+                ],
+                'value' => $this->vaultingFunctionality->isEnabled() ? Vaulting::ENABLED : Vaulting::DISABLED,
+            ];
+        }
+
         return [
             'legend' => [
                 'title' => $this->module->l('Checkout', 'AdminPayPalCustomizeCheckoutController'),
@@ -513,6 +540,8 @@ class CheckoutForm implements FormInterface
             isset($data[PaypalConfigurations::MERCHANT_INSTALLMENT]) ? 1 : 0
         );
 
+        $this->vaultingFunctionality->enable(isset($data[PaypalConfigurations::ACCOUNT_VAULTING]) ? 1 : 0);
+
         return true;
     }
 
@@ -520,6 +549,7 @@ class CheckoutForm implements FormInterface
     {
         return Context::getContext()->smarty
             ->assign('isShowCustomerInstruction', $this->method == 'PPP')
+            ->assign('isShowVaultingFunctionality', $this->vaultingFunctionality->isAvailable())
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/messages/form-help-info/checkout.tpl');
     }
 }

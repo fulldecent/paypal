@@ -67,7 +67,7 @@ class MethodMB extends AbstractMethodPaypal
 
     public function __construct()
     {
-        $this->servicePaypalVaulting = new ServicePaypalVaulting();
+        $this->servicePaypalVaulting = new ServicePaypalVaulting($this);
         $this->whiteListService = new WhiteListService();
         $this->initApiManager();
     }
@@ -149,7 +149,7 @@ class MethodMB extends AbstractMethodPaypal
         $customer = new Customer($cart->id_customer);
 
         if (Validate::isLoadedObject($customer) && $this->getRememberedCards()) {
-            $this->servicePaypalVaulting->createOrUpdatePaypalVaulting($customer->id, $this->getRememberedCards());
+            $this->servicePaypalVaulting->saveRememberedCards($customer->id, $this->getRememberedCards());
         }
 
         parent::validation();

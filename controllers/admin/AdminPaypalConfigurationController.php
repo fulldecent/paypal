@@ -23,6 +23,11 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+include_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
@@ -40,6 +45,7 @@ use PaypalAddons\classes\Form\TrackingParametersForm;
 use PaypalAddons\classes\Form\WhiteListForm;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayPalController
@@ -49,6 +55,9 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
     protected $forms = [];
 
     protected $method;
+
+    /** @var VaultingFunctionality */
+    protected $vaultingFunctionality;
 
     private $is_shown_modal;
 
@@ -61,6 +70,7 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
         }
         $this->initForms();
         $this->method = AbstractMethodPaypal::load();
+        $this->vaultingFunctionality = new VaultingFunctionality();
     }
 
     protected function initForms()
@@ -201,9 +211,15 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
             ),
         ];
         $errorMessages[] = $this->module->l('More details: ', 'AdminPaypalConfigurationController', $locale);
+        $tooManyRequestMessage = $this->module->l('Client error response [url]https://api.paypal.com/v1/oauth2/token [status code] 429 [reason phrase] Too many Requests. 429 Unsual activity from this IP address. Too many request to PayPal systems. This could come from a shared infrastructure', 'AdminPaypalConfigurationController', $locale);
 
         if ($result->isSuccess() == false) {
-            $errorMessages[] = $result->getError()->getMessage();
+            if ((int) $result->getError()->getCode() === PayPal::PAYPAL_STATUS_CODE_TOO_MANY_REQUEST) {
+                $errorMessage[] = $tooManyRequestMessage;
+            } else {
+                $errorMessage[] = $result->getError()->getMessage();
+            }
+
             $this->errorTemplate($response, $errorMessages);
         }
 
@@ -214,7 +230,12 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
         $result = $paypalGetCredentials->execute();
 
         if ($result->isSuccess() == false) {
-            $errorMessage[] = $result->getError()->getMessage();
+            if ((int) $result->getError()->getCode() === PayPal::PAYPAL_STATUS_CODE_TOO_MANY_REQUEST) {
+                $errorMessage[] = $tooManyRequestMessage;
+            } else {
+                $errorMessage[] = $result->getError()->getMessage();
+            }
+
             $this->errorTemplate($response, $errorMessages);
         }
 
