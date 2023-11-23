@@ -32,7 +32,7 @@ if (!defined('_PS_VERSION_')) {
  */
 class PaypalIpn extends ObjectModel
 {
-    /* @var string transaction_id*/
+    /* @var string */
     public $id_transaction;
 
     /* @var string */
@@ -41,7 +41,7 @@ class PaypalIpn extends ObjectModel
     /* @var string */
     public $response;
 
-    /* @var string creation date*/
+    /* @var string */
     public $date_add;
 
     /**

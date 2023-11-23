@@ -36,7 +36,7 @@ if (!defined('_PS_VERSION_')) {
  */
 class PaypalLog extends ProcessLoggerObjectModel
 {
-    /* @var object object service*/
+    /* @var object */
     protected $serviceLog;
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
