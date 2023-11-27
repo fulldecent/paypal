@@ -36,9 +36,9 @@ class ResponseGenerateIdToken extends Response
         return (string) $this->idToken;
     }
 
-    public function setIdToken(string $idToken)
+    public function setIdToken($idToken)
     {
-        $this->idToken = $idToken;
+        $this->idToken = (string) $idToken;
 
         return $this;
     }

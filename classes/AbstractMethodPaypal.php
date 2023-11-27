@@ -806,12 +806,12 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     /**
      * @return \PaypalVaulting|null
      */
-    protected function saveVault(int $idCustomer, VaultInfo $vaultInfo)
+    protected function saveVault($idCustomer, VaultInfo $vaultInfo)
     {
         $paypalVaultingService = $this->initPaypalVaultingService();
 
         if ($vaultInfo->getStatus() === Vaulting::STATUS_VAULTED) {
-            return $paypalVaultingService->addVault($idCustomer, $vaultInfo);
+            return $paypalVaultingService->addVault((int) $idCustomer, $vaultInfo);
         }
 
         if ($vaultInfo->getStatus() !== Vaulting::STATUS_APPROVED) {

@@ -45,11 +45,11 @@ class PaypalDeleteVaultPaymentTokenRequest extends RequestAbstract
     /** @var string */
     protected $vaultId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, string $vaultId)
+    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $vaultId)
     {
         parent::__construct($client, $method);
 
-        $this->vaultId = $vaultId;
+        $this->vaultId = (string) $vaultId;
     }
 
     public function execute()

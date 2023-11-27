@@ -159,7 +159,7 @@ class ResponseOrderGet extends Response
      *
      * @return ResponseOrderGet
      */
-    public function setTransactionId(string $transactionId)
+    public function setTransactionId($transactionId)
     {
         $this->transactionId = $transactionId;
 
@@ -199,7 +199,7 @@ class ResponseOrderGet extends Response
      *
      * @return ResponseOrderGet
      */
-    public function setPaymentMethod(string $paymentMethod)
+    public function setPaymentMethod($paymentMethod)
     {
         $this->paymentMethod = $paymentMethod;
 
@@ -219,7 +219,7 @@ class ResponseOrderGet extends Response
      *
      * @return ResponseOrderGet
      */
-    public function setPaymentTool(string $paymentTool)
+    public function setPaymentTool($paymentTool)
     {
         $this->paymentTool = $paymentTool;
 
@@ -239,7 +239,7 @@ class ResponseOrderGet extends Response
      *
      * @return ResponseOrderGet
      */
-    public function setMethod(string $method)
+    public function setMethod($method)
     {
         $this->method = $method;
 

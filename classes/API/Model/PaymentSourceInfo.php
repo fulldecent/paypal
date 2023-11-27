@@ -66,9 +66,9 @@ class PaymentSourceInfo
      *
      * @return PaymentSourceInfo
      */
-    public function setType(string $type)
+    public function setType($type)
     {
-        $this->type = $type;
+        $this->type = (string) $type;
 
         return $this;
     }
@@ -86,9 +86,9 @@ class PaymentSourceInfo
      *
      * @return PaymentSourceInfo
      */
-    public function setEmail(string $email)
+    public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = (string) $email;
 
         return $this;
     }
@@ -106,9 +106,9 @@ class PaymentSourceInfo
      *
      * @return PaymentSourceInfo
      */
-    public function setAddress(string $address)
+    public function setAddress($address)
     {
-        $this->address = $address;
+        $this->address = (string) $address;
 
         return $this;
     }
@@ -126,9 +126,9 @@ class PaymentSourceInfo
      *
      * @return PaymentSourceInfo
      */
-    public function setCity(string $city)
+    public function setCity($city)
     {
-        $this->city = $city;
+        $this->city = (string) $city;
 
         return $this;
     }
@@ -146,9 +146,9 @@ class PaymentSourceInfo
      *
      * @return PaymentSourceInfo
      */
-    public function setPostcode(string $postcode)
+    public function setPostcode($postcode)
     {
-        $this->postcode = $postcode;
+        $this->postcode = (string) $postcode;
 
         return $this;
     }
@@ -166,9 +166,9 @@ class PaymentSourceInfo
      *
      * @return PaymentSourceInfo
      */
-    public function setCountry(string $country)
+    public function setCountry($country)
     {
-        $this->country = $country;
+        $this->country = (string) $country;
 
         return $this;
     }
@@ -186,9 +186,9 @@ class PaymentSourceInfo
      *
      * @return PaymentSourceInfo
      */
-    public function setLastDigits(string $lastDigits)
+    public function setLastDigits($lastDigits)
     {
-        $this->lastDigits = $lastDigits;
+        $this->lastDigits = (string) $lastDigits;
 
         return $this;
     }
@@ -206,9 +206,9 @@ class PaymentSourceInfo
      *
      * @return PaymentSourceInfo
      */
-    public function setBrand(string $brand)
+    public function setBrand($brand)
     {
-        $this->brand = $brand;
+        $this->brand = (string) $brand;
 
         return $this;
     }
