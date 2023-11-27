@@ -51,14 +51,14 @@ class VaultedPaymentButtonCollection
 
     protected $id_customer;
 
-    public function __construct(int $id_customer, string $paymentSourceType)
+    public function __construct($id_customer, $paymentSourceType)
     {
         $this->context = Context::getContext();
         $this->method = AbstractMethodPaypal::load();
         $this->vaultingFunctionality = new VaultingFunctionality();
         $this->paypalVaultingService = new ServicePaypalVaulting();
-        $this->paymentSourceType = $paymentSourceType;
-        $this->id_customer = $id_customer;
+        $this->paymentSourceType = (string) $paymentSourceType;
+        $this->id_customer = (int) $id_customer;
     }
 
     public function render()

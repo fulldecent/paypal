@@ -56,12 +56,12 @@ class VaultedPaymentButton
     /** @var string */
     protected $userIdToken;
 
-    public function __construct(string $userIdToken)
+    public function __construct($userIdToken)
     {
         $this->context = Context::getContext();
         $this->module = Module::getInstanceByName('paypal');
         $this->method = AbstractMethodPaypal::load($this->getMethodType());
-        $this->userIdToken = $userIdToken;
+        $this->userIdToken = (string) $userIdToken;
     }
 
     /**
