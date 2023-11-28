@@ -26,6 +26,7 @@
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\PaypalApiManager;
+use PaypalAddons\classes\API\Response\ResponseGetSellerStatus;
 use PaypalAddons\classes\PUI\DataUserForm;
 use PaypalAddons\classes\PuiMethodInterface;
 use PaypalAddons\classes\WhiteList\WhiteListService;
@@ -364,6 +365,13 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
 
     public function getSellerStatus()
     {
+        if (empty($this->getMerchantId())) {
+            $response = new ResponseGetSellerStatus();
+            $response->setSuccess(false);
+
+            return $response;
+        }
+
         return $this->paypalApiManager->getSellerStatusRequest()->execute();
     }
 

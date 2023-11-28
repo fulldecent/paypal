@@ -26,6 +26,10 @@
 
 namespace PaypalAddons\classes\Form;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface FormInterface
 {
     /**

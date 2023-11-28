@@ -37,6 +37,7 @@ use PaypalAddons\classes\APM\ApmCollection;
 use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\APM;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -57,6 +58,8 @@ use PaypalAddons\classes\SEPA\SepaFunctionality;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Vaulting\VaultedPaymentButtonCollection;
+use PaypalAddons\classes\Vaulting\VaultingFunctionality;
 use PaypalAddons\classes\Venmo\VenmoButton;
 use PaypalAddons\classes\Venmo\VenmoFunctionality;
 use PaypalAddons\classes\Webhook\WebhookOption;
@@ -66,6 +69,7 @@ use PaypalAddons\classes\Widget\ShortcutWidget;
 use PaypalAddons\services\PaymentRefundAmount;
 use PaypalAddons\services\PaypalContext;
 use PaypalAddons\services\ServicePaypalOrder;
+use PaypalAddons\services\ServicePaypalVaulting;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\AbstractModuleExtension;
@@ -98,6 +102,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
     const NEED_INSTALL_MODELS = 'PAYPAL_NEED_INSTALL_MODELS';
 
     const NEED_INSTALL_EXTENSIONS = 'PAYPAL_NEED_INSTALL_EXTENSIONS';
+
+    const PAYPAL_STATUS_CODE_TOO_MANY_REQUEST = 429;
+
+    const SCA_LIABILITY_SHIFT_POSSIBLE = 'POSSIBLE';
+
+    const SCA_LIABILITY_SHIFT_NO = 'NO';
+
+    const SCA_BANK_NOT_READY = 'N';
+
+    const SCA_UNAVAILABLE = 'U';
+
+    const SCA_BYPASSED = 'B';
 
     public static $dev = true;
     public $express_checkout;
@@ -243,6 +259,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'displayNavFullWidth',
         'actionLocalizationPageSave',
         'actionAdminOrdersTrackingNumberUpdate',
+        'displayCustomerAccount',
         ShortcutConfiguration::HOOK_REASSURANCE,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS,
@@ -369,6 +386,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             WebHookConf::ENABLE => 1,
             PaypalConfigurations::SHOW_MODAL_CONFIGURATION => 1,
+            PaypalConfigurations::PUI_ENABLED => 1,
+            PaypalConfigurations::SEPA_ENABLED => 1,
+            PaypalConfigurations::GIROPAY_ENABLED => 1,
+            PaypalConfigurations::SOFORT_ENABLED => 1,
+            PaypalConfigurations::ACDC_OPTION => 1,
         ];
 
         if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
@@ -639,6 +661,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if ($this->context->customer->isLogged() || $this->context->customer->is_guest) {
             return '';
         }
+        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+            return '';
+        }
 
         $content = $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP]);
         $content .= $this->displayShortcutButton([
@@ -780,8 +805,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
 
                 if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
-                    if ($this->initPuiFunctionality()->isAvailable(false) && $this->initPuiFunctionality()->isEligibleContext($this->context)) {
-                        $payments_options[] = $this->renderPuiOption($params);
+                    if ($this->initPuiFunctionality()->isAvailable(false)) {
+                        if ($this->initPuiFunctionality()->isEnabled()) {
+                            if ($this->initPuiFunctionality()->isEligibleContext($this->context)) {
+                                $payments_options[] = $this->renderPuiOption($params);
+                            }
+                        }
                     }
                 }
             }
@@ -802,6 +831,28 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $payments_options;
+    }
+
+    public function hookDisplayCustomerAccount()
+    {
+        $paypalVaultingService = $this->initPaypalVaultingService();
+        $vaultList = $paypalVaultingService->getVaultListByCustomer($this->context->customer->id);
+
+        if (false === empty($vaultList)) {
+            $template = $this->context->smarty->createTemplate('module:paypal/views/templates/hook/my-account.tpl');
+            $template->assign(
+                'vaultListUrl',
+                $this->context->link->getModuleLink(
+                    $this->name,
+                    'vaultList',
+                    [
+                        'token' => $this->context->customer->secure_key,
+                    ]
+                )
+            );
+
+            return $template->fetch();
+        }
     }
 
     protected function buildVenmoPaymentOption($params = [])
@@ -1003,6 +1054,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paymentOptions = [];
         $is_virtual = 0;
         $additionalInformation = '';
+        $vaultingFunctionality = $this->initVaultingFunctionality();
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
                 $is_virtual = 1;
@@ -1027,6 +1079,23 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
             $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
+        }
+        if ($vaultingFunctionality->isAvailable()) {
+            if ($vaultingFunctionality->isEnabled()) {
+                if ($vaultingFunctionality->isCapabilityAvailable(false)) {
+                    $vaultedButtonCollection = new VaultedPaymentButtonCollection(
+                        (int) $this->context->customer->id,
+                        Vaulting::PAYMENT_SOURCE_PAYPAL
+                    );
+                    $vaultedButtons = $vaultedButtonCollection->render();
+
+                    if (false === empty($vaultedButtons)) {
+                        $additionalInformation = $vaultedButtons;
+                    } else {
+                        $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/vaulting-checkbox.tpl');
+                    }
+                }
+            }
         }
 
         $paymentOption->setAdditionalInformation($additionalInformation);
@@ -1503,10 +1572,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $secure_key,
                 $shop
             );
-        } catch (Exception $e) {
-            $log = 'Order validation error : ' . $e->getMessage() . ';';
-            $log .= ' File: ' . $e->getFile() . ';';
-            $log .= ' Line: ' . $e->getLine() . ';';
+        } catch (Exception $validateOrderException) {
+        } catch (Throwable $validateOrderException) {
+        }
+
+        if (isset($validateOrderException)) {
+            $log = 'Order validation error : ' . $validateOrderException->getMessage() . ';';
+            $log .= ' File: ' . $validateOrderException->getFile() . ';';
+            $log .= ' Line: ' . $validateOrderException->getLine() . ';';
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
                 $log,
@@ -1523,7 +1596,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $this->currentOrder = (int) Order::getIdByCartId((int) $id_cart);
 
             if ($this->currentOrder == false) {
-                $msg = $this->l('Order validation error : ') . $e->getMessage() . '. ';
+                $msg = $this->l('Order validation error : ') . $validateOrderException->getMessage() . '. ';
                 if (isset($transaction['transaction_id']) && $id_order_state != Configuration::get('PS_OS_ERROR')) {
                     $msg .= $this->l('Attention, your payment is made. Please, contact customer support. Your transaction ID is  : ') . $transaction['transaction_id'];
                 }
@@ -1651,7 +1724,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         /* @var $paypal_order PaypalOrder */
         $id_order = $params['id_order'];
         $order = new Order((int) $id_order);
-        $paypal_msg = "<div class='module_warning'>";
+        $paypal_msg = '';
         $paypal_order = PaypalOrder::loadByOrderId($id_order);
         $paypal_capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
 
@@ -1698,88 +1771,90 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
-            $tmpMessage = "<p class='paypal-warning'>";
-            $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . '</br>';
-            $tmpMessage .= $this->l('Starting from v5.0.0 of PayPal module, Braintree payment solution won\'t be available via PayPal module anymore. You can continue using Braintree by installing the new Braintree module available via ') . "<a href='https://addons.prestashop.com/' target='_blank'>" . $this->l('addons.prestashop') . '</a>' . '</br>';
+            $tmpMessage = $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ');
+            $tmpMessage .= $this->l('Starting from v5.0.0 of PayPal module, Braintree payment solution won\'t be available via PayPal module anymore. You can continue using Braintree by installing the new Braintree module available via');
             $tmpMessage .= $this->l('All actions on this order will not be processed by Braintree until you install the new module (ex: you cannot refund this order automatically by changing order status).');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
         if ($paypal_order->sandbox) {
-            $tmpMessage = "<p class='paypal-warning'>";
-            $tmpMessage .= $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $tmpMessage = $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
         if (isset($_SESSION['need_refund']) && $_SESSION['need_refund']) {
             unset($_SESSION['need_refund']);
-            $tmpMessage = "<p class='paypal-warning'>";
-            $tmpMessage .= $this->l('The order should be refunded before the cancellation. Please select the status "Refunded".');
+            $tmpMessage = $this->l('The order should be refunded before the cancellation. Please select the status "Refunded".');
             $tmpMessage .= $this->l('You can cancel the order after. If you don\'t want to generate a refund automatically on PayPal when you change the status, you can disable it via the module settings: "Experience -> Advanced settings - Customize order status", select "no action".');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
         if (isset($_SESSION['not_payed_capture']) && $_SESSION['not_payed_capture']) {
             unset($_SESSION['not_payed_capture']);
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('You can\'t refund order as it hasn\'t be paid yet.') . '</p>'
+                $this->l('You can\'t refund order as it hasn\'t be paid yet.'),
+                true,
+                false,
+                'paypal-warning'
             );
         }
         if (Tools::getValue('error_refund')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.') . '</p>'
+                $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.'),
+                true,
+                false,
+                'paypal-warning'
             );
         }
         if (Tools::getValue('cancel_failed')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during cancel operation. For more details please see the \'PayPal\' tab in the order details.') . '</p>'
+                $this->l('We encountered an unexpected problem during cancel operation. For more details please see the \'PayPal\' tab in the order details.'),
+                true,
+                false,
+                'paypal-warning'
             );
         }
         if ($order->current_state == Configuration::get('PS_OS_REFUND') && $paypal_order->payment_status == 'Refunded') {
             $msg = $this->l('Your order is fully refunded by PayPal.');
-            $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $msg . '</p>'
-            );
+            $paypal_msg .= $this->displayWarning($msg, true, false, 'paypal-warning');
         }
 
         if ($order->getCurrentOrderState()->paid == 1 && Validate::isLoadedObject($paypal_capture) && $paypal_capture->id_capture) {
             $msg = $this->l('Your order is captured by PayPal.');
-            $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $msg . '</p>'
-            );
+            $paypal_msg .= $this->displayWarning($msg, true, false, 'paypal-warning');
         }
         if (Tools::getValue('error_capture')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during capture operation. See messages for more details.') . '</p>'
+                $this->l('We encountered an unexpected problem during capture operation. See messages for more details.'),
+                true,
+                false,
+                'paypal-warning'
             );
         }
 
         if ($paypal_order->total_paid != $paypal_order->total_prestashop) {
-            $preferences = $this->context->link->getAdminLink('AdminPreferences', true);
-            $paypal_msg .= $this->displayWarning('<p class="paypal-warning">' . $this->l('Product pricing has been modified as your rounding settings aren\'t compliant with PayPal.') . ' ' .
-                $this->l('To avoid automatic rounding to customer for PayPal payments, please update your rounding settings.') . ' ' .
-                '<a target="_blank" href="' . $preferences . '">' . $this->l('Read more.') . '</a></p>');
+            $paypal_msg .= $this->displayWarning(
+                $this->l('Product pricing has been modified as your rounding settings aren\'t compliant with PayPal.') . ' ' .
+                $this->l('To avoid automatic rounding to customer for PayPal payments, please update your rounding settings.'),
+                true,
+                false,
+                'paypal-warning'
+            );
         }
 
         if (isset($_SESSION['paypal_transaction_already_refunded']) && $_SESSION['paypal_transaction_already_refunded']) {
             unset($_SESSION['paypal_transaction_already_refunded']);
-            $tmpMessage = '<p class="paypal-warning">';
-            $tmpMessage .= $this->l('The order status was changed but this transaction has already been fully refunded.');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $tmpMessage = $this->l('The order status was changed but this transaction has already been fully refunded.');
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
 
         if (isset($_SESSION['paypal_partial_refund_successful']) && $_SESSION['paypal_partial_refund_successful']) {
             unset($_SESSION['paypal_partial_refund_successful']);
-            $tmpMessage = '<p class="paypal-warning">';
-            $tmpMessage .= $this->l('A refund request has been sent to PayPal.');
-            $tmpMessage .= '</p>';
-            $paypal_msg .= $this->displayWarning($tmpMessage);
+            $tmpMessage = $this->l('A refund request has been sent to PayPal.');
+            $paypal_msg .= $this->displayWarning($tmpMessage, true, false, 'paypal-warning');
         }
 
-        $paypal_msg .= '</div>';
+        $tpl = $this->context->smarty->createTemplate('module:paypal/views/templates/hook/paypal_order.tpl');
+        $tpl->assign('paypal_msg', $paypal_msg);
 
-        return $paypal_msg . $this->display(__FILE__, 'views/templates/hook/paypal_order.tpl');
+        return $tpl->fetch();
     }
 
     public function hookActionCartUpdateQuantityBefore($params)
@@ -3010,7 +3085,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (\Configuration::get('PS_ROUND_TYPE') != \Order::ROUND_ITEM
             || \Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP
             || (\Configuration::get('PS_PRICE_DISPLAY_PRECISION') && \Configuration::get('PS_PRICE_DISPLAY_PRECISION') != 2)) {
-            $conflicts[] = $this->l('Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode.');
+            $conflicts[] = $this->l('Your rounding settings are not fully compatible with PayPal requirements. In order to avoid some of the transactions to fail, please change the PrestaShop rounding mode in Preferences > General to: Round on each item');
         }
 
         return $conflicts;
@@ -3027,5 +3102,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initSepaFunctionality()
     {
         return new SepaFunctionality();
+    }
+
+    protected function initVaultingFunctionality()
+    {
+        return new VaultingFunctionality();
+    }
+
+    protected function initPaypalVaultingService()
+    {
+        return new ServicePaypalVaulting();
     }
 }
