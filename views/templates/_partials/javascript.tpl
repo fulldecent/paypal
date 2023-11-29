@@ -29,7 +29,7 @@
    {foreach from=$JSvars key=varName item=varValue}
        {assign var="isNotJSVarsvalue" value=($varName == '0' && $varValue == '1')}
        {if $isNotJSVarsvalue === false}
-           var {$varName} = {$varValue|json_encode nofilter};
+           var {$varName|escape:'htmlall':'UTF-8'} = {$varValue|json_encode nofilter};
        {/if}
    {/foreach}
  {/if}
@@ -51,16 +51,16 @@
           function addScripts() {
               var scripts = Array();
               {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
-              var script = document.querySelector('script[data-key="{$keyScript}"]');
+              var script = document.querySelector('script[data-key="{$keyScript|escape:'htmlall':'UTF-8'}"]');
 
               if (null == script) {
                   var newScript = document.createElement('script');
                   {foreach from=$JSscriptAttributes key=attrName item=attrVal}
-                  newScript.setAttribute('{$attrName}', '{$attrVal nofilter}');
+                  newScript.setAttribute('{$attrName|escape:'htmlall':'UTF-8'}', '{$attrVal|escape:'htmlall':'UTF-8'}');
                   {/foreach}
 
                   if (false === ('{$keyScript}'.search('jq-lib') === 0 && typeof jQuery === 'function')) {
-                      newScript.setAttribute('data-key', '{$keyScript}');
+                      newScript.setAttribute('data-key', '{$keyScript|escape:'htmlall':'UTF-8'}');
                       scripts.push(newScript);
                   }
               }
