@@ -56,7 +56,7 @@
               if (null == script) {
                   var newScript = document.createElement('script');
                   {foreach from=$JSscriptAttributes key=attrName item=attrVal}
-                  newScript.setAttribute('{$attrName|escape:'htmlall':'UTF-8'}', '{$attrVal|escape:'htmlall':'UTF-8'}');
+                  newScript.setAttribute('{$attrName|escape:'htmlall':'UTF-8'}', '{$attrVal nofilter}');
                   {/foreach}
 
                   if (false === ('{$keyScript}'.search('jq-lib') === 0 && typeof jQuery === 'function')) {
