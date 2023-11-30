@@ -739,6 +739,7 @@ $_MODULE['<{paypal}prestashop>featurechecklist_f67fc894b5813f835edef6f58be72d12'
 $_MODULE['<{paypal}prestashop>featurechecklist_8a2964eb57aaac88e98ad4b145f617a2'] = 'PUI désactivé';
 $_MODULE['<{paypal}prestashop>featurechecklist_7f3d62d17837fe131d519441262154fe'] = 'Statut des commandes standard';
 $_MODULE['<{paypal}prestashop>featurechecklist_aa21b8541e24cea6af859c433aa4d92e'] = 'Affichage des bénéfices PayPal activé';
+$_MODULE['<{paypal}prestashop>featurechecklist_5d9681f21942a3dfddda847cfa15e805'] = 'Affichage des bénéfices PayPal deactivé';
 $_MODULE['<{paypal}prestashop>featurechecklist_5cfd369fbb2f54facb290021abf9b2a7'] = 'Tracking activé';
 $_MODULE['<{paypal}prestashop>featurechecklist_63a6a88c066880c5ac42394a22803ca6'] = 'Rafraîchir';
 $_MODULE['<{paypal}prestashop>modal-configuration_113f884286351db7fdb46f04b4a94d89'] = 'Etape :';
