@@ -73,6 +73,10 @@ class Banner
 
     public function render()
     {
+        if (!$this->method->isConfigured()) {
+            return '';
+        }
+
         $render = Context::getContext()->smarty
             ->assign('paypalmessenging', $this->getConfig())
             ->assign($this->getTplVars())
