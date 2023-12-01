@@ -48,11 +48,11 @@ class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
     /** @var string */
     protected $tokenId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, string $tokenId)
+    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $tokenId)
     {
         parent::__construct($client, $method);
 
-        $this->tokenId = $tokenId;
+        $this->tokenId = (string) $tokenId;
     }
 
     public function execute()

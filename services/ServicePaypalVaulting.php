@@ -91,7 +91,7 @@ class ServicePaypalVaulting
     /**
      * @return \PaypalVaulting|null
      */
-    public function addVault(int $idCustomer, VaultInfo $vaultInfo, $mode = null)
+    public function addVault($idCustomer, VaultInfo $vaultInfo, $mode = null)
     {
         if ($mode === null) {
             $mode = (int) \Configuration::get('PAYPAL_SANDBOX');
@@ -105,7 +105,7 @@ class ServicePaypalVaulting
         );
 
         $paypalVaultingObject = new \PaypalVaulting($idPaypalVaulting);
-        $paypalVaultingObject->id_customer = $idCustomer;
+        $paypalVaultingObject->id_customer = (int) $idCustomer;
         $paypalVaultingObject->sandbox = (int) $mode;
         $paypalVaultingObject->profile_key = $this->getProfileKey((int) $mode);
         $paypalVaultingObject->vault_id = $vaultInfo->getVaultId();
@@ -164,7 +164,7 @@ class ServicePaypalVaulting
         return $collection->getFirst();
     }
 
-    public function getVaultListByCustomer(int $idCustomer, $mode = null)
+    public function getVaultListByCustomer($idCustomer, $mode = null)
     {
         if ($mode === null) {
             $mode = (int) \Configuration::get('PAYPAL_SANDBOX');

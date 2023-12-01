@@ -52,9 +52,9 @@ class VaultInfo
         return $this->status;
     }
 
-    public function setStatus(string $status)
+    public function setStatus($status)
     {
-        $this->status = $status;
+        $this->status = (string) $status;
 
         return $this;
     }
@@ -64,9 +64,9 @@ class VaultInfo
         return $this->vaultId;
     }
 
-    public function setVaultId(string $vaultId)
+    public function setVaultId($vaultId)
     {
-        $this->vaultId = $vaultId;
+        $this->vaultId = (string) $vaultId;
 
         return $this;
     }
@@ -76,9 +76,9 @@ class VaultInfo
         return $this->customerId;
     }
 
-    public function setCustomerId(string $customerId)
+    public function setCustomerId($customerId)
     {
-        $this->customerId = $customerId;
+        $this->customerId = (string) $customerId;
 
         return $this;
     }
@@ -88,9 +88,9 @@ class VaultInfo
         return $this->setupToken;
     }
 
-    public function setSetupToken(string $setupToken)
+    public function setSetupToken($setupToken)
     {
-        $this->setupToken = $setupToken;
+        $this->setupToken = (string) $setupToken;
 
         return $this;
     }
@@ -100,9 +100,9 @@ class VaultInfo
         return $this->paymentSource;
     }
 
-    public function setPaymentSource(string $paymentSource)
+    public function setPaymentSource($paymentSource)
     {
-        $this->paymentSource = $paymentSource;
+        $this->paymentSource = (string) $paymentSource;
 
         return $this;
     }
