@@ -402,7 +402,6 @@ class Form {
     }
     $(messageSection).html(response.message);
   }
-
   isSandbox() {
     const mode = document.querySelector('#pp_account_form [name="mode"]');
 

@@ -25,17 +25,17 @@
  *}
 {assign var='baseUrl' value=Context::getContext()->shop->getBaseURL(true)}
 
-<link rel="stylesheet" href="{$baseUrl nofilter}modules/paypal/views/intl-tel/css/intlTelInput.css">
+<link rel="stylesheet" href="{$baseUrl|escape:'htmlall':'UTF-8'}modules/paypal/views/intl-tel/css/intlTelInput.css">
 
-{include file = "{$psPaypalDir}/views/templates/_partials/javascript.tpl" assign=javascriptBlock}
+{include file = "{$psPaypalDir|escape:'htmlall':'UTF-8'}/views/templates/_partials/javascript.tpl" assign=javascriptBlock}
 {$javascriptBlock nofilter}
 {assign var='currentDate' value=date('Y-m-d')}
 
 {literal}
 <script type="application/json" fncls="fnparams-dede7cc5-15fd-4c75-a9f4-36c430ee3a99">
   {
-    "f":"{/literal}{$sessionId}{literal}",
-    "s":"{/literal}{$sourceId}{literal}",
+    "f":"{/literal}{$sessionId|escape:'htmlall':'UTF-8'}{literal}",
+    "s":"{/literal}{$sourceId|escape:'htmlall':'UTF-8'}{literal}",
     "sandbox": {/literal}{if $isSandbox}true{else}false{/if}{literal}
   }
 </script>

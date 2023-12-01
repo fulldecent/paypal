@@ -26,6 +26,10 @@
 
 namespace PaypalAddons\classes\Form;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use Configuration;
 use Module;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;

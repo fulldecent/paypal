@@ -51,13 +51,13 @@
 
             var button = new PaypalButton({
               button: '#paypal-' + skdNameSpace,
-              controller: '{$scInitController nofilter}',
-              validationController: '{$validationController nofilter}',
+              controller: '{$scInitController|escape:'htmlall':'UTF-8'}',
+              validationController: '{$validationController|escape:'htmlall':'UTF-8'}',
               paypal: window[skdNameSpace],
               style: {
                 height: 35
               },
-              isMoveButtonAtEnd: '{$isMoveButtonAtEnd|default:''|escape:'htmlall':'utf-8'}',
+              isMoveButtonAtEnd: '{$isMoveButtonAtEnd|default:''|escape:'htmlall':'UTF-8'}',
               isAddAddress: true
             });
             button.initButton();

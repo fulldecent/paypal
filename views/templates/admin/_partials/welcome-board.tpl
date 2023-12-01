@@ -36,6 +36,7 @@
                   <li class="d-flex align-items-center mb-1">
                       {include
                       file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+
                       isSuccess=(false == $isSandbox|default:false)
                       }
                       {l s='Mode production enabled' mod='paypal'}
@@ -43,6 +44,7 @@
                   <li class="d-flex align-items-center">
                       {include
                       file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+
                       isSuccess=$isConfigured|default:false
                       }
                       {l s='Account connected' mod='paypal'}
