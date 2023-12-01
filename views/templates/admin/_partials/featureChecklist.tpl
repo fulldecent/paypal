@@ -97,7 +97,11 @@
           file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
           isSuccess=$vars.isShowPaypalBenefits|default:false
         }
+        {if $vars.isShowPaypalBenefits|default:false}
           {l s='PayPal benefits enabled' mod='paypal'}
+        {else}
+          {l s='PayPal benefits disabled' mod='paypal'}
+        {/if}
       </li>
 
       <li class="d-flex align-items-center">
