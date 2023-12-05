@@ -57,12 +57,19 @@
 
       {if isset($vars.isCreditCardEnabled)}
         <li class="d-flex align-items-center mb-1">
-            {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
-            isSuccess=$vars.isCreditCardEnabled
-            }
-
-            {l s='Credit card enabled' mod='paypal'}
+            {if $vars.isCreditCardEnabled}
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+                isSuccess=true
+                }
+                {l s='Credit card enabled' mod='paypal'}
+            {else}
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+                isSuccess=false
+                }
+                {l s='Credit card disabled' mod='paypal'}
+            {/if}
         </li>
       {/if}
 
