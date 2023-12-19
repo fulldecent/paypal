@@ -735,6 +735,7 @@ $_MODULE['<{paypal}prestashop>featurechecklist_44366bddc41085ee7180f17c40b92d64'
 $_MODULE['<{paypal}prestashop>featurechecklist_eae7904d870bfc265c03cfe7ba54013b'] = 'Buy Now Pay Later désactivé';
 $_MODULE['<{paypal}prestashop>featurechecklist_8e5a9e5eecfa97578270d7ac818826a1'] = 'Personnalisation des boutons shortcut activé';
 $_MODULE['<{paypal}prestashop>featurechecklist_610e933c022f9e2adf39d456beff60f7'] = 'Carte de crédit activé';
+$_MODULE['<{paypal}prestashop>featurechecklist_28492591ece7ba34ec2c254a622e0dbb'] = 'Carte de crédit deactivé';
 $_MODULE['<{paypal}prestashop>featurechecklist_f67fc894b5813f835edef6f58be72d12'] = 'PUI activé';
 $_MODULE['<{paypal}prestashop>featurechecklist_8a2964eb57aaac88e98ad4b145f617a2'] = 'PUI désactivé';
 $_MODULE['<{paypal}prestashop>featurechecklist_7f3d62d17837fe131d519441262154fe'] = 'Statut des commandes standard';
