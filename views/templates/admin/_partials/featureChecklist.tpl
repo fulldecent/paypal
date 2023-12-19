@@ -122,6 +122,20 @@
         </li>
       {/if}
 
+        {if isset($vars.isInstallmentMbEnabled)}
+          <li class="d-flex align-items-center mb-1">
+              {include
+              file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+              isSuccess=$vars.isInstallmentMbEnabled
+              }
+              {if $vars.isInstallmentMbEnabled}
+                  {l s='Payment with installement is enabled' mod='paypal'}
+              {else}
+                  {l s='Payment with installement is disabled' mod='paypal'}
+              {/if}
+          </li>
+        {/if}
+
     </ul>
   </div>
 
