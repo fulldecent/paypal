@@ -67,6 +67,7 @@ class Checker
         }
 
         $tls_server = $this->context->link->getModuleLink($this->module->name, 'tlscurltestserver');
+        $return['ping_page'] = $tls_server;
         $curl = curl_init($tls_server);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
