@@ -27,8 +27,6 @@
 namespace PaypalAddons\classes\Webhook;
 
 use Configuration;
-use MethodMB;
-use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\WebHookConf;
 
 if (!defined('_PS_VERSION_')) {
@@ -75,6 +73,6 @@ class WebhookOption
 
     public function isEligibleContext()
     {
-        return false == (AbstractMethodPaypal::load() instanceof MethodMB);
+        return true;
     }
 }

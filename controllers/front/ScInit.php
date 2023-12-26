@@ -52,12 +52,7 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         $this->values['getToken'] = Tools::getvalue('getToken');
         $this->values['credit_card'] = 0;
         $this->values['short_cut'] = 1;
-        if ($this->module->paypal_method == 'MB') {
-            $methodType = 'EC';
-        } else {
-            $methodType = $this->module->paypal_method;
-        }
-        $this->setMethod(AbstractMethodPaypal::load($methodType));
+        $this->setMethod(AbstractMethodPaypal::load());
     }
 
     public function displayAjaxCheckAvailability()

@@ -25,7 +25,7 @@
  */
 
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\PaypalApiManagerMB;
+use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalAddons\classes\WhiteList\WhiteListService;
 use PaypalAddons\services\ServicePaypalVaulting;
 
@@ -60,6 +60,9 @@ class MethodMB extends AbstractMethodPaypal
     /** @var string hash of the remembered card ids */
     protected $rememeberedCards;
 
+    /** @var bool shortcut payment from product or cart page */
+    public $short_cut;
+
     protected $servicePaypalVaulting;
 
     /** @var WhiteListService */
@@ -74,7 +77,7 @@ class MethodMB extends AbstractMethodPaypal
 
     protected function initApiManager()
     {
-        $this->paypalApiManager = new PaypalApiManagerMB($this);
+        $this->paypalApiManager = new PaypalApiManager($this);
 
         return $this;
     }
@@ -110,7 +113,7 @@ class MethodMB extends AbstractMethodPaypal
 
         Configuration::updateValue('PAYPAL_MB_' . $mode . '_CLIENTID', '');
         Configuration::updateValue('PAYPAL_MB_' . $mode . '_SECRET', '');
-        Configuration::updateValue('PAYPAL_MB_EXPERIENCE', '');
+        Configuration::updateValue('PAYPAL_CONNECTION_MB_CONFIGURED', '');
     }
 
     /**
@@ -155,17 +158,6 @@ class MethodMB extends AbstractMethodPaypal
         parent::validation();
     }
 
-    public function getOrderStatus()
-    {
-        if ((int) Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
-            $orderStatus = (int) Configuration::get('PAYPAL_OS_PROCESSING');
-        } else {
-            $orderStatus = (int) Configuration::get('PAYPAL_OS_WAITING');
-        }
-
-        return $orderStatus;
-    }
-
     /**
      * @see AbstractMethodPaypal::confirmCapture()
      */
@@ -188,23 +180,16 @@ class MethodMB extends AbstractMethodPaypal
         if (false == $this->whiteListService->isEligibleContext()) {
             return false;
         }
-
-        $isMbConfigured = (bool) Configuration::get('PAYPAL_MB_EXPERIENCE');
-
-        // If a payment by PayPal account is enabled and the credentials for EC are not setted, so it should use MB credentials
-        if ($isMbConfigured && (bool) Configuration::get('PAYPAL_MB_EC_ENABLED')) {
-            $methodEC = self::load('EC');
-
-            if ($methodEC->isCredentialsSetted() === false) {
-                $methodEC->setConfig([
-                    'clientId' => $this->getClientId(),
-                    'secret' => $this->getSecret(),
-                    'merchantId' => $this->getMerchantId(),
-                ]);
-            }
+        if ($this->isCredentialsSetted() === false) {
+            return false;
+        }
+        if ((bool) Configuration::get('PAYPAL_CONNECTION_MB_CONFIGURED')) {
+            return true;
         }
 
-        return $isMbConfigured;
+        $this->checkCredentials();
+
+        return (bool) Configuration::get('PAYPAL_CONNECTION_MB_CONFIGURED');
     }
 
     public function checkCredentials()
@@ -212,9 +197,14 @@ class MethodMB extends AbstractMethodPaypal
         $response = $this->paypalApiManager->getAccessTokenRequest()->execute();
 
         if ($response->isSuccess()) {
-            Configuration::updateValue('PAYPAL_MB_EXPERIENCE', $response->getIdProfileExperience());
+            Configuration::updateValue('PAYPAL_CONNECTION_MB_CONFIGURED', 1);
         } else {
-            Configuration::updateValue('PAYPAL_MB_EXPERIENCE', '');
+            $this->setConfig([
+                'clientId' => '',
+                'secret' => '',
+                'merchantId' => '',
+            ]);
+            Configuration::updateValue('PAYPAL_CONNECTION_MB_CONFIGURED', 0);
 
             if ($response->getError()) {
                 $this->errors[] = $response->getError()->getMessage();
@@ -473,5 +463,17 @@ class MethodMB extends AbstractMethodPaypal
         } else {
             return Configuration::get('PAYPAL_MB_MERCHANT_ID_LIVE');
         }
+    }
+
+    public function getShortCut()
+    {
+        return (bool) $this->short_cut;
+    }
+
+    public function setShortCut($shortCut)
+    {
+        $this->short_cut = (bool) $shortCut;
+
+        return $this;
     }
 }

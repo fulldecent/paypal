@@ -47,14 +47,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
         parent::init();
         $this->fileName = pathinfo(__FILE__)['filename'];
         $this->setPaymentData(json_decode(Tools::getValue('paymentData')));
-
-        if ($this->module->paypal_method == 'MB') {
-            $methodType = 'EC';
-        } else {
-            $methodType = $this->module->paypal_method;
-        }
-
-        $this->method = AbstractMethodPaypal::load($methodType);
+        $this->method = AbstractMethodPaypal::load();
     }
 
     /**
@@ -129,12 +122,12 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
         // END Login
-        if ($this->method instanceof MethodEC) {
-            $this->context->cookie->__set('paypal_ecs', $this->paymentData->orderID);
-            $this->context->cookie->__set('paypal_ecs_email', $info->getClient()->getEmail());
-        } elseif ($this->method instanceof MethodPPP) {
+        if ($this->method instanceof MethodPPP) {
             $this->context->cookie->__set('paypal_pSc', $this->paymentData->orderID);
             $this->context->cookie->__set('paypal_pSc_email', $info->getClient()->getEmail());
+        } else {
+            $this->context->cookie->__set('paypal_ecs', $this->paymentData->orderID);
+            $this->context->cookie->__set('paypal_ecs_email', $info->getClient()->getEmail());
         }
 
         $addresses = $this->context->customer->getAddresses($this->context->language->id);

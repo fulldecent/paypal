@@ -56,7 +56,7 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
      */
     public function postProcess()
     {
-        $method_ec = AbstractMethodPaypal::load('EC');
+        $method_ec = AbstractMethodPaypal::load();
         $paypal = Module::getInstanceByName($this->name);
 
         try {

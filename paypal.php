@@ -756,8 +756,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
             case 'MB':
                 if (in_array($this->context->currency->iso_code, $this->currencyMB)) {
-                    $methodEC = AbstractMethodPaypal::load('EC');
-                    if ($methodEC->isConfigured()) {
+                    if (Configuration::get(PaypalConfigurations::MB_EC_ENABLED)) {
                         $paymentOptionsEc = $this->renderEcPaymentOptions($params);
                         $payments_options = array_merge($payments_options, $paymentOptionsEc);
                     }
@@ -1478,13 +1477,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
-        if ($this->paypal_method == 'MB') {
-            $methodType = 'EC';
-        } else {
-            $methodType = $this->paypal_method;
-        }
-
-        $method = AbstractMethodPaypal::load($methodType);
+        $method = AbstractMethodPaypal::load();
 
         if ($method->isConfigured() == false) {
             return '';
