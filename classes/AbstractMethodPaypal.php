@@ -39,6 +39,7 @@ use PayPal;
 use PaypalAddons\classes\API\Model\VaultInfo;
 use PaypalAddons\classes\API\PaypalApiManagerInterface;
 use PaypalAddons\classes\API\PaypalVaultApiManagerInterface;
+use PaypalAddons\classes\API\PaypalWebhookApiManagerInterface;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\API\Response\ResponseGenerateIdToken;
@@ -46,6 +47,8 @@ use PaypalAddons\classes\API\Response\ResponseOrderCapture;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalAddons\classes\API\Response\ResponseVaultPaymentToken;
+use PaypalAddons\classes\API\Response\ResponseWebhookEventDetail;
+use PaypalAddons\classes\API\Response\ResponseWebhookEventList;
 use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\PUI\SignupLink;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
@@ -828,6 +831,24 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
 
         return null;
+    }
+
+    public function getWebhookEventList($params = [])
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->getWebhookEventList($params)->execute();
+        }
+
+        return (new ResponseWebhookEventList())->setSuccess(false);
+    }
+
+    public function getWebhookEventDetail($id)
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->getWebhookEventDetail($id)->execute();
+        }
+
+        return (new ResponseWebhookEventDetail())->setSuccess(false);
     }
 
     /** @return  string*/

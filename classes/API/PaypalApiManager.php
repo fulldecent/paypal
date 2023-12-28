@@ -38,6 +38,7 @@ use PaypalAddons\classes\API\Request\PaypalGenerateIdTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGenerateVaultPaymentTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGetSellerStatusRequest;
 use PaypalAddons\classes\API\Request\PaypalGetVaultPaymentTokenRequest;
+use PaypalAddons\classes\API\Request\PaypalGetWebhookEventRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
@@ -48,12 +49,13 @@ use PaypalAddons\classes\API\Request\PaypalOrderPuiCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderRefundRequest;
 use PaypalAddons\classes\API\Request\PaypalPartnerReferralsRequest;
 use PaypalAddons\classes\API\Request\PaypalUpdateTrackingInfoRequest;
+use PaypalAddons\classes\API\Request\PaypalWebhookEventListRequest;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class PaypalApiManager implements PaypalApiManagerInterface, PaypalVaultApiManagerInterface
+class PaypalApiManager implements PaypalApiManagerInterface, PaypalVaultApiManagerInterface, PaypalWebhookApiManagerInterface
 {
     /** @var AbstractMethodPaypal */
     protected $method;
@@ -170,5 +172,15 @@ class PaypalApiManager implements PaypalApiManagerInterface, PaypalVaultApiManag
     public function getGenerateIdTokenRequest($paypalCustomerId)
     {
         return new PaypalGenerateIdTokenRequest($this->client, $this->method, $paypalCustomerId);
+    }
+
+    public function getWebhookEventList($params)
+    {
+        return new PaypalWebhookEventListRequest($this->client, $this->method, $params);
+    }
+
+    public function getWebhookEventDetail($id)
+    {
+        return new PaypalGetWebhookEventRequest($this->client, $this->method, $id);
     }
 }
