@@ -39,6 +39,7 @@ use PaypalAddons\classes\API\Request\PaypalGenerateVaultPaymentTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGetSellerStatusRequest;
 use PaypalAddons\classes\API\Request\PaypalGetVaultPaymentTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGetWebhookEventRequest;
+use PaypalAddons\classes\API\Request\PaypalGetWebhookListRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
@@ -182,5 +183,10 @@ class PaypalApiManager implements PaypalApiManagerInterface, PaypalVaultApiManag
     public function getWebhookEventDetail($id)
     {
         return new PaypalGetWebhookEventRequest($this->client, $this->method, $id);
+    }
+
+    public function getWebhookList()
+    {
+        return new PaypalGetWebhookListRequest($this->client, $this->method);
     }
 }
