@@ -32,7 +32,7 @@ use Cart;
 use Configuration;
 use DateTime;
 use Module;
-use PayPal\Api\WebhookEvent;
+use PaypalAddons\classes\API\Model\WebhookEvent;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractTest extends TestCase
