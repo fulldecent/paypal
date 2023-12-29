@@ -32,7 +32,7 @@ use Db;
 use DbQuery;
 use Employee;
 use Exception;
-use PayPal\Api\WebhookEvent;
+use PaypalAddons\classes\API\Model\WebhookEvent;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\services\ActualizeTotalPaid;
 use PaypalAddons\services\PaymentTotalAmount;

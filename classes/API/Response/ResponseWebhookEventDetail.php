@@ -46,6 +46,9 @@ class ResponseWebhookEventDetail extends Response
         return $this;
     }
 
+    /**
+     * @return WebhookEvent|null
+     */
     public function getEvent()
     {
         return $this->event;

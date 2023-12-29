@@ -24,9 +24,8 @@
  *  @copyright PayPal
  */
 
-use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Request\V_1\GetWebhookEvents;
+use PaypalAddons\classes\API\Model\WebhookEvent;
 use PaypalAddons\classes\Constants\WebhookHandler;
 use PaypalAddons\classes\Webhook\WebhookEventHandler;
 use PaypalAddons\services\ServicePaypalOrder;
@@ -51,12 +50,15 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     protected $webhookEventHandler;
 
+    protected $method;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->request = Tools::file_get_contents('php://input');
         $this->webhookEventHandler = new WebhookEventHandler();
+        $this->method = AbstractMethodPaypal::load();
     }
 
     public function run()
@@ -142,28 +144,19 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                 return false;
             }
 
-            $params = [
-                'id' => $this->getRequestData()['id'],
-            ];
-            $events = $this->getWebhookEventRequest()->setParams($params)->execute()->getData();
+            $response = $this->method->getWebhookEventDetail($this->getRequestData()['id']);
 
-            if (empty($events)) {
+            if ($response->isSuccess() === false) {
                 return false;
             }
 
-            $this->request = $events[0]->toJson();
-            $this->requestData = $events[0]->toArray();
+            $this->request = $response->getEvent()->toJson();
+            $this->requestData = $response->getEvent()->toArray();
         } catch (Exception $e) {
             return false;
         }
 
         return true;
-    }
-
-    /** @return GetWebhookEvents*/
-    protected function getWebhookEventRequest()
-    {
-        return new GetWebhookEvents(AbstractMethodPaypal::load());
     }
 
     protected function getRequestData()
