@@ -33,6 +33,7 @@ use PaypalAddons\classes\API\Request\PaypalAddTrackingInfoRequest;
 use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
 use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalConfirmPaymentSourceRequest;
+use PaypalAddons\classes\API\Request\PaypalCreateWebhookRequest;
 use PaypalAddons\classes\API\Request\PaypalDeleteVaultPaymentTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGenerateIdTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGenerateVaultPaymentTokenRequest;
@@ -188,5 +189,10 @@ class PaypalApiManager implements PaypalApiManagerInterface, PaypalVaultApiManag
     public function getWebhookList()
     {
         return new PaypalGetWebhookListRequest($this->client, $this->method);
+    }
+
+    public function createWebhook($webhook = null)
+    {
+        return new PaypalCreateWebhookRequest($this->client, $this->method, $webhook);
     }
 }

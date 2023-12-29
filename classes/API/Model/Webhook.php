@@ -58,8 +58,6 @@ class Webhook extends PayPalModel
      *
      * @param string $url
      *
-     * @throws \InvalidArgumentException
-     *
      * @return $this
      */
     public function setUrl($url)

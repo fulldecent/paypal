@@ -26,10 +26,8 @@
 
 namespace PaypalAddons\classes\Webhook;
 
-use PayPal\Api\Webhook;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Request\V_1\CreateWebHookRequest;
-use PaypalAddons\classes\API\Request\V_1\GetWebHooks;
+use PaypalAddons\classes\API\Model\Webhook;
 use PaypalAddons\classes\API\Request\V_1\UpdateWebHookEventType;
 use PaypalAddons\classes\API\Response\Response;
 
@@ -62,10 +60,10 @@ class CreateWebhook
     public function execute()
     {
         $method = $this->getMethod();
-        $response = (new GetWebHooks($method))->execute();
+        $response = $method->getWebhookList();
 
         if ($response->isSuccess() == false) {
-            $executeResponse = (new CreateWebHookRequest($method))->execute();
+            $executeResponse = $method->createWebhook();
 
             if ($executeResponse->isSuccess()) {
                 @$this->updateWebhookId($executeResponse->getData());
@@ -75,7 +73,7 @@ class CreateWebhook
         }
 
         if (empty($response->getData())) {
-            return (new CreateWebHookRequest($method))->execute();
+            return $method->createWebhook();
         }
 
         $webhookHandler = (new WebhookHandlerUrl())->get();
@@ -95,7 +93,7 @@ class CreateWebhook
             }
         }
 
-        $executeResponse = (new CreateWebHookRequest($method))->execute();
+        $executeResponse = $method->createWebhook();
 
         if ($executeResponse->isSuccess()) {
             @$this->updateWebhookId($executeResponse->getData());
@@ -153,6 +151,6 @@ class CreateWebhook
      */
     protected function updateWebhookId(Webhook $webhook)
     {
-        (new WebhookId($this->method))->update($webhook->id);
+        (new WebhookId($this->method))->update($webhook->getId());
     }
 }

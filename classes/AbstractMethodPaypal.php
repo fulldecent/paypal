@@ -860,6 +860,15 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return (new Response())->setSuccess(false);
     }
 
+    public function createWebhook($webhook = null)
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->createWebhook($webhook)->execute();
+        }
+
+        return (new Response())->setSuccess(false);
+    }
+
     /** @return  string*/
     abstract public function getMerchantId();
 
