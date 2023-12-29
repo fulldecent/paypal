@@ -37,6 +37,7 @@ use MethodMB;
 use Module;
 use PayPal;
 use PaypalAddons\classes\API\Model\VaultInfo;
+use PaypalAddons\classes\API\Model\WebhookPatch;
 use PaypalAddons\classes\API\PaypalApiManagerInterface;
 use PaypalAddons\classes\API\PaypalVaultApiManagerInterface;
 use PaypalAddons\classes\API\PaypalWebhookApiManagerInterface;
@@ -864,6 +865,15 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     {
         if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
             return $this->paypalApiManager->createWebhook($webhook)->execute();
+        }
+
+        return (new Response())->setSuccess(false);
+    }
+
+    public function patchWebhook(WebhookPatch $patch)
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->patchWebhook($patch)->execute();
         }
 
         return (new Response())->setSuccess(false);

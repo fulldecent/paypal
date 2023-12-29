@@ -25,28 +25,41 @@
  *
  */
 
-namespace PaypalAddons\classes\API;
+namespace PaypalAddons\classes\API\Model;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PaypalAddons\classes\API\Request\RequestInteface;
-
-interface PaypalWebhookApiManagerInterface
+class WebhookPatch
 {
-    /** @return RequestInteface*/
-    public function getWebhookEventList($params);
+    protected $patches = [];
 
-    /** @return RequestInteface*/
-    public function getWebhookEventDetail($id);
+    protected $id;
 
-    /** @return RequestInteface*/
-    public function getWebhookList();
+    public function __construct($id)
+    {
+        $this->id = (string) $id;
+    }
 
-    /** @return RequestInteface*/
-    public function createWebhook($webhook = null);
+    public function addPatch($op, $path, $value)
+    {
+        $this->patches[] = [
+            'op' => (string) $op,
+            'path' => (string) $path,
+            'value' => $value,
+        ];
 
-    /** @return RequestInteface*/
-    public function patchWebhook($patch);
+        return $this;
+    }
+
+    public function getPatches()
+    {
+        return $this->patches;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

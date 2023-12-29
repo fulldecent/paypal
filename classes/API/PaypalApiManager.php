@@ -50,6 +50,7 @@ use PaypalAddons\classes\API\Request\PaypalOrderPatchRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPuiCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderRefundRequest;
 use PaypalAddons\classes\API\Request\PaypalPartnerReferralsRequest;
+use PaypalAddons\classes\API\Request\PaypalPatchWebhookRequest;
 use PaypalAddons\classes\API\Request\PaypalUpdateTrackingInfoRequest;
 use PaypalAddons\classes\API\Request\PaypalWebhookEventListRequest;
 
@@ -194,5 +195,10 @@ class PaypalApiManager implements PaypalApiManagerInterface, PaypalVaultApiManag
     public function createWebhook($webhook = null)
     {
         return new PaypalCreateWebhookRequest($this->client, $this->method, $webhook);
+    }
+
+    public function patchWebhook($patch)
+    {
+        return new PaypalPatchWebhookRequest($this->client, $this->method, $patch);
     }
 }

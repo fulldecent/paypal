@@ -25,28 +25,25 @@
  *
  */
 
-namespace PaypalAddons\classes\API;
+namespace PaypalAddons\classes\API\ExtensionSDK\Webhook;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PaypalAddons\classes\API\Request\RequestInteface;
+use PayPalHttp\HttpRequest;
 
-interface PaypalWebhookApiManagerInterface
+class PatchWebhook extends HttpRequest
 {
-    /** @return RequestInteface*/
-    public function getWebhookEventList($params);
-
-    /** @return RequestInteface*/
-    public function getWebhookEventDetail($id);
-
-    /** @return RequestInteface*/
-    public function getWebhookList();
-
-    /** @return RequestInteface*/
-    public function createWebhook($webhook = null);
-
-    /** @return RequestInteface*/
-    public function patchWebhook($patch);
+    public function __construct($id)
+    {
+        parent::__construct(
+            sprintf(
+                '/v1/notifications/webhooks/%s',
+                (string) $id
+            ),
+            'PATCH'
+        );
+        $this->headers['Content-Type'] = 'application/json';
+    }
 }
