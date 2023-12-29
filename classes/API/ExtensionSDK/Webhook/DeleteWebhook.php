@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 2007-2023 PayPal
  *
  * NOTICE OF LICENSE
@@ -22,44 +22,25 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 
-namespace PaypalAddons\classes\Webhook;
+namespace PaypalAddons\classes\API\ExtensionSDK\Webhook;
 
-use Configuration;
-use Context;
+use PayPalHttp\HttpRequest;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class WebhookHandlerUrl
+class DeleteWebhook extends HttpRequest
 {
-    public function get()
+    public function __construct($id)
     {
-        $url = Context::getContext()->link->getModuleLink(
-            'paypal',
-            'webhookhandler',
-            [],
-            null,
-            (int) Configuration::get('PS_LANG_DEFAULT')
+        parent::__construct(
+            '/v1/notifications/webhooks/' . (string) $id,
+            'DELETE'
         );
-        $url = str_replace('http://', 'https://', $url);
-
-        return $url;
-    }
-
-    public function getCheckAvailabilityUrl()
-    {
-        $url = Context::getContext()->link->getModuleLink(
-            'paypal',
-            'webhookhandler',
-            [
-                'checkAvailability' => 1,
-            ]
-        );
-        $url = str_replace('http://', 'https://', $url);
-
-        return $url;
+        $this->headers['Content-Type'] = 'application/json';
     }
 }

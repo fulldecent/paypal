@@ -49,4 +49,7 @@ interface PaypalWebhookApiManagerInterface
 
     /** @return RequestInteface*/
     public function patchWebhook($patch);
+
+    /** @return RequestInteface*/
+    public function deleteWebhook($id);
 }

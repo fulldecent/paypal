@@ -35,6 +35,7 @@ use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalConfirmPaymentSourceRequest;
 use PaypalAddons\classes\API\Request\PaypalCreateWebhookRequest;
 use PaypalAddons\classes\API\Request\PaypalDeleteVaultPaymentTokenRequest;
+use PaypalAddons\classes\API\Request\PaypalDeleteWebhookRequest;
 use PaypalAddons\classes\API\Request\PaypalGenerateIdTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGenerateVaultPaymentTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalGetSellerStatusRequest;
@@ -200,5 +201,10 @@ class PaypalApiManager implements PaypalApiManagerInterface, PaypalVaultApiManag
     public function patchWebhook($patch)
     {
         return new PaypalPatchWebhookRequest($this->client, $this->method, $patch);
+    }
+
+    public function deleteWebhook($id)
+    {
+        return new PaypalDeleteWebhookRequest($this->client, $this->method, $id);
     }
 }

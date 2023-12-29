@@ -28,8 +28,10 @@ namespace PaypalAddons\classes\Webhook;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Model\Webhook;
-use PaypalAddons\classes\API\Request\V_1\UpdateWebHookEventType;
+use PaypalAddons\classes\API\Model\WebhookEventType;
+use PaypalAddons\classes\API\Model\WebhookPatch;
 use PaypalAddons\classes\API\Response\Response;
+use PaypalAddons\classes\Constants\WebHookType;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -84,7 +86,7 @@ class CreateWebhook
                 $this->updateWebhookId($webhook);
 
                 if ($this->getUpdate()) {
-                    return (new UpdateWebHookEventType($method, $webhook))->execute();
+                    return $this->updateWebhookEventTypes($webhook);
                 }
 
                 return (new Response())
@@ -152,5 +154,25 @@ class CreateWebhook
     protected function updateWebhookId(Webhook $webhook)
     {
         (new WebhookId($this->method))->update($webhook->getId());
+    }
+
+    protected function updateWebhookEventTypes(Webhook $webhook)
+    {
+        $eventTypes = [];
+        $webhookPatch = new WebhookPatch($webhook->getId());
+
+        foreach (WebHookType::getAll() as $type) {
+            $eventType = new WebhookEventType();
+            $eventType->setName($type);
+            $eventTypes[] = $eventType->toArray();
+        }
+
+        $webhookPatch->addPatch(
+            'replace',
+            '/event_types',
+            $eventTypes
+        );
+
+        return $this->method->patchWebhook($webhookPatch);
     }
 }
