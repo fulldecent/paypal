@@ -27,8 +27,8 @@
 namespace PaypalAddons\services;
 
 use Exception;
-use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Model\WebhookEvent;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\classes\Exception\RefundCalculationException;
 use PaypalOrder;
