@@ -180,7 +180,7 @@ class WebhookEvent extends PayPalModel
     /**
      * The resource that triggered the webhook event notification.
      *
-     * @param \PayPal\Common\PayPalModel $resource
+     * @param \PaypalAddons\classes\API\Model\PayPalModel $resource
      *
      * @return $this
      */
@@ -194,7 +194,7 @@ class WebhookEvent extends PayPalModel
     /**
      * The resource that triggered the webhook event notification.
      *
-     * @return \PayPal\Common\PayPalModel
+     * @return \PaypalAddons\classes\API\Model\PayPalModel
      */
     public function getResource()
     {
