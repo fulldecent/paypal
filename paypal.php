@@ -389,7 +389,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             PaypalConfigurations::PUI_ENABLED => 1,
             PaypalConfigurations::SEPA_ENABLED => 1,
             PaypalConfigurations::GIROPAY_ENABLED => 1,
-            PaypalConfigurations::SOFORT_ENABLED => 1,
             PaypalConfigurations::ACDC_OPTION => 1,
         ];
 
