@@ -422,14 +422,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $this->_errors[] = Tools::displayError($e->getMessage());
         }
 
-        if (($isPhpVersionCompliant && parent::install() && $installer->install()) == false) {
-            return false;
-        }
-        // Registration order status
-        if (!$this->installOrderState()) {
+        if (($isPhpVersionCompliant && parent::install()) == false) {
             return false;
         }
 
+        $installer->installObjectModels();
+        $installer->installAdminControllers();
+        $installer->installExtensions();
+        // Registration order status
+        $this->installOrderState();
         $this->registerHooks();
         $this->moduleConfigs['PAYPAL_OS_WAITING_VALIDATION'] = (int) Configuration::get('PAYPAL_OS_WAITING');
         $this->moduleConfigs['PAYPAL_OS_PROCESSING'] = (int) Configuration::get('PAYPAL_OS_WAITING');
