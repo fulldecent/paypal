@@ -2053,10 +2053,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 return true;
             }
 
-            if ($orderPayPal->method != 'EC') {
-                return true;
-            }
-
             $paypalCapture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
 
             //If a payment is already captured, so need to refund firstly
