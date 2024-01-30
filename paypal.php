@@ -1547,7 +1547,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $amount_paid = Tools::ps_round($amount_paid, 2);
 
         $cart = new Cart((int) $id_cart);
-        $total_ps = (float) $cart->getOrderTotal(true, Cart::BOTH);
+        $total_ps = Tools::ps_round((float) $cart->getOrderTotal(true, Cart::BOTH), 2);
         if ($amount_paid_curr > $total_ps + 0.10 || $amount_paid_curr < $total_ps - 0.10) {
             $total_ps = $amount_paid_curr;
         }
