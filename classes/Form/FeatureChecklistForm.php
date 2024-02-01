@@ -28,6 +28,7 @@ namespace PaypalAddons\classes\Form;
 
 use Configuration;
 use Country;
+use MethodMB;
 use MethodPPP;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
@@ -88,6 +89,14 @@ class FeatureChecklistForm implements FormInterface
         if ($this->vaultingFunctionality->isAvailable() && $this->vaultingFunctionality->isEnabled()) {
             $vars['isVaultingCapabilityAvailable'] = $this->vaultingFunctionality->isCapabilityAvailable();
             $vars['vaultingStatusMessage'] = $this->vaultingFunctionality->getStatusMessage();
+        }
+
+        if ($this->method instanceof MethodMB) {
+            if (Configuration::get(PaypalConfigurations::MERCHANT_INSTALLMENT)) {
+                $vars['isInstallmentMbEnabled'] = true;
+            } else {
+                $vars['isInstallmentMbEnabled'] = false;
+            }
         }
 
         return [

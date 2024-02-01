@@ -215,9 +215,9 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
 
         if ($result->isSuccess() == false) {
             if ((int) $result->getError()->getCode() === PayPal::PAYPAL_STATUS_CODE_TOO_MANY_REQUEST) {
-                $errorMessage[] = $tooManyRequestMessage;
+                $errorMessages[] = $tooManyRequestMessage;
             } else {
-                $errorMessage[] = $result->getError()->getMessage();
+                $errorMessages[] = $result->getError()->getMessage();
             }
 
             $this->errorTemplate($response, $errorMessages);
@@ -231,9 +231,9 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
 
         if ($result->isSuccess() == false) {
             if ((int) $result->getError()->getCode() === PayPal::PAYPAL_STATUS_CODE_TOO_MANY_REQUEST) {
-                $errorMessage[] = $tooManyRequestMessage;
+                $errorMessages[] = $tooManyRequestMessage;
             } else {
-                $errorMessage[] = $result->getError()->getMessage();
+                $errorMessages[] = $result->getError()->getMessage();
             }
 
             $this->errorTemplate($response, $errorMessages);

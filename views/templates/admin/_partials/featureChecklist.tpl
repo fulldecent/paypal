@@ -57,12 +57,19 @@
 
       {if isset($vars.isCreditCardEnabled)}
         <li class="d-flex align-items-center mb-1">
-            {include
-            file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
-            isSuccess=$vars.isCreditCardEnabled
-            }
-
-            {l s='Credit card enabled' mod='paypal'}
+            {if $vars.isCreditCardEnabled}
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+                isSuccess=true
+                }
+                {l s='Credit card enabled' mod='paypal'}
+            {else}
+                {include
+                file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+                isSuccess=false
+                }
+                {l s='Credit card disabled' mod='paypal'}
+            {/if}
         </li>
       {/if}
 
@@ -97,7 +104,11 @@
           file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
           isSuccess=$vars.isShowPaypalBenefits|default:false
         }
+        {if $vars.isShowPaypalBenefits|default:false}
           {l s='PayPal benefits enabled' mod='paypal'}
+        {else}
+          {l s='PayPal benefits disabled' mod='paypal'}
+        {/if}
       </li>
 
       <li class="d-flex align-items-center">
@@ -117,6 +128,20 @@
             <div vaulting-status-message>{{$vars.vaultingStatusMessage|escape:'htmlall':'utf-8'}|paypalreplace:['<b>' => '<b refresh-feature-checklist>']}</div>
         </li>
       {/if}
+
+        {if isset($vars.isInstallmentMbEnabled)}
+          <li class="d-flex align-items-center mb-1">
+              {include
+              file=$moduleFullDir|cat:"/views/templates/admin/_partials/icon-status.tpl"
+              isSuccess=$vars.isInstallmentMbEnabled
+              }
+              {if $vars.isInstallmentMbEnabled}
+                  {l s='Payment with installement is enabled' mod='paypal'}
+              {else}
+                  {l s='Payment with installement is disabled' mod='paypal'}
+              {/if}
+          </li>
+        {/if}
 
     </ul>
   </div>

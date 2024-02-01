@@ -389,7 +389,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             PaypalConfigurations::PUI_ENABLED => 1,
             PaypalConfigurations::SEPA_ENABLED => 1,
             PaypalConfigurations::GIROPAY_ENABLED => 1,
-            PaypalConfigurations::SOFORT_ENABLED => 1,
             PaypalConfigurations::ACDC_OPTION => 1,
         ];
 
@@ -423,14 +422,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $this->_errors[] = Tools::displayError($e->getMessage());
         }
 
-        if (($isPhpVersionCompliant && parent::install() && $installer->install()) == false) {
-            return false;
-        }
-        // Registration order status
-        if (!$this->installOrderState()) {
+        if (($isPhpVersionCompliant && parent::install()) == false) {
             return false;
         }
 
+        $installer->installObjectModels();
+        $installer->installAdminControllers();
+        $installer->installExtensions();
+        // Registration order status
+        $this->installOrderState();
         $this->registerHooks();
         $this->moduleConfigs['PAYPAL_OS_WAITING_VALIDATION'] = (int) Configuration::get('PAYPAL_OS_WAITING');
         $this->moduleConfigs['PAYPAL_OS_PROCESSING'] = (int) Configuration::get('PAYPAL_OS_WAITING');
@@ -1554,7 +1554,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $amount_paid = Tools::ps_round($amount_paid, 2);
 
         $cart = new Cart((int) $id_cart);
-        $total_ps = (float) $cart->getOrderTotal(true, Cart::BOTH);
+        $total_ps = Tools::ps_round((float) $cart->getOrderTotal(true, Cart::BOTH), 2);
         if ($amount_paid_curr > $total_ps + 0.10 || $amount_paid_curr < $total_ps - 0.10) {
             $total_ps = $amount_paid_curr;
         }
@@ -2051,10 +2051,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             if (in_array($orderPayPal->payment_status, ['refunded', 'voided'])) {
-                return true;
-            }
-
-            if ($orderPayPal->method != 'EC') {
                 return true;
             }
 

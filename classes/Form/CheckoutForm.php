@@ -372,24 +372,27 @@ class CheckoutForm implements FormInterface
                 ],
                 'value' => (int) Configuration::get(PaypalConfigurations::GIROPAY_ENABLED),
             ];
-            $fields[PaypalConfigurations::SOFORT_ENABLED] = [
-                'type' => 'switch',
-                'label' => $this->module->l('Sofort', 'CheckoutForm'),
-                'name' => PaypalConfigurations::SOFORT_ENABLED,
-                'values' => [
-                    [
-                        'id' => PaypalConfigurations::SOFORT_ENABLED . '_on',
-                        'value' => 1,
-                        'label' => $this->module->l('Enabled', 'AdminPayPalCustomizeCheckoutController'),
+            // Do not show the 'Sofort' feature the new clients. Make this feature available only for those, who has already activated it
+            if ((int) Configuration::get(PaypalConfigurations::SOFORT_ENABLED)) {
+                $fields[PaypalConfigurations::SOFORT_ENABLED] = [
+                    'type' => 'switch',
+                    'label' => $this->module->l('Sofort', 'CheckoutForm'),
+                    'name' => PaypalConfigurations::SOFORT_ENABLED,
+                    'values' => [
+                        [
+                            'id' => PaypalConfigurations::SOFORT_ENABLED . '_on',
+                            'value' => 1,
+                            'label' => $this->module->l('Enabled', 'AdminPayPalCustomizeCheckoutController'),
+                        ],
+                        [
+                            'id' => PaypalConfigurations::SOFORT_ENABLED . '_off',
+                            'value' => 0,
+                            'label' => $this->module->l('Disabled', 'AdminPayPalCustomizeCheckoutController'),
+                        ],
                     ],
-                    [
-                        'id' => PaypalConfigurations::SOFORT_ENABLED . '_off',
-                        'value' => 0,
-                        'label' => $this->module->l('Disabled', 'AdminPayPalCustomizeCheckoutController'),
-                    ],
-                ],
-                'value' => (int) Configuration::get(PaypalConfigurations::SOFORT_ENABLED),
-            ];
+                    'value' => (int) Configuration::get(PaypalConfigurations::SOFORT_ENABLED),
+                ];
+            }
         }
 
         if ($this->vaultingFunctionality->isAvailable()) {
