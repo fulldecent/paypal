@@ -115,6 +115,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     const SCA_BYPASSED = 'B';
 
+    const ACCESS_TOKEN = 'PAYPAL_ACCESS_TOKEN';
+
     public static $dev = true;
     public $express_checkout;
     public $message;

@@ -1,6 +1,6 @@
 <?php
-/**
- * 2007-2023 PayPal
+/*
+ * 2007-2024 PayPal
  *
  * NOTICE OF LICENSE
  *
@@ -18,22 +18,24 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2023 PayPal
+ *  @author 2007-2024 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 
 namespace PaypalAddons\classes\API;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PayPalCheckoutSdk\Core\AccessTokenRequest;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Core\ProductionEnvironment;
-use PayPalCheckoutSdk\Core\SandboxEnvironment;
+use PaypalAddons\classes\API\Client\HttpClient;
+use PaypalAddons\classes\API\Environment\PaypalEnvironment;
+use PaypalAddons\classes\API\ExtensionSDK\AccessTokenRequest;
+use PaypalAddons\classes\API\Injector\AuthorizationInjector;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\PaypalException;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
-use PayPalHttp\HttpRequest;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Throwable;
 
@@ -41,21 +43,13 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class PaypalClient extends PayPalHttpClient
+class PaypalClient extends HttpClient
 {
-    protected $method;
-
     public function __construct($method)
     {
-        $this->method = $method;
+        parent::__construct(new PaypalEnvironment($method));
 
-        if ($method->isSandbox()) {
-            $environment = new SandboxEnvironment($method->getClientId(), $method->getSecret());
-        } else {
-            $environment = new ProductionEnvironment($method->getClientId(), $method->getSecret());
-        }
-
-        parent::__construct($environment);
+        $this->addInjector(new AuthorizationInjector($this, $method));
     }
 
     public static function get(AbstractMethodPaypal $method)
@@ -63,10 +57,10 @@ class PaypalClient extends PayPalHttpClient
         return new self($method);
     }
 
-    public function execute(HttpRequest $httpRequest)
+    public function execute(HttpRequestInterface $httpRequest)
     {
         if ($httpRequest instanceof AccessTokenRequest) {
-            return parent::execute($httpRequest);
+            return $this->adoptResponse(parent::execute($httpRequest));
         }
 
         try {
@@ -81,22 +75,22 @@ class PaypalClient extends PayPalHttpClient
             throw $e;
         }
 
-        return $response;
+        return $this->adoptResponse($response);
     }
 
-    protected function logRequest(HttpRequest $httpRequest)
+    protected function logRequest(HttpRequestInterface $httpRequest)
     {
         $message = sprintf('[Request][%s] ', get_class($httpRequest));
-        $message .= 'Path: ' . $httpRequest->path . '; ';
+        $message .= 'Path: ' . $httpRequest->getPath() . '; ';
         $body = null;
-        $headers = $httpRequest->headers;
+        $headers = $httpRequest->getHeaders();
 
         if ($httpRequest instanceof OrdersCreateRequest) {
-            if (false === empty($httpRequest->body['purchase_units'][0]['amount'])) {
-                $body = $httpRequest->body['purchase_units'][0]['amount'];
+            if (false === empty($httpRequest->getBody()['purchase_units'][0]['amount'])) {
+                $body = $httpRequest->getBody()['purchase_units'][0]['amount'];
             }
         } else {
-            $body = $httpRequest->body;
+            $body = $httpRequest->getBody();
         }
 
         if ($body) {
@@ -147,10 +141,10 @@ class PaypalClient extends PayPalHttpClient
         ProcessLoggerHandler::closeLogger();
     }
 
-    protected function logResponse(\PayPalHttp\HttpResponse $response)
+    protected function logResponse(HttpResponse $response)
     {
         $message = '[Response] ';
-        $message .= 'Code: ' . $response->statusCode;
+        $message .= 'Code: ' . $response->getCode();
 
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(
@@ -163,5 +157,28 @@ class PaypalClient extends PayPalHttpClient
             (int) \Configuration::get('PAYPAL_SANDBOX')
         );
         ProcessLoggerHandler::closeLogger();
+    }
+
+    /**
+     * @throws PaypalException
+     */
+    protected function adoptResponse(HttpResponse $response)
+    {
+        if ($response->getCode() < 200 || $response->getCode() > 299) {
+            throw new PaypalException($response->getCode(), $response->getContent());
+        }
+
+        $adoptedResponse = [
+            'statusCode' => $response->getCode(),
+            'headers' => $response->getHeaders(),
+        ];
+
+        if ($response instanceof HttpJsonResponse) {
+            $adoptedResponse['result'] = $response->toArray();
+        } else {
+            $adoptedResponse['result'] = $response->getContent();
+        }
+
+        return json_decode(json_encode($adoptedResponse));
     }
 }

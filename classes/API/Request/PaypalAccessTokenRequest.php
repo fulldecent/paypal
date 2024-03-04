@@ -1,6 +1,6 @@
 <?php
-/**
- * 2007-2023 PayPal
+/*
+ * 2007-2024 PayPal
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,20 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2023 PayPal
+ *  @author 2007-2024 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 
 namespace PaypalAddons\classes\API\Request;
 
 use Exception;
+use PaypalAddons\classes\API\ExtensionSDK\AccessTokenRequest;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\PaypalResponseAccessToken;
-use PayPalCheckoutSdk\Core\AccessTokenRequest;
-use PayPalHttp\HttpException;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -44,8 +45,8 @@ class PaypalAccessTokenRequest extends RequestAbstract
         $response = new PaypalResponseAccessToken();
 
         try {
-            $accessTokenRequest = new AccessTokenRequest($this->client->environment);
-            $accessTokenRequest->headers = array_merge($this->getHeaders(), $accessTokenRequest->headers);
+            $accessTokenRequest = new AccessTokenRequest();
+            $accessTokenRequest->setHeaders(array_merge($this->getHeaders(), $accessTokenRequest->getHeaders()));
             $accessToken = $this->client->execute($accessTokenRequest);
 
             if ($accessToken->statusCode == 200) {
@@ -55,7 +56,7 @@ class PaypalAccessTokenRequest extends RequestAbstract
             } else {
                 $response->setSuccess(false)->setData($accessToken);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 
