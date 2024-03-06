@@ -27,58 +27,29 @@
 
 namespace PaypalAddons\classes\API;
 
+use PaypalAddons\classes\PaypalException;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class HttpResponse
+class HttpAdoptedResponse extends HttpJsonResponse
 {
-    /** @var int */
-    protected $code;
-    /** @var mixed */
-    protected $content;
-    /** @var array */
-    protected $headers = [];
-
-    /** @return int|null*/
-    public function getCode()
+    /**
+     * @throws PaypalException
+     *
+     * @return \stdClass
+     */
+    public function getAdoptedResponse()
     {
-        return $this->code;
-    }
+        if ($this->getCode() < 200 || $this->getCode() > 299) {
+            throw new PaypalException($this->getCode(), $this->getContent());
+        }
 
-    /** @return self*/
-    public function setCode(int $code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /** @return mixed*/
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /** @return self*/
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /** @return array*/
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-
-    /** @return self*/
-    public function setHeaders(array $headers)
-    {
-        $this->headers = $headers;
-
-        return $this;
+        return json_decode(json_encode([
+            'statusCode' => $this->getCode(),
+            'headers' => $this->getHeaders(),
+            'result' => $this->toArray(),
+        ]));
     }
 }

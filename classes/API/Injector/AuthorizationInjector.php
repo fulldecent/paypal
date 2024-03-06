@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\API\Injector;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\AccessTokenRequest;

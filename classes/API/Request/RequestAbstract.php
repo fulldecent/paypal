@@ -38,7 +38,7 @@ if (!defined('_PS_VERSION_')) {
 
 abstract class RequestAbstract implements RequestInteface
 {
-    /** PayPalHttpClient*/
+    /** PaypalClient*/
     protected $client;
 
     /** @var \Context */

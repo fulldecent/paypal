@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\API\Client;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use PaypalAddons\classes\API\ClientInterface;
 use PaypalAddons\classes\API\EnvironmentInterface;
 use PaypalAddons\classes\API\HttpResponse;

@@ -33,8 +33,8 @@ use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\Environment\PaypalEnvironment;
 use PaypalAddons\classes\API\ExtensionSDK\AccessTokenRequest;
 use PaypalAddons\classes\API\Injector\AuthorizationInjector;
+use PaypalAddons\classes\API\Injector\BnCodeInjector;
 use PaypalAddons\classes\API\Request\HttpRequestInterface;
-use PaypalAddons\classes\PaypalException;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Throwable;
@@ -50,6 +50,7 @@ class PaypalClient extends HttpClient
         parent::__construct(new PaypalEnvironment($method));
 
         $this->addInjector(new AuthorizationInjector($this, $method));
+        $this->addInjector(new BnCodeInjector($method));
     }
 
     public static function get(AbstractMethodPaypal $method)
@@ -60,7 +61,7 @@ class PaypalClient extends HttpClient
     public function execute(HttpRequestInterface $httpRequest)
     {
         if ($httpRequest instanceof AccessTokenRequest) {
-            return $this->adoptResponse(parent::execute($httpRequest));
+            return parent::execute($httpRequest);
         }
 
         try {
@@ -75,7 +76,7 @@ class PaypalClient extends HttpClient
             throw $e;
         }
 
-        return $this->adoptResponse($response);
+        return $response;
     }
 
     protected function logRequest(HttpRequestInterface $httpRequest)
@@ -157,28 +158,5 @@ class PaypalClient extends HttpClient
             (int) \Configuration::get('PAYPAL_SANDBOX')
         );
         ProcessLoggerHandler::closeLogger();
-    }
-
-    /**
-     * @throws PaypalException
-     */
-    protected function adoptResponse(HttpResponse $response)
-    {
-        if ($response->getCode() < 200 || $response->getCode() > 299) {
-            throw new PaypalException($response->getCode(), $response->getContent());
-        }
-
-        $adoptedResponse = [
-            'statusCode' => $response->getCode(),
-            'headers' => $response->getHeaders(),
-        ];
-
-        if ($response instanceof HttpJsonResponse) {
-            $adoptedResponse['result'] = $response->toArray();
-        } else {
-            $adoptedResponse['result'] = $response->getContent();
-        }
-
-        return json_decode(json_encode($adoptedResponse));
     }
 }

@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\API;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class HttpJsonResponse extends HttpResponse
 {
     protected $response;

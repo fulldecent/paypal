@@ -25,29 +25,33 @@
  *
  */
 
-namespace PaypalAddons\classes\API\ExtensionSDK;
-
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
+namespace PaypalAddons\classes\API\ExtensionSDK\Order;
 
 use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\HttpResponse;
 use PaypalAddons\classes\API\Request\HttpRequestInterface;
 use PaypalAddons\classes\API\WrapperInterface;
+use PaypalAddons\services\Builder\BuilderInterface;
 
-class AccessTokenRequest implements HttpRequestInterface, WrapperInterface
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+class OrdersCreateRequest implements HttpRequestInterface, WrapperInterface
 {
     protected $headers = [];
+    /** @var BuilderInterface */
+    protected $bodyBuilder;
 
-    public function __construct()
+    public function __construct(BuilderInterface $bodyBuilder)
     {
-        $this->headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        $this->headers['Content-Type'] = 'application/json';
+        $this->bodyBuilder = $bodyBuilder;
     }
 
     public function getPath()
     {
-        return 'v1/oauth2/token';
+        return 'v2/checkout/orders';
     }
 
     /** @return array*/
@@ -72,7 +76,13 @@ class AccessTokenRequest implements HttpRequestInterface, WrapperInterface
 
     public function getBody()
     {
-        return 'grant_type=client_credentials';
+        $body = $this->bodyBuilder->build();
+
+        if (is_array($body)) {
+            $body = json_encode($body);
+        }
+
+        return $body;
     }
 
     public function getMethod()

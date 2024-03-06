@@ -25,16 +25,17 @@
  *
  */
 
-namespace PaypalAddons\classes\API\Token;
+namespace PaypalAddons\classes\API\Injector;
+
+use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\InjectorInterface;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\TokenInterface;
-
-class BasicToken implements TokenInterface
+class BnCodeInjector implements InjectorInterface
 {
     /** @var AbstractMethodPaypal */
     protected $method;
@@ -44,41 +45,19 @@ class BasicToken implements TokenInterface
         $this->method = $method;
     }
 
-    /** @return bool*/
-    public function isEligible()
+    public function inject(&$object)
     {
-        if (empty($this->getClientId()) || empty($this->getClientSecret())) {
-            return false;
+        if (false === $object instanceof HttpRequestInterface) {
+            return;
         }
 
-        return true;
-    }
+        $headers = $object->getHeaders();
 
-    /** @return string*/
-    public function getToken()
-    {
-        return base64_encode(implode(':', [$this->getClientId(), $this->getClientSecret()]));
-    }
+        if (isset($headers['PayPal-Partner-Attribution-Id'])) {
+            return;
+        }
 
-    /**
-     * @param mixed $data
-     *
-     * @return bool
-     */
-    public function update($data)
-    {
-        return true;
-    }
-
-    /** @return string*/
-    protected function getClientId()
-    {
-        return $this->method->getClientId();
-    }
-
-    /** @return string*/
-    protected function getClientSecret()
-    {
-        return $this->method->getSecret();
+        $headers['PayPal-Partner-Attribution-Id'] = $this->method->getPaypalPartnerId();
+        $object->setHeaders($headers);
     }
 }

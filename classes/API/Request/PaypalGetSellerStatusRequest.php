@@ -30,6 +30,7 @@ namespace PaypalAddons\classes\API\Request;
 use Exception;
 use PayPal;
 use PaypalAddons\classes\API\ExtensionSDK\GetSellerStatus;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use Throwable;
 use Tools;
@@ -44,10 +45,13 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
     {
         $response = $this->getResponse();
         $getSellerStatus = new GetSellerStatus($this->getPartnerMerchantId(), $this->getSellerMerchantId());
-        $getSellerStatus->setHeaders(array_merge($getSellerStatus->getHeaders(), $this->getHeaders()));
 
         try {
             $exec = $this->client->execute($getSellerStatus);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
         } catch (Throwable $e) {
             $error = new Error();
             $error->setMessage($e->getMessage())
@@ -72,7 +76,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         return $response;
     }
 
-    /** @return ResponsePartnerReferrals*/
+    /** @return \PaypalAddons\classes\API\Response\ResponseGetSellerStatus*/
     protected function getResponse()
     {
         return new \PaypalAddons\classes\API\Response\ResponseGetSellerStatus();

@@ -29,13 +29,14 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCreateRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\PaypalClient;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderCreate;
+use PaypalAddons\classes\PaypalException;
 use PaypalAddons\services\Builder\BuilderInterface;
 use PaypalAddons\services\Builder\OrderCreateBody;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
-use PayPalHttp\HttpException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -47,7 +48,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
     /** @var BuilderInterface */
     protected $bodyBuilder;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
+    public function __construct(PaypalClient $client, AbstractMethodPaypal $method)
     {
         parent::__construct($client, $method);
 
@@ -57,12 +58,14 @@ class PaypalOrderCreateRequest extends RequestAbstract
     public function execute()
     {
         $response = new ResponseOrderCreate();
-        $order = new OrdersCreateRequest();
-        $order->body = $this->buildRequestBody();
-        $order->headers = array_merge($this->getHeaders(), $order->headers);
+        $order = new OrdersCreateRequest($this->bodyBuilder);
 
         try {
             $exec = $this->client->execute($order);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
 
             if (in_array($exec->statusCode, [200, 201, 202])) {
                 $response->setSuccess(true)
@@ -79,7 +82,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 $response->setSuccess(false)
                     ->setError($error);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 
@@ -123,14 +126,6 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         return '';
-    }
-
-    /**
-     * @return array
-     */
-    protected function buildRequestBody()
-    {
-        return $this->bodyBuilder->build();
     }
 
     protected function initBodyBuilder()

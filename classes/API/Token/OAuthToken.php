@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\API\Token;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use Configuration;
 use PayPal;
 use PaypalAddons\classes\AbstractMethodPaypal;

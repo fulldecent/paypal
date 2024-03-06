@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\API\ExtensionSDK\AccessTokenRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\PaypalResponseAccessToken;
 use PaypalAddons\classes\PaypalException;
@@ -46,8 +47,11 @@ class PaypalAccessTokenRequest extends RequestAbstract
 
         try {
             $accessTokenRequest = new AccessTokenRequest();
-            $accessTokenRequest->setHeaders(array_merge($this->getHeaders(), $accessTokenRequest->getHeaders()));
             $accessToken = $this->client->execute($accessTokenRequest);
+
+            if ($accessToken instanceof HttpAdoptedResponse) {
+                $accessToken = $accessToken->getAdoptedResponse();
+            }
 
             if ($accessToken->statusCode == 200) {
                 $response->setSuccess(true)

@@ -27,13 +27,16 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK;
 
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
 use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class GetSellerStatus implements HttpRequestInterface
+class GetSellerStatus implements HttpRequestInterface, WrapperInterface
 {
     /** @var string */
     protected $partnerMerchantId;
@@ -86,5 +89,14 @@ class GetSellerStatus implements HttpRequestInterface
     public function getMethod()
     {
         return 'GET';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }
