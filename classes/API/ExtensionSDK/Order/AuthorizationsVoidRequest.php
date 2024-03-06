@@ -25,33 +25,32 @@
  *
  */
 
-namespace PaypalAddons\classes\API\ExtensionSDK;
+namespace PaypalAddons\classes\API\ExtensionSDK\Order;
 
 use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\HttpResponse;
 use PaypalAddons\classes\API\Request\HttpRequestInterface;
 use PaypalAddons\classes\API\WrapperInterface;
-use PaypalAddons\services\Builder\BuilderInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class AddTrackingInfo implements HttpRequestInterface, WrapperInterface
+class AuthorizationsVoidRequest implements HttpRequestInterface, WrapperInterface
 {
     protected $headers = [];
-    /** @var BuilderInterface */
-    protected $bodyBuilder;
+    /** @var string */
+    protected $paymentId;
 
-    public function __construct(BuilderInterface $bodyBuilder)
+    public function __construct($paymentId)
     {
         $this->headers['Content-Type'] = 'application/json';
-        $this->bodyBuilder = $bodyBuilder;
+        $this->paymentId = (string) $paymentId;
     }
 
     public function getPath()
     {
-        return 'v1/shipping/trackers-batch';
+        return sprintf('v2/payments/authorizations/%s/void', urlencode($this->paymentId));
     }
 
     /** @return array*/
@@ -76,13 +75,7 @@ class AddTrackingInfo implements HttpRequestInterface, WrapperInterface
 
     public function getBody()
     {
-        $body = $this->bodyBuilder->build();
-
-        if (is_array($body)) {
-            $body = json_encode($body);
-        }
-
-        return $body;
+        return null;
     }
 
     public function getMethod()

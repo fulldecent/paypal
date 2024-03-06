@@ -31,16 +31,67 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PayPalHttp\HttpRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
+use PaypalAddons\classes\API\Model\Webhook;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
 
-class CreateWebhook extends HttpRequest
+class CreateWebhook implements HttpRequestInterface, WrapperInterface
 {
-    public function __construct()
+    protected $headers = [];
+    /**
+     * @var Webhook
+     */
+    protected $webhook;
+
+    public function __construct(Webhook $webhook)
     {
-        parent::__construct(
-            '/v1/notifications/webhooks',
-            'POST'
-        );
         $this->headers['Content-Type'] = 'application/json';
+        $this->webhook = $webhook;
+    }
+
+    public function getPath()
+    {
+        return 'v1/notifications/webhooks';
+    }
+
+    /** @return array*/
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        if (is_array($headers)) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        return json_encode($this->webhook->toArray());
+    }
+
+    public function getMethod()
+    {
+        return 'POST';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }
