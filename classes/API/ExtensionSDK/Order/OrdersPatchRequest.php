@@ -25,29 +25,38 @@
  *
  */
 
-namespace PaypalAddons\classes\API\ExtensionSDK;
+namespace PaypalAddons\classes\API\ExtensionSDK\Order;
 
 use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\HttpResponse;
 use PaypalAddons\classes\API\Request\HttpRequestInterface;
 use PaypalAddons\classes\API\WrapperInterface;
+use PaypalAddons\services\Builder\BuilderInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class AcdcGenerateTokenRequest implements HttpRequestInterface, WrapperInterface
+class OrdersPatchRequest implements HttpRequestInterface, WrapperInterface
 {
     protected $headers = [];
+    /** @var BuilderInterface */
+    protected $bodyBuilder;
+    /**
+     * @var string
+     */
+    protected $orderId;
 
-    public function __construct()
+    public function __construct($orderId, BuilderInterface $bodyBuilder)
     {
         $this->headers['Content-Type'] = 'application/json';
+        $this->bodyBuilder = $bodyBuilder;
+        $this->orderId = (string) $orderId;
     }
 
     public function getPath()
     {
-        return 'v1/identity/generate-token';
+        return 'v2/checkout/orders/' . urlencode($this->orderId);
     }
 
     /** @return array*/
@@ -72,12 +81,18 @@ class AcdcGenerateTokenRequest implements HttpRequestInterface, WrapperInterface
 
     public function getBody()
     {
-        return null;
+        $body = $this->bodyBuilder->build();
+
+        if (is_array($body)) {
+            $body = json_encode($body);
+        }
+
+        return $body;
     }
 
     public function getMethod()
     {
-        return 'POST';
+        return 'PATCH';
     }
 
     public function wrap($object)

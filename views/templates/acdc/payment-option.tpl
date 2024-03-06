@@ -128,8 +128,8 @@
         messages['DATE_IS_EMPTY'] = '{l s='Please enter a valid date' mod='paypal'}';
         messages['3DS_FAILED'] = '{l s='3DS verification is failed' mod='paypal'}';
         acdcObj = new ACDC({
-            controller: '{$scInitController|escape:'htmlall':'UTF-8'}',
-            validationController: '{$validationController|escape:'htmlall':'UTF-8'}',
+            controller: '{$scInitController nofilter}',
+            validationController: '{$validationController nofilter}',
             messages: messages,
             buttonForm: document.querySelector('[paypal-acdc-form-button]'),
             isMoveButtonAtEnd: PAYPAL_MOVE_BUTTON_AT_END

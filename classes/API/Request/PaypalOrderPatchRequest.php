@@ -29,12 +29,13 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
+use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersPatchRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
+use PaypalAddons\classes\PaypalException;
 use PaypalAddons\services\Builder\OrderPatchBody;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Orders\OrdersPatchRequest;
-use PayPalHttp\HttpException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -46,7 +47,7 @@ class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
     /** @var string */
     protected $idPayment;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $idPayment)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $idPayment)
     {
         parent::__construct($client, $method);
         $this->idPayment = $idPayment;
@@ -55,12 +56,15 @@ class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
     public function execute()
     {
         $response = new Response();
-        $orderPath = new OrdersPatchRequest($this->idPayment);
-        $orderPath->body = $this->buildRequestBody();
-        $orderPath->headers = array_merge($this->getHeaders(), $orderPath->headers);
+        $orderPath = new OrdersPatchRequest($this->idPayment, $this->initBodyBuilder());
 
         try {
             $exec = $this->client->execute($orderPath);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             if ($exec->statusCode == 204) {
                 $response->setSuccess(true);
             } else {
@@ -68,7 +72,7 @@ class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
                 $error->setMessage('Failed order update');
                 $response->setSuccess(false)->setError($error);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
             $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());

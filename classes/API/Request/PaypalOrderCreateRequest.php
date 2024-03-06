@@ -29,9 +29,9 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCreateRequest;
 use PaypalAddons\classes\API\HttpAdoptedResponse;
-use PaypalAddons\classes\API\PaypalClient;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderCreate;
 use PaypalAddons\classes\PaypalException;
@@ -48,7 +48,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
     /** @var BuilderInterface */
     protected $bodyBuilder;
 
-    public function __construct(PaypalClient $client, AbstractMethodPaypal $method)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method)
     {
         parent::__construct($client, $method);
 
