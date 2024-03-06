@@ -39,10 +39,18 @@ use PaypalAddons\classes\API\WrapperInterface;
 class AccessTokenRequest implements HttpRequestInterface, WrapperInterface
 {
     protected $headers = [];
+    /**
+     * @var string
+     */
+    protected $paypalCustomerId;
 
-    public function __construct()
+    public function __construct($paypalCustomerId = null)
     {
         $this->headers['Content-Type'] = 'application/x-www-form-urlencoded';
+
+        if (false === empty($paypalCustomerId)) {
+            $this->paypalCustomerId = (string) $paypalCustomerId;
+        }
     }
 
     public function getPath()
@@ -72,7 +80,16 @@ class AccessTokenRequest implements HttpRequestInterface, WrapperInterface
 
     public function getBody()
     {
-        return 'grant_type=client_credentials';
+        $body = [
+            'grant_type' => 'client_credentials',
+        ];
+
+        if ($this->paypalCustomerId) {
+            $body['target_customer_id'] = $this->paypalCustomerId;
+            $body['response_type'] = 'id_token';
+        }
+
+        return http_build_query($body);
     }
 
     public function getMethod()

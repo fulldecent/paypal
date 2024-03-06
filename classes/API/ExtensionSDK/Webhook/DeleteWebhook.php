@@ -27,20 +27,69 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK\Webhook;
 
-use PayPalHttp\HttpRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class DeleteWebhook extends HttpRequest
+class DeleteWebhook implements HttpRequestInterface, WrapperInterface
 {
+    /**
+     * @var string
+     */
+    protected $id;
+
     public function __construct($id)
     {
-        parent::__construct(
-            '/v1/notifications/webhooks/' . (string) $id,
-            'DELETE'
-        );
         $this->headers['Content-Type'] = 'application/json';
+        $this->id = (string) $id;
+    }
+
+    public function getPath()
+    {
+        return 'v1/notifications/webhooks/' . urlencode($this->id);
+    }
+
+    /** @return array*/
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        if (is_array($headers)) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        return null;
+    }
+
+    public function getMethod()
+    {
+        return 'DELETE';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }

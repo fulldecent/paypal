@@ -29,11 +29,12 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
+use PaypalAddons\classes\API\ExtensionSDK\AccessTokenRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseGenerateIdToken;
-use PayPalCheckoutSdk\Core\AccessTokenRequest;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
+use PaypalAddons\classes\PaypalException;
 use PayPalHttp\HttpResponse;
 use Throwable;
 
@@ -46,7 +47,7 @@ class PaypalGenerateIdTokenRequest extends RequestAbstract
     /** @var string */
     protected $paypalCustomerId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $paypalCustomerId)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $paypalCustomerId)
     {
         parent::__construct($client, $method);
 
@@ -56,15 +57,15 @@ class PaypalGenerateIdTokenRequest extends RequestAbstract
     public function execute()
     {
         $response = new ResponseGenerateIdToken();
-        $request = new AccessTokenRequest($this->client->environment);
-        $request->body = [
-            'grant_type' => 'client_credentials',
-            'response_type' => 'id_token',
-            'target_customer_id' => $this->paypalCustomerId,
-        ];
+        $request = new AccessTokenRequest($this->paypalCustomerId);
 
         try {
             $exec = $this->client->execute($request);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             $response->setData($exec);
 
             if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
@@ -81,7 +82,7 @@ class PaypalGenerateIdTokenRequest extends RequestAbstract
                 $response->setSuccess(false)
                     ->setError($error);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 

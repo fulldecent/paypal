@@ -29,11 +29,12 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\DeleteVaultPaymentToken;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -45,7 +46,7 @@ class PaypalDeleteVaultPaymentTokenRequest extends RequestAbstract
     /** @var string */
     protected $vaultId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $vaultId)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $vaultId)
     {
         parent::__construct($client, $method);
 
@@ -59,6 +60,11 @@ class PaypalDeleteVaultPaymentTokenRequest extends RequestAbstract
 
         try {
             $exec = $this->client->execute($request);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             $response->setData($exec);
 
             if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
@@ -74,7 +80,7 @@ class PaypalDeleteVaultPaymentTokenRequest extends RequestAbstract
                 $response->setSuccess(false)
                     ->setError($error);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 

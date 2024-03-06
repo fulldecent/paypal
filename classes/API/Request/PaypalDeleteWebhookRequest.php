@@ -29,11 +29,12 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\Webhook\DeleteWebhook;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -44,7 +45,7 @@ class PaypalDeleteWebhookRequest extends RequestAbstract
 {
     protected $id;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $id)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $id)
     {
         parent::__construct($client, $method);
         $this->id = (string) $id;
@@ -57,8 +58,13 @@ class PaypalDeleteWebhookRequest extends RequestAbstract
 
         try {
             $exec = $this->client->execute($request);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             $response->setSuccess(true)->setData($exec);
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 
