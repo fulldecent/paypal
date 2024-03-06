@@ -36,7 +36,7 @@ use PaypalAddons\classes\API\Response\DepositBankDetails;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\PurchaseUnit;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
-use PayPalHttp\HttpException;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -96,7 +96,7 @@ class PaypalOrderGetRequest extends RequestAbstract
                 $error->setMessage($resultDecoded->message);
                 $response->setSuccess(false)->setError($error);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
             $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
@@ -116,12 +116,12 @@ class PaypalOrderGetRequest extends RequestAbstract
         return $response;
     }
 
-    protected function getAddress1(\PayPalHttp\HttpResponse $exec)
+    protected function getAddress1($exec)
     {
         return $exec->result->purchase_units[0]->shipping->address->address_line_1;
     }
 
-    protected function getAddress2(\PayPalHttp\HttpResponse $exec)
+    protected function getAddress2($exec)
     {
         $address = $exec->result->purchase_units[0]->shipping->address;
         if (isset($address->address_line_2)) {
@@ -131,22 +131,22 @@ class PaypalOrderGetRequest extends RequestAbstract
         }
     }
 
-    protected function getCity(\PayPalHttp\HttpResponse $exec)
+    protected function getCity($exec)
     {
         return $exec->result->purchase_units[0]->shipping->address->admin_area_2;
     }
 
-    protected function getPostCode(\PayPalHttp\HttpResponse $exec)
+    protected function getPostCode($exec)
     {
         return $exec->result->purchase_units[0]->shipping->address->postal_code;
     }
 
-    protected function getCountryCode(\PayPalHttp\HttpResponse $exec)
+    protected function getCountryCode($exec)
     {
         return $exec->result->purchase_units[0]->shipping->address->country_code;
     }
 
-    protected function getStateCode(\PayPalHttp\HttpResponse $exec)
+    protected function getStateCode($exec)
     {
         $address = $exec->result->purchase_units[0]->shipping->address;
 
@@ -157,7 +157,7 @@ class PaypalOrderGetRequest extends RequestAbstract
         }
     }
 
-    protected function getPhone(\PayPalHttp\HttpResponse $exec)
+    protected function getPhone($exec)
     {
         if (empty($exec->result->payer->phone->phone_number->national_number)) {
             return '';
@@ -166,12 +166,12 @@ class PaypalOrderGetRequest extends RequestAbstract
         return $exec->result->payer->phone->phone_number->national_number;
     }
 
-    protected function getFullName(\PayPalHttp\HttpResponse $exec)
+    protected function getFullName($exec)
     {
         return $exec->result->purchase_units[0]->shipping->name->full_name;
     }
 
-    protected function getEmail(\PayPalHttp\HttpResponse $exec)
+    protected function getEmail($exec)
     {
         if (false == empty($exec->result->payer->email_address)) {
             return $exec->result->payer->email_address;
@@ -180,7 +180,7 @@ class PaypalOrderGetRequest extends RequestAbstract
         return '';
     }
 
-    protected function getFirstName(\PayPalHttp\HttpResponse $exec)
+    protected function getFirstName($exec)
     {
         if (false == empty($exec->result->payer->name->given_name)) {
             return $exec->result->payer->name->given_name;
@@ -189,7 +189,7 @@ class PaypalOrderGetRequest extends RequestAbstract
         return '';
     }
 
-    protected function getLastName(\PayPalHttp\HttpResponse $exec)
+    protected function getLastName($exec)
     {
         if (false == empty($exec->result->payer->name->surname)) {
             return $exec->result->payer->name->surname;
@@ -198,7 +198,7 @@ class PaypalOrderGetRequest extends RequestAbstract
         return '';
     }
 
-    protected function getPurchaseUnit(\PayPalHttp\HttpResponse $exec)
+    protected function getPurchaseUnit($exec)
     {
         if (empty($exec->result->purchase_units)) {
             return new PurchaseUnit();
@@ -217,7 +217,7 @@ class PaypalOrderGetRequest extends RequestAbstract
         return $purchaseUnit;
     }
 
-    protected function getStatus(\PayPalHttp\HttpResponse $exec)
+    protected function getStatus($exec)
     {
         if (empty($exec->result->status)) {
             return '';
@@ -226,7 +226,7 @@ class PaypalOrderGetRequest extends RequestAbstract
         return $exec->result->status;
     }
 
-    protected function getDepositBankDetails(\PayPalHttp\HttpResponse $exec)
+    protected function getDepositBankDetails($exec)
     {
         if (empty($exec->result->payment_source->pay_upon_invoice->deposit_bank_details)) {
             return new DepositBankDetails();

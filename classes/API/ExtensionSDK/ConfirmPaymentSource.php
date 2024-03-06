@@ -27,23 +27,78 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK;
 
-use PayPalHttp\HttpRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
+use PaypalAddons\services\Builder\BuilderInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class ConfirmPaymentSource extends HttpRequest
+class ConfirmPaymentSource implements HttpRequestInterface, WrapperInterface
 {
-    public function __construct($orderId)
+    protected $headers = [];
+    /** @var BuilderInterface */
+    protected $bodyBuilder;
+    /** @var string */
+    protected $orderId;
+
+    public function __construct($orderId, BuilderInterface $bodyBuilder)
     {
-        parent::__construct(
-            sprintf(
-                '/v2/checkout/orders/%s/confirm-payment-source',
-                (string) $orderId
-            ),
-            'POST'
-        );
+        $this->orderId = (string) $orderId;
+        $this->bodyBuilder = $bodyBuilder;
         $this->headers['Content-Type'] = 'application/json';
+    }
+
+    public function getPath()
+    {
+        return sprintf('v2/checkout/orders/%s/confirm-payment-source', urlencode($this->orderId));
+    }
+
+    /** @return array*/
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        if (is_array($headers)) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        $body = $this->bodyBuilder->build();
+
+        if (is_array($body)) {
+            $body = json_encode($body);
+        }
+
+        return $body;
+    }
+
+    public function getMethod()
+    {
+        return 'POST';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }

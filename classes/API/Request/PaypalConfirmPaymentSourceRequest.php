@@ -29,12 +29,13 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\ConfirmPaymentSource;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseConfirmationPaymentSource;
+use PaypalAddons\classes\PaypalException;
 use PaypalAddons\services\Builder\ConfirmPaymentSourceBuilder;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -47,7 +48,7 @@ class PaypalConfirmPaymentSourceRequest extends RequestAbstract
 
     protected $apmMethod;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $paypalOrderId, $apmMethod)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $paypalOrderId, $apmMethod)
     {
         parent::__construct($client, $method);
 
@@ -60,10 +61,12 @@ class PaypalConfirmPaymentSourceRequest extends RequestAbstract
         $response = $this->initResponse();
 
         try {
-            $confirmPaymentSource = new ConfirmPaymentSource($this->paypalOrderId);
-            $confirmPaymentSource->headers = array_merge($this->getHeaders(), $confirmPaymentSource->headers);
-            $confirmPaymentSource->body = $this->initBodyBuilder()->build();
+            $confirmPaymentSource = new ConfirmPaymentSource($this->paypalOrderId, $this->initBodyBuilder());
             $exec = $this->client->execute($confirmPaymentSource);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
 
             if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
                 $response->setSuccess(true)
@@ -75,7 +78,7 @@ class PaypalConfirmPaymentSourceRequest extends RequestAbstract
             } else {
                 $response->setSuccess(false)->setData($exec);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 
