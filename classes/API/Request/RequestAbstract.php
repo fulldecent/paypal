@@ -28,7 +28,7 @@
 namespace PaypalAddons\classes\API\Request;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\PaypalClient;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\services\FormatterPaypal;
 use PaypalAddons\services\PaypalContext;
 
@@ -56,7 +56,7 @@ abstract class RequestAbstract implements RequestInteface
     /** @var PaypalContext */
     protected $paypalContext;
 
-    public function __construct(PaypalClient $client, AbstractMethodPaypal $method)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method)
     {
         $this->client = $client;
         $this->method = $method;
@@ -64,18 +64,6 @@ abstract class RequestAbstract implements RequestInteface
         $this->module = \Module::getInstanceByName($method->name);
         $this->formatter = new FormatterPaypal();
         $this->paypalContext = PaypalContext::getContext();
-    }
-
-    /**
-     * @return array
-     */
-    protected function getHeaders()
-    {
-        $headers = [
-            'PayPal-Partner-Attribution-Id' => $this->method->getPaypalPartnerId(),
-        ];
-
-        return $headers;
     }
 
     abstract public function execute();

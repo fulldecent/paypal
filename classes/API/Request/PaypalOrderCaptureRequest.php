@@ -29,13 +29,13 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCaptureRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Model\VaultInfo;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderCapture;
 use PaypalAddons\classes\Constants\Vaulting;
-use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 use PayPalHttp\HttpException;
-use PayPalHttp\HttpResponse;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -57,10 +57,13 @@ class PaypalOrderCaptureRequest extends RequestAbstract
     {
         $response = new ResponseOrderCapture();
         $orderCapture = new OrdersCaptureRequest($this->paymentId);
-        $orderCapture->headers = array_merge($this->getHeaders(), $orderCapture->headers);
 
         try {
             $exec = $this->client->execute($orderCapture);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
 
             if (in_array($exec->statusCode, [200, 201, 202])) {
                 $response->setSuccess(true)
@@ -170,7 +173,7 @@ class PaypalOrderCaptureRequest extends RequestAbstract
         return $method;
     }
 
-    protected function getVaultInfo(HttpResponse $response)
+    protected function getVaultInfo($response)
     {
         if (false === empty($response->result->payment_source->paypal->attributes->vault)) {
             $vaultInfo = new VaultInfo();

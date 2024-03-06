@@ -29,12 +29,13 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
+use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersGetRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\DepositBankDetails;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\PurchaseUnit;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 use PayPalHttp\HttpException;
 use Throwable;
 
@@ -46,7 +47,7 @@ class PaypalOrderGetRequest extends RequestAbstract
 {
     protected $idPayment;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $idPayment)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $idPayment)
     {
         parent::__construct($client, $method);
         $this->idPayment = $idPayment;
@@ -58,8 +59,12 @@ class PaypalOrderGetRequest extends RequestAbstract
 
         try {
             $orderGetRequest = new OrdersGetRequest($this->idPayment);
-            $orderGetRequest->headers = array_merge($this->getHeaders(), $orderGetRequest->headers);
             $exec = $this->client->execute($orderGetRequest);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             if (in_array($exec->statusCode, [200, 201, 202])) {
                 $response->setSuccess(true)
                     ->setData($exec);
