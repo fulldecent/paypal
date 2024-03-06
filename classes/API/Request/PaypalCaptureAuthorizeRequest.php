@@ -29,10 +29,11 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
+use PaypalAddons\classes\API\ExtensionSDK\Order\AuthorizationsCaptureRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseCaptureAuthorize;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Payments\AuthorizationsCaptureRequest;
 use PayPalHttp\HttpException;
 use Throwable;
 
@@ -45,7 +46,7 @@ class PaypalCaptureAuthorizeRequest extends RequestAbstract
     /** @var \PaypalOrder */
     protected $paypalOrder;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder)
     {
         parent::__construct($client, $method);
         $this->paypalOrder = $paypalOrder;
@@ -58,11 +59,13 @@ class PaypalCaptureAuthorizeRequest extends RequestAbstract
     {
         $response = new ResponseCaptureAuthorize();
         $captureAuhorize = new AuthorizationsCaptureRequest($this->paypalOrder->id_transaction);
-        $captureAuhorize->prefer('return=representation');
-        $captureAuhorize->headers = array_merge($this->getHeaders(), $captureAuhorize->headers);
 
         try {
             $exec = $this->client->execute($captureAuhorize);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
 
             if (in_array($exec->statusCode, [200, 201, 202])) {
                 $response->setSuccess(true)
@@ -94,7 +97,7 @@ class PaypalCaptureAuthorizeRequest extends RequestAbstract
         return $response;
     }
 
-    protected function getDateTransaction(\PayPalHttp\HttpResponse $exec)
+    protected function getDateTransaction($exec)
     {
         $date = \DateTime::createFromFormat(\DateTime::ATOM, $exec->result->create_time);
 
