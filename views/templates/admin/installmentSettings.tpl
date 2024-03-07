@@ -107,6 +107,30 @@
 
         <div class="paypal-form-group pp__flex-align-center pp_mb-20">
             <div class="label">
+                {if isset($PayPal_sandbox_mode) && $PayPal_sandbox_mode}
+                    {l s='REST Secret ID Sandbox' mod='paypal'}
+
+                {else}
+                    {l s='REST Secret ID' mod='paypal'}
+                {/if}
+            </div>
+
+            <div class="configuration">
+                <div class="bootstrap pp__flex" style="width: 50%">
+                    <input
+                            type="text"
+                            name="PAYPAL_SECRET_ID_INSTALLMENT"
+                            {if isset($PAYPAL_SECRET_ID_INSTALLMENT)}value="{$PAYPAL_SECRET_ID_INSTALLMENT}"{/if}>
+                    <div>
+                        <span class="btn btn-default pp__ml-2" onclick="toggleHint(event)">?</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
+            <div class="label">
                 {l s='Enable \'Pay Later\' in your checkout' mod='paypal'}
             </div>
 
@@ -182,6 +206,9 @@
                             </li>
                             <li>
                                 {l s='Copy/paste your "Client ID"' mod='paypal'}
+                            </li>
+                            <li>
+                                {l s='Copy/paste your "Secret ID"' mod='paypal'}
                             </li>
                         </ul>
                     </div>

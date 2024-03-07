@@ -45,13 +45,15 @@ BNPL.prototype.render = function (container, order, onIsNotEligible) {
         fundingSource: this.paypal.FUNDING.PAYLATER,
 
         createOrder: function(data, actions) {
-            return actions.order.create(order);
-        },
+            return this.getIdOrder();
+        }.bind(this),
 
         onApprove: function(data, actions) {
-            return actions.order.capture()
+            return this.captureOrder(data)
                 .then(function(detail) {
-                    this.validateOrder(detail);
+                    if (detail.success) {
+                        this.validateOrder(detail);
+                    }
                 }.bind(this))
         }.bind(this)
     });
@@ -65,6 +67,49 @@ BNPL.prototype.render = function (container, order, onIsNotEligible) {
     }
 
     paypalButton.render(container);
+}
+
+BNPL.prototype.getIdOrder = function() {
+    if (this.validationController === null) {
+        return;
+    }
+
+    var url = new URL(this.validationController);
+    url.searchParams.append('ajax', '1');
+    url.searchParams.append('action', 'CreateOrder');
+
+    return fetch(url)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(response) {
+            if (response.success) {
+                return response.idOrder;
+            }
+        });
+}
+
+BNPL.prototype.captureOrder = function(data) {
+    if (this.validationController === null) {
+        return;
+    }
+
+    var url = new URL(this.validationController);
+    var form = new FormData();
+    url.searchParams.append('ajax', '1');
+    url.searchParams.append('action', 'CaptureOrder');
+    form.append('order', JSON.stringify(data));
+    console.log(data);
+
+    return fetch(url, {method: 'POST', body: form})
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(response) {
+            if (response.success) {
+                return response;
+            }
+        });
 }
 
 BNPL.prototype.validateOrder = function(detail) {

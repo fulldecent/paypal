@@ -57,6 +57,8 @@ class ConfigurationMap
 
     const CLIENT_ID = 'PAYPAL_CLIENT_ID_INSTALLMENT';
 
+    const SECRET_ID = 'PAYPAL_SECRET_ID_INSTALLMENT';
+
     const PAGE_TYPE_PRODUCT = 'product-details';
 
     const PAGE_TYPE_CART = 'cart';
@@ -88,6 +90,17 @@ class ConfigurationMap
             return (string) Configuration::get(self::CLIENT_ID . '_LIVE');
         }
     }
+    /**
+     * @return string
+     */
+    public static function getSecretId()
+    {
+        if ((int) Configuration::get('PAYPAL_SANDBOX')) {
+            return (string) Configuration::get(self::SECRET_ID . '_SANDBOX');
+        } else {
+            return (string) Configuration::get(self::SECRET_ID . '_LIVE');
+        }
+    }
 
     /**
      * @param string $clientId
@@ -100,6 +113,19 @@ class ConfigurationMap
             return Configuration::updateValue(self::CLIENT_ID . '_SANDBOX', $clientId);
         } else {
             return Configuration::updateValue(self::CLIENT_ID . '_LIVE', $clientId);
+        }
+    }
+    /**
+     * @param string $secretId
+     *
+     * @return bool
+     */
+    public static function setSecretId($secretId)
+    {
+        if ((int) Configuration::get('PAYPAL_SANDBOX')) {
+            return Configuration::updateValue(self::SECRET_ID . '_SANDBOX', $secretId);
+        } else {
+            return Configuration::updateValue(self::SECRET_ID . '_LIVE', $secretId);
         }
     }
 

@@ -45,6 +45,13 @@
 
 <div class="bootstrap">
 
+	{if isset($isShowMessageSecretIdMissing) && $isShowMessageSecretIdMissing}
+		<div class="alert alert-danger">
+			<button type="button" class="close" data-dismiss="alert" data-action="close">×</button>
+			{l s='You need to fill up the Secret ID to continue use the "Pay later" functionality' mod='paypal'}
+		</div>
+	{/if}
+
 	{if $showPsCheckoutInfo}
 		<div class="alert alert-info ps-checkout-info">
 			<button type="button" class="close" data-dismiss="alert" data-action="close">×</button>

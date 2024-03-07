@@ -99,6 +99,7 @@ class PayPal extends PaymentModule
     const ONLY_SHIPPING = 5;
     const ONLY_WRAPPING = 6;
     const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
+    const ACCESS_TOKEN = 'PAYPAL_ACCESS_TOKEN';
 
     public function __construct()
     {
@@ -823,11 +824,13 @@ class PayPal extends PaymentModule
             ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE),
             ConfigurationMap::CHECKOUT_PAGE => Configuration::get(ConfigurationMap::CHECKOUT_PAGE),
             ConfigurationMap::CLIENT_ID => ConfigurationMap::getClientId(),
+            ConfigurationMap::SECRET_ID => ConfigurationMap::getSecretId(),
             'paypalInstallmentBanner' => $banner->render(),
             'showInstallmentPopup' => $this->isShowInstallmentPopup(),
             'showInstallmentSetting' => $this->isShowInstallmentSetting(),
             'isoCountryDefault' => $isoCountryDefault,
             ConfigurationMap::ENABLE_BNPL => Configuration::get(ConfigurationMap::ENABLE_BNPL),
+            'isShowMessageSecretIdMissing' => $this->isShowMessageSecretIdMissing(),
         ]);
 
         // Tpl vars for Paypal installment banner. End
@@ -2041,6 +2044,7 @@ class PayPal extends PaymentModule
             Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
             Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
             ConfigurationMap::setClientId(Tools::getValue(ConfigurationMap::CLIENT_ID, ''));
+            ConfigurationMap::setSecretId(Tools::getValue(ConfigurationMap::SECRET_ID, ''));
             Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, Tools::getValue(ConfigurationMap::ENABLE_BNPL));
         }
 
@@ -2943,5 +2947,10 @@ class PayPal extends PaymentModule
     protected function getBnplAvailabilityManager()
     {
         return new BnplAvailabilityManager();
+    }
+
+    protected function isShowMessageSecretIdMissing()
+    {
+        return $this->isShowInstallmentSetting() && Configuration::get(ConfigurationMap::ENABLE_BNPL) && empty(ConfigurationMap::getSecretId());
     }
 }
