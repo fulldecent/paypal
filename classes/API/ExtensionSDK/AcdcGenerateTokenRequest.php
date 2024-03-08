@@ -47,7 +47,7 @@ class AcdcGenerateTokenRequest implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return 'v1/identity/generate-token';
+        return '/v1/identity/generate-token';
     }
 
     /** @return array*/

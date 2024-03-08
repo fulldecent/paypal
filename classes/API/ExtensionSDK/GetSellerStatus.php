@@ -55,7 +55,7 @@ class GetSellerStatus implements HttpRequestInterface, WrapperInterface
     public function getPath()
     {
         return sprintf(
-            'v1/customer/partners/%s/merchant-integrations/%s',
+            '/v1/customer/partners/%s/merchant-integrations/%s',
             $this->partnerMerchantId,
             $this->sellerMerchantId
         );

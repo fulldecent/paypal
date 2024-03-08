@@ -51,7 +51,7 @@ class AuthorizationsCaptureRequest implements HttpRequestInterface, WrapperInter
 
     public function getPath()
     {
-        return sprintf('v2/payments/authorizations/%s/capture', urlencode($this->paymentId));
+        return sprintf('/v2/payments/authorizations/%s/capture', urlencode($this->paymentId));
     }
 
     /** @return array*/

@@ -51,7 +51,7 @@ class DeleteWebhook implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return 'v1/notifications/webhooks/' . urlencode($this->id);
+        return '/v1/notifications/webhooks/' . urlencode($this->id);
     }
 
     /** @return array*/

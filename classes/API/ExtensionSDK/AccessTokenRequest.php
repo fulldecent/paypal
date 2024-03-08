@@ -55,7 +55,7 @@ class AccessTokenRequest implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return 'v1/oauth2/token';
+        return '/v1/oauth2/token';
     }
 
     /** @return array*/

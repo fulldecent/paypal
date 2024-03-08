@@ -54,7 +54,7 @@ class ConfirmPaymentSource implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return sprintf('v2/checkout/orders/%s/confirm-payment-source', urlencode($this->orderId));
+        return sprintf('/v2/checkout/orders/%s/confirm-payment-source', urlencode($this->orderId));
     }
 
     /** @return array*/

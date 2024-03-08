@@ -53,7 +53,7 @@ class CreateWebhook implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return 'v1/notifications/webhooks';
+        return '/v1/notifications/webhooks';
     }
 
     /** @return array*/

@@ -51,7 +51,7 @@ class AddTrackingInfo implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return 'v1/shipping/trackers-batch';
+        return '/v1/shipping/trackers-batch';
     }
 
     /** @return array*/

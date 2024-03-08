@@ -51,7 +51,7 @@ class OrdersCreateRequest implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return 'v2/checkout/orders';
+        return '/v2/checkout/orders';
     }
 
     /** @return array*/

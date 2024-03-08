@@ -50,7 +50,7 @@ class AuthorizationsVoidRequest implements HttpRequestInterface, WrapperInterfac
 
     public function getPath()
     {
-        return sprintf('v2/payments/authorizations/%s/void', urlencode($this->paymentId));
+        return sprintf('/v2/payments/authorizations/%s/void', urlencode($this->paymentId));
     }
 
     /** @return array*/

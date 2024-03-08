@@ -50,7 +50,7 @@ class DeleteVaultPaymentToken implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return sprintf('v3/vault/payment-tokens/%s', urlencode($this->vaultId));
+        return sprintf('/v3/vault/payment-tokens/%s', urlencode($this->vaultId));
     }
 
     /** @return array*/

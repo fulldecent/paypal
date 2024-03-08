@@ -48,9 +48,9 @@ class PaypalEnvironment implements EnvironmentInterface
     public function getBaseUri()
     {
         if ($this->method->isSandbox()) {
-            return 'https://api.sandbox.paypal.com/';
+            return 'https://api.sandbox.paypal.com';
         }
 
-        return 'https://api.paypal.com/';
+        return 'https://api.paypal.com';
     }
 }

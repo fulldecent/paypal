@@ -56,7 +56,7 @@ class OrdersPatchRequest implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return 'v2/checkout/orders/' . urlencode($this->orderId);
+        return '/v2/checkout/orders/' . urlencode($this->orderId);
     }
 
     /** @return array*/

@@ -50,7 +50,7 @@ class OrdersGetRequest implements HttpRequestInterface, WrapperInterface
 
     public function getPath()
     {
-        return sprintf('v2/checkout/orders/%s', urlencode($this->orderId));
+        return sprintf('/v2/checkout/orders/%s', urlencode($this->orderId));
     }
 
     /** @return array*/

@@ -96,7 +96,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         return $this->method->getMerchantId();
     }
 
-    protected function getCapabilities(\PayPalHttp\HttpResponse $data)
+    protected function getCapabilities($data)
     {
         $capabilities = [];
 
@@ -123,7 +123,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         return $capabilities;
     }
 
-    protected function getProducts(\PayPalHttp\HttpResponse $data)
+    protected function getProducts($data)
     {
         $products = [];
 
@@ -142,7 +142,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         return $products;
     }
 
-    protected function getProductsFull(\PayPalHttp\HttpResponse $data)
+    protected function getProductsFull($data)
     {
         if (empty($data->result->products)) {
             return [];
@@ -163,7 +163,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         return $products;
     }
 
-    protected function getCapabilitiesFull(\PayPalHttp\HttpResponse $data)
+    protected function getCapabilitiesFull($data)
     {
         if (empty($data->result->capabilities)) {
             return [];
