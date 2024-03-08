@@ -29,12 +29,13 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\UpdateTrackingInfo;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
+use PaypalAddons\classes\PaypalException;
 use PaypalAddons\services\Builder\TrackingInfoBuilder;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -45,7 +46,7 @@ class PaypalUpdateTrackingInfoRequest extends RequestAbstract
 {
     protected $paypalOrder;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder)
     {
         parent::__construct($client, $method);
 
@@ -57,21 +58,11 @@ class PaypalUpdateTrackingInfoRequest extends RequestAbstract
         $response = $this->initResponse();
 
         try {
-            $body = $this->initBuilder()->build();
-            $trackingId = '';
+            $exec = $this->client->execute(new UpdateTrackingInfo($this->initBuilder()));
 
-            if (false == empty($body['transaction_id'])) {
-                $trackingId .= $body['transaction_id'];
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
             }
-
-            if (false == empty($body['tracking_number'])) {
-                $trackingId .= '-' . $body['tracking_number'];
-            }
-
-            $sendTrackingInfoRequest = new UpdateTrackingInfo($trackingId);
-            $sendTrackingInfoRequest->headers = array_merge($this->getHeaders(), $sendTrackingInfoRequest->headers);
-            $sendTrackingInfoRequest->body = $body;
-            $exec = $this->client->execute($sendTrackingInfoRequest);
 
             if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
                 $response->setSuccess(true);
@@ -80,7 +71,7 @@ class PaypalUpdateTrackingInfoRequest extends RequestAbstract
             }
 
             $response->setData($exec);
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 

@@ -29,15 +29,16 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
+use PaypalAddons\classes\API\ExtensionSDK\Order\CapturesRefundRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalAddons\classes\Exception\OrderFullyRefundedException;
 use PaypalAddons\classes\Exception\RefundCalculationException;
+use PaypalAddons\classes\PaypalException;
 use PaypalAddons\services\PaymentTotalAmount;
 use PaypalAddons\services\ServicePaypalOrder;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Payments\CapturesRefundRequest;
-use PayPalHttp\HttpException;
 use Throwable;
 use Validate;
 
@@ -49,7 +50,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
 {
     protected $paypalOrder;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder)
     {
         parent::__construct($client, $method);
         $this->paypalOrder = $paypalOrder;
@@ -59,15 +60,17 @@ class PaypalOrderRefundRequest extends RequestAbstract
     {
         $response = new ResponseOrderRefund();
         $captureRefund = new CapturesRefundRequest($this->getResourceId());
-        $captureRefund->prefer('return=representation');
-        $captureRefund->headers = array_merge($this->getHeaders(), $captureRefund->headers);
 
         try {
             if ($body = $this->buildRequestBody()) {
-                $captureRefund->body = $body;
+                $captureRefund->setBody(json_encode($body));
             }
 
             $exec = $this->client->execute($captureRefund);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
 
             if (in_array($exec->statusCode, [200, 201, 202])) {
                 $response->setSuccess(true)
@@ -81,7 +84,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
                 $error->setMessage($resultDecoded->message);
                 $response->setSuccess(false)->setError($error);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
 

@@ -29,13 +29,14 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\Webhook\PatchWebhook;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Model\Webhook;
 use PaypalAddons\classes\API\Model\WebhookPatch;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -46,7 +47,7 @@ class PaypalPatchWebhookRequest extends RequestAbstract
 {
     protected $patch;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, WebhookPatch $patch)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, WebhookPatch $patch)
     {
         parent::__construct($client, $method);
         $this->patch = $patch;
@@ -55,13 +56,17 @@ class PaypalPatchWebhookRequest extends RequestAbstract
     public function execute()
     {
         $response = $this->getResponse();
-        $request = new PatchWebhook($this->patch->getId());
-        $request->body = $this->patch->getPatches();
+        $request = new PatchWebhook($this->patch);
 
         try {
             $exec = $this->client->execute($request);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             $response->setSuccess(true)->setData(new Webhook(json_encode($exec->result)));
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 

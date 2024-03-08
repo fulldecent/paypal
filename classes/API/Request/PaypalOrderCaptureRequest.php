@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCaptureRequest;
 use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Model\VaultInfo;
@@ -47,7 +48,7 @@ class PaypalOrderCaptureRequest extends RequestAbstract
     /** @var string */
     protected $paymentId;
 
-    public function __construct($client, AbstractMethodPaypal $method, $paymentId)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $paymentId)
     {
         parent::__construct($client, $method);
         $this->paymentId = $paymentId;

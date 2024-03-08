@@ -27,22 +27,70 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK\Webhook;
 
-use PayPalHttp\HttpRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class ShowEventNotification extends HttpRequest
+class ShowEventNotification implements HttpRequestInterface, WrapperInterface
 {
+    protected $headers = [];
+    /**
+     * @var string
+     */
+    protected $id;
+
     public function __construct($id)
     {
-        parent::__construct(
-            sprintf(
-                '/v1/notifications/webhooks-events/%s',
-                (string) $id
-            ),
-            'GET');
         $this->headers['Content-Type'] = 'application/json';
+        $this->id = (string) $id;
+    }
+
+    public function getPath()
+    {
+        return sprintf('/v1/notifications/webhooks-events/%s', $this->id);
+    }
+
+    /** @return array*/
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        if (is_array($headers)) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        return null;
+    }
+
+    public function getMethod()
+    {
+        return 'GET';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }

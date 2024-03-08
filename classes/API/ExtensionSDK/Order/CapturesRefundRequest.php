@@ -25,7 +25,7 @@
  *
  */
 
-namespace PaypalAddons\classes\API\ExtensionSDK;
+namespace PaypalAddons\classes\API\ExtensionSDK\Order;
 
 use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\HttpResponse;
@@ -36,23 +36,28 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class VaultPaymentTokens implements HttpRequestInterface, WrapperInterface
+class CapturesRefundRequest implements HttpRequestInterface, WrapperInterface
 {
     protected $headers = [];
     /**
      * @var string
      */
-    protected $tokenId;
+    protected $id;
+    /**
+     * @var string
+     */
+    protected $body;
 
-    public function __construct($tokenId)
+    public function __construct($id)
     {
         $this->headers['Content-Type'] = 'application/json';
-        $this->tokenId = (string) $tokenId;
+        $this->headers['Prefer'] = 'return=representation';
+        $this->id = (string) $id;
     }
 
     public function getPath()
     {
-        return '/v3/vault/payment-tokens';
+        return sprintf('/v2/payments/captures/%s/refund', $this->id);
     }
 
     /** @return array*/
@@ -75,16 +80,14 @@ class VaultPaymentTokens implements HttpRequestInterface, WrapperInterface
         return $this;
     }
 
+    public function setBody($body)
+    {
+        $this->body = (string) $body;
+    }
+
     public function getBody()
     {
-        return json_encode([
-            'payment_source' => [
-                'token' => [
-                    'id' => (string) $this->tokenId,
-                    'type' => 'SETUP_TOKEN',
-                ],
-            ],
-        ]);
+        return $this->body;
     }
 
     public function getMethod()

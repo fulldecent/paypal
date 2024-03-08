@@ -27,23 +27,95 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK;
 
-use PayPalHttp\HttpRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
+use PaypalAddons\services\Builder\BuilderInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class UpdateTrackingInfo extends HttpRequest
+class UpdateTrackingInfo implements HttpRequestInterface, WrapperInterface
 {
-    public function __construct($trackingId)
+    /**
+     * @var BuilderInterface
+     */
+    protected $builder;
+
+    protected $headers = [];
+    /**
+     * @var string
+     */
+    protected $id;
+
+    public function __construct(BuilderInterface $builder)
     {
-        parent::__construct(
-            sprintf(
-                '/v1/shipping/trackers/%s',
-                (string) $trackingId
-            ),
-            'PUT'
-        );
         $this->headers['Content-Type'] = 'application/json';
+        $this->builder = $builder;
+
+        $body = $builder->build();
+        $id = '';
+
+        if (false === empty($body['transaction_id'])) {
+            $id .= $body['transaction_id'];
+        }
+
+        if (false === empty($body['tracking_number'])) {
+            $id .= '-' . $body['tracking_number'];
+        }
+
+        $this->id = $id;
+    }
+
+    public function getPath()
+    {
+        return sprintf('/v1/shipping/trackers/%s', $this->id);
+    }
+
+    /** @return array*/
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        if (is_array($headers)) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        $body = $this->builder->build();
+
+        if (is_array($body)) {
+            $body = json_encode($body);
+        }
+
+        return $body;
+    }
+
+    public function getMethod()
+    {
+        return 'PUT';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }

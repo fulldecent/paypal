@@ -27,30 +27,79 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK\Webhook;
 
-use PayPalHttp\HttpRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class ListEventNotification extends HttpRequest
+class ListEventNotification implements HttpRequestInterface, WrapperInterface
 {
+    protected $headers = [];
+    /**
+     * @var array
+     */
+    protected $params = [
+        'page_size' => 10,
+        'start_time' => '', // Format DateTime::ISO8601
+        'end_time' => '', // Format DateTime::ISO8601
+        'transaction_id' => '',
+        'event_type' => '',
+    ];
+
     public function __construct($params)
     {
-        $allowedParams = [
-            'page_size' => 10,
-            'start_time' => '', // Format DateTime::ISO8601
-            'end_time' => '', // Format DateTime::ISO8601
-            'transaction_id' => '',
-            'event_type' => '',
-        ];
-
-        parent::__construct(
-            sprintf(
-                '/v1/notifications/webhooks-events?%s',
-                http_build_query(array_intersect_key($params, $allowedParams))
-            ),
-            'GET');
         $this->headers['Content-Type'] = 'application/json';
+
+        if (is_array($params)) {
+            $this->params = array_intersect_key($params, $this->params);
+        }
+    }
+
+    public function getPath()
+    {
+        return sprintf('/v1/notifications/webhooks-events?%s', http_build_query($this->params));
+    }
+
+    /** @return array*/
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        if (is_array($headers)) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        return null;
+    }
+
+    public function getMethod()
+    {
+        return 'GET';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }

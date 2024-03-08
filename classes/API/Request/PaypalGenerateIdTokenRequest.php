@@ -35,7 +35,6 @@ use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseGenerateIdToken;
 use PaypalAddons\classes\PaypalException;
-use PayPalHttp\HttpResponse;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -111,7 +110,7 @@ class PaypalGenerateIdTokenRequest extends RequestAbstract
         return $response;
     }
 
-    protected function getIdToken(HttpResponse $response)
+    protected function getIdToken($response)
     {
         if (empty($response->result->id_token)) {
             return '';

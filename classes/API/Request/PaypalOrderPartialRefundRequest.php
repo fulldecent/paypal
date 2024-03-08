@@ -28,7 +28,7 @@
 namespace PaypalAddons\classes\API\Request;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
+use PaypalAddons\classes\API\Client\HttpClient;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -38,7 +38,7 @@ class PaypalOrderPartialRefundRequest extends PaypalOrderRefundRequest
 {
     protected $amount;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder, $amount)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder, $amount)
     {
         parent::__construct($client, $method, $paypalOrder);
         $this->amount = $this->method->formatPrice($amount, $this->paypalOrder->currency);

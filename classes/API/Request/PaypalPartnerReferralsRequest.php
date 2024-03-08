@@ -29,12 +29,13 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\PartnerReferrals;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponsePartnerReferrals;
+use PaypalAddons\classes\PaypalException;
 use PaypalAddons\services\Builder\PartnerReferralsRequestBody;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -45,7 +46,7 @@ class PaypalPartnerReferralsRequest extends RequestAbstract
 {
     protected $bodyBuilder;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method)
     {
         parent::__construct($client, $method);
 
@@ -55,15 +56,18 @@ class PaypalPartnerReferralsRequest extends RequestAbstract
     public function execute()
     {
         $response = $this->getResponse();
-        $partnerReferral = new PartnerReferrals();
-        $partnerReferral->headers = array_merge($partnerReferral->headers, $this->getHeaders());
-        $partnerReferral->body = $this->buildRequestBody();
+        $partnerReferral = new PartnerReferrals($this->bodyBuilder);
 
         try {
             $exec = $this->client->execute($partnerReferral);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             $response->setActionLink($this->getActionLink($exec));
             $response->setSelfLink($this->getSelfLink($exec));
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
             $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
@@ -101,17 +105,17 @@ class PaypalPartnerReferralsRequest extends RequestAbstract
         return new ResponsePartnerReferrals();
     }
 
-    protected function getActionLink(\PayPalHttp\HttpResponse $exec)
+    protected function getActionLink($exec)
     {
         return $this->getLink('action_url', $exec);
     }
 
-    protected function getSelfLink(\PayPalHttp\HttpResponse $exec)
+    protected function getSelfLink($exec)
     {
         return $this->getLink('self', $exec);
     }
 
-    protected function getLink($type, \PayPalHttp\HttpResponse $exec)
+    protected function getLink($type, $exec)
     {
         $link = '';
 

@@ -29,14 +29,14 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\VaultPaymentTokens;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Model\VaultInfo;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseVaultPaymentToken;
 use PaypalAddons\classes\Constants\Vaulting;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
-use PayPalHttp\HttpResponse;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -48,7 +48,7 @@ class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
     /** @var string */
     protected $tokenId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $tokenId)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $tokenId)
     {
         parent::__construct($client, $method);
 
@@ -62,6 +62,11 @@ class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
 
         try {
             $exec = $this->client->execute($request);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             $response->setData($exec);
 
             if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
@@ -82,7 +87,7 @@ class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
                 $response->setSuccess(false)
                     ->setError($error);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 
@@ -114,7 +119,7 @@ class PaypalGenerateVaultPaymentTokenRequest extends RequestAbstract
     /**
      * @return VaultInfo
      */
-    protected function getVaultInfo(HttpResponse $response)
+    protected function getVaultInfo($response)
     {
         $vaultInfo = new VaultInfo();
         $vaultInfo->setPaymentSource(Vaulting::PAYMENT_SOURCE_PAYPAL);

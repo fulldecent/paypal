@@ -28,14 +28,11 @@
 namespace PaypalAddons\classes\API\Request;
 
 use Exception;
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCreateRequest;
 use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderCreate;
 use PaypalAddons\classes\PaypalException;
-use PaypalAddons\services\Builder\BuilderInterface;
 use PaypalAddons\services\Builder\OrderCreateBody;
 use Throwable;
 
@@ -45,20 +42,16 @@ if (!defined('_PS_VERSION_')) {
 
 class PaypalOrderCreateRequest extends RequestAbstract
 {
-    /** @var BuilderInterface */
-    protected $bodyBuilder;
-
-    public function __construct(HttpClient $client, AbstractMethodPaypal $method)
+    /** @return HttpRequestInterface */
+    protected function prepareRequest()
     {
-        parent::__construct($client, $method);
-
-        $this->bodyBuilder = $this->initBodyBuilder();
+        return new OrdersCreateRequest($this->initBodyBuilder());
     }
 
     public function execute()
     {
         $response = new ResponseOrderCreate();
-        $order = new OrdersCreateRequest($this->bodyBuilder);
+        $order = $this->prepareRequest();
 
         try {
             $exec = $this->client->execute($order);

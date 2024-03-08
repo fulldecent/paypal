@@ -29,12 +29,13 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\Webhook\ListEventNotification;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Model\WebhookEvent;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseWebhookEventList;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -45,7 +46,7 @@ class PaypalWebhookEventListRequest extends RequestAbstract
 {
     protected $params = [];
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $params = [])
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $params = [])
     {
         parent::__construct($client, $method);
 
@@ -63,13 +64,17 @@ class PaypalWebhookEventListRequest extends RequestAbstract
         try {
             $exec = $this->client->execute($request);
 
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             if (false === empty($exec->result->events)) {
                 foreach ($exec->result->events as $event) {
                     $list[] = new WebhookEvent(json_encode($event));
                 }
             }
             $response->setSuccess(true)->setData($exec)->setList($list);
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 

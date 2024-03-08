@@ -31,19 +31,67 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PayPalHttp\HttpRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
+use PaypalAddons\classes\API\Model\WebhookPatch;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
 
-class PatchWebhook extends HttpRequest
+class PatchWebhook implements HttpRequestInterface, WrapperInterface
 {
-    public function __construct($id)
+    protected $headers = [];
+    /**
+     * @var WebhookPatch
+     */
+    protected $patch;
+
+    public function __construct(WebhookPatch $patch)
     {
-        parent::__construct(
-            sprintf(
-                '/v1/notifications/webhooks/%s',
-                (string) $id
-            ),
-            'PATCH'
-        );
         $this->headers['Content-Type'] = 'application/json';
+        $this->patch = $patch;
+    }
+
+    public function getPath()
+    {
+        return sprintf('/v1/notifications/webhooks/%s', $this->patch->getId());
+    }
+
+    /** @return array*/
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        if (is_array($headers)) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        return json_encode($this->patch->getPatches());
+    }
+
+    public function getMethod()
+    {
+        return 'PATCH';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }

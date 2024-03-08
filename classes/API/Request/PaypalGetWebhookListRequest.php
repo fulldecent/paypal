@@ -29,10 +29,11 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\API\ExtensionSDK\Webhook\ListWebhook;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Model\Webhook;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
-use PayPalHttp\HttpException;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -49,13 +50,18 @@ class PaypalGetWebhookListRequest extends RequestAbstract
 
         try {
             $exec = $this->client->execute($request);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             if (false === empty($exec->result->webhooks)) {
                 foreach ($exec->result->webhooks as $webhook) {
                     $list[] = new Webhook(json_encode($webhook));
                 }
             }
             $response->setSuccess(true)->setData($list);
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 

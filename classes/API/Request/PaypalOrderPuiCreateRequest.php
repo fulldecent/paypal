@@ -40,19 +40,21 @@ class PaypalOrderPuiCreateRequest extends PaypalOrderCreateRequest
         return new OrderPuiCreateBody($this->context, $this->method);
     }
 
-    protected function getHeaders()
+    protected function prepareRequest()
     {
-        $headers = parent::getHeaders();
+        $request = parent::prepareRequest();
+        $headers = $request->getHeaders();
         $sessionId = $this->paypalContext->get('client-session-id', '');
 
         if (empty($sessionId)) {
-            return $headers;
+            return $request;
         }
-
         //This header is required for PUI payment
         $headers['PayPal-Client-Metadata-Id'] = $sessionId;
         $headers['PayPal-Request-Id'] = uniqid();
 
-        return $headers;
+        $request->setHeaders($headers);
+
+        return $request;
     }
 }
