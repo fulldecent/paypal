@@ -51,8 +51,8 @@
 
             var button = new PaypalButton({
               button: '#paypal-' + skdNameSpace,
-              controller: '{$scInitController|escape:'htmlall':'UTF-8'}',
-              validationController: '{$validationController|escape:'htmlall':'UTF-8'}',
+              controller: '{$scInitController nofilter}',
+              validationController: '{$validationController nofilter}',
               paypal: window[skdNameSpace],
               style: {
                 height: 35

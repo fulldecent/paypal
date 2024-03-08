@@ -38,6 +38,7 @@ if (!defined('_PS_VERSION_')) {
 
 class DeleteVaultPaymentToken implements HttpRequestInterface, WrapperInterface
 {
+    protected $headers = [];
     /**
      * @var string
      */

@@ -59,8 +59,8 @@
                   var apmObj = new ApmButton({
                       method: method,
                       button: '#paypal-apm-'+method,
-                      controller: '{$scInitController|escape:'htmlall':'UTF-8'}',
-                      validationController: '{$validationController|escape:'htmlall':'UTF-8'}',
+                      controller: '{$scInitController nofilter}',
+                      validationController: '{$validationController nofilter}',
                       paypal: window[skdNameSpace],
                       isMoveButtonAtEnd: PAYPAL_MOVE_BUTTON_AT_END
                   });
