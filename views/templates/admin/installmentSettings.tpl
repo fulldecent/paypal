@@ -118,9 +118,11 @@
             <div class="configuration">
                 <div class="bootstrap pp__flex" style="width: 50%">
                     <input
-                            type="text"
+                            type="password"
                             name="PAYPAL_SECRET_ID_INSTALLMENT"
-                            {if isset($PAYPAL_SECRET_ID_INSTALLMENT)}value="{$PAYPAL_SECRET_ID_INSTALLMENT}"{/if}>
+                            {if isset($PAYPAL_SECRET_ID_INSTALLMENT)}
+                                value="{$PAYPAL_SECRET_ID_INSTALLMENT|escape:'htmlall':'UTF-8'}"
+                            {/if}>
                     <div>
                         <span class="btn btn-default pp__ml-2" onclick="toggleHint(event)">?</span>
                     </div>

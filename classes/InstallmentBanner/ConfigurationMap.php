@@ -55,6 +55,15 @@ class ConfigurationMap
 
     const COLOR_GRAYSCALE = 'grayscale';
 
+    const ALL_COLORS = [
+        self::COLOR_BLACK,
+        self::COLOR_BLUE,
+        self::COLOR_WHITE,
+        self::COLOR_GRAY,
+        self::COLOR_GRAYSCALE,
+        self::COLOR_MONOCHROME,
+    ];
+
     const CLIENT_ID = 'PAYPAL_CLIENT_ID_INSTALLMENT';
 
     const SECRET_ID = 'PAYPAL_SECRET_ID_INSTALLMENT';

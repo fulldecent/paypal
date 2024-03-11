@@ -2041,11 +2041,29 @@ class PayPal extends PaymentModule
             Configuration::updateValue(ConfigurationMap::CART_PAGE, Tools::getValue(ConfigurationMap::CART_PAGE));
             Configuration::updateValue(ConfigurationMap::CHECKOUT_PAGE, Tools::getValue(ConfigurationMap::CHECKOUT_PAGE));
             Configuration::updateValue(ConfigurationMap::PRODUCT_PAGE, Tools::getValue(ConfigurationMap::PRODUCT_PAGE));
-            Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
+            $colorOption = Tools::getValue(ConfigurationMap::COLOR);
+            if ($colorOption !== false && in_array($colorOption, ConfigurationMap::ALL_COLORS) === false) {
+                $this->_errors[] = $this->l('BNPL: Color option format is not correct and was not saved.');
+            } else {
+                Configuration::updateValue(ConfigurationMap::COLOR, $colorOption);
+            }
             Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
-            ConfigurationMap::setClientId(Tools::getValue(ConfigurationMap::CLIENT_ID, ''));
-            ConfigurationMap::setSecretId(Tools::getValue(ConfigurationMap::SECRET_ID, ''));
+            $clientID = Tools::getValue(ConfigurationMap::CLIENT_ID, '');
+            if (Validate::isCleanHtml($clientID) === false) {
+                $this->_errors[] = $this->l('REST Client ID format is not correct and was not saved.');
+            } else {
+                ConfigurationMap::setClientId($clientID);
+            }
+            $clientSecret = Tools::getValue(ConfigurationMap::SECRET_ID, '');
+            if (Validate::isCleanHtml($clientSecret) === false) {
+                $this->_errors[] = $this->l('REST Secret ID format is not correct and was not saved.');
+            } else {
+                ConfigurationMap::setSecretId($clientSecret);
+            }
             Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, Tools::getValue(ConfigurationMap::ENABLE_BNPL));
+            if (empty($this->_errors) === false) {
+                return $this->displayWarning(implode('<br />', $this->_errors));
+            }
         }
 
         return $this->loadLangDefault();

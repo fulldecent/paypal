@@ -176,7 +176,7 @@ class PayPalValidateBnplModuleFrontController extends ModuleFrontController
             'success' => false,
         ];
 
-        if (false === empty($order['orderID'])) {
+        if ($this->validateOrderID($order)) {
             $response = $this->client->execute(new OrdersCaptureRequest($order['orderID']));
 
             if ($response->getCode() < 300 && $response->getCode() > 199) {
@@ -189,5 +189,22 @@ class PayPalValidateBnplModuleFrontController extends ModuleFrontController
         }
 
         die(json_encode($return));
+    }
+
+    protected function validateOrderID($order)
+    {
+        if (false === empty($order['orderID'])) {
+            return false;
+        }
+
+        if (Validate::isCleanHtml($order['orderID']) === false) {
+            return false;
+        }
+
+        if (mb_strlen($order['orderID']) > 36) {
+            return false;
+        }
+
+        return true;
     }
 }
