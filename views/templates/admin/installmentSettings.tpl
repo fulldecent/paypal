@@ -96,7 +96,7 @@
                     <input
                             type="text"
                             name="PAYPAL_CLIENT_ID_INSTALLMENT"
-                            {if isset($PAYPAL_CLIENT_ID_INSTALLMENT)}value="{$PAYPAL_CLIENT_ID_INSTALLMENT}"{/if}>
+                            {if isset($PAYPAL_CLIENT_ID_INSTALLMENT)}value="{$PAYPAL_CLIENT_ID_INSTALLMENT|escape:'htmlall':'UTF-8'}"{/if}>
                     <div>
                         <span class="btn btn-default pp__ml-2" onclick="toggleHint(event)">?</span>
                     </div>
