@@ -26,9 +26,20 @@
 
 require_once __DIR__ . '/../../classes/Services/Token.php';
 require_once __DIR__ . '/../../classes/Transaction.php';
+require_once _PS_MODULE_DIR_ . 'paypal/classes/SDK/Client/PaypalClient.php';
+require_once _PS_MODULE_DIR_ . 'paypal/classes/SDK/Request/Order/OrdersCreateRequest.php';
+require_once _PS_MODULE_DIR_ . 'paypal/classes/SDK/Request/Order/OrdersCaptureRequest.php';
+require_once _PS_MODULE_DIR_ . 'paypal/classes/Builder/OrderBuilder.php';
 
 class PayPalValidateBnplModuleFrontController extends ModuleFrontController
 {
+    /** @var PaypalClient*/
+    protected $client;
+    public function init()
+    {
+        parent::init();
+        $this->client = new PaypalClient();
+    }
     public function checkAccess()
     {
         if (Validate::isLoadedObject($this->context->cart)) {
@@ -43,6 +54,10 @@ class PayPalValidateBnplModuleFrontController extends ModuleFrontController
 
     public function initContent()
     {
+        if ($this->ajax) {
+            return;
+        }
+
         $transaction = $this->getTransactionFromRequest();
         $cart = $this->context->cart;
 
@@ -129,5 +144,67 @@ class PayPalValidateBnplModuleFrontController extends ModuleFrontController
     protected function initDisplayController()
     {
         return (_PS_VERSION_ < '1.5') ? new BWDisplay() : new FrontController();
+    }
+
+    public function displayAjaxCreateOrder()
+    {
+        $return = [
+            'success' => false,
+            'idOrder' => null
+        ];
+        $response = $this->client->execute(new OrdersCreateRequest(new OrderBuilder($this->context)));
+
+        if ($response->getCode() < 300 && $response->getCode() > 199) {
+            $return['success'] = true;
+
+            if ($response instanceof HttpJsonResponse) {
+                $order = $response->toArray();
+
+                if (false === empty($order['id'])) {
+                    $return['idOrder'] = $order['id'];
+                }
+            }
+        }
+
+        die(json_encode($return));
+    }
+
+    public function displayAjaxCaptureOrder()
+    {
+        $order = json_decode(Tools::getValue('order'), true);
+        $return = [
+            'success' => false,
+        ];
+
+        if ($this->validateOrderID($order)) {
+            $response = $this->client->execute(new OrdersCaptureRequest($order['orderID']));
+
+            if ($response->getCode() < 300 && $response->getCode() > 199) {
+                $return['success'] = true;
+
+                if ($response instanceof HttpJsonResponse) {
+                    $return = array_merge($return, $response->toArray());
+                }
+            }
+        }
+
+        die(json_encode($return));
+    }
+
+    protected function validateOrderID($order)
+    {
+        if (false === empty($order['orderID'])) {
+            return false;
+        }
+
+        if (Validate::isCleanHtml($order['orderID']) === false) {
+            return false;
+        }
+
+        if (mb_strlen($order['orderID']) > 36) {
+            return false;
+        }
+
+        return true;
     }
 }

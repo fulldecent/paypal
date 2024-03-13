@@ -92,7 +92,6 @@ class BnplButton
         $JSscripts['tot-paypal-bnpl-sdk'] = [
             'src' => 'https://www.paypal.com/sdk/js?' . http_build_query($params),
             'data-namespace' => $this->getSdkNamespace(),
-            'data-partner-attribution-id' => $this->getPartnerId(),
         ];
         $JSscripts['bnpl'] = [
             'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/bnpl.js?v=' . $this->module->version,
@@ -127,10 +126,5 @@ class BnplButton
     protected function getSdkNamespace()
     {
         return 'totPaypalBnplSdkButtons';
-    }
-
-    protected function getPartnerId()
-    {
-        return 'PRESTASHOP_Cart_BNPLforPS16';
     }
 }

@@ -99,6 +99,7 @@ class PayPal extends PaymentModule
     const ONLY_SHIPPING = 5;
     const ONLY_WRAPPING = 6;
     const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
+    const ACCESS_TOKEN = 'PAYPAL_ACCESS_TOKEN';
 
     public function __construct()
     {
@@ -823,11 +824,13 @@ class PayPal extends PaymentModule
             ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE),
             ConfigurationMap::CHECKOUT_PAGE => Configuration::get(ConfigurationMap::CHECKOUT_PAGE),
             ConfigurationMap::CLIENT_ID => ConfigurationMap::getClientId(),
+            ConfigurationMap::SECRET_ID => ConfigurationMap::getSecretId(),
             'paypalInstallmentBanner' => $banner->render(),
             'showInstallmentPopup' => $this->isShowInstallmentPopup(),
             'showInstallmentSetting' => $this->isShowInstallmentSetting(),
             'isoCountryDefault' => $isoCountryDefault,
             ConfigurationMap::ENABLE_BNPL => Configuration::get(ConfigurationMap::ENABLE_BNPL),
+            'isShowMessageSecretIdMissing' => $this->isShowMessageSecretIdMissing(),
         ]);
 
         // Tpl vars for Paypal installment banner. End
@@ -2038,10 +2041,29 @@ class PayPal extends PaymentModule
             Configuration::updateValue(ConfigurationMap::CART_PAGE, Tools::getValue(ConfigurationMap::CART_PAGE));
             Configuration::updateValue(ConfigurationMap::CHECKOUT_PAGE, Tools::getValue(ConfigurationMap::CHECKOUT_PAGE));
             Configuration::updateValue(ConfigurationMap::PRODUCT_PAGE, Tools::getValue(ConfigurationMap::PRODUCT_PAGE));
-            Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
+            $colorOption = Tools::getValue(ConfigurationMap::COLOR);
+            if ($colorOption !== false && in_array($colorOption, ConfigurationMap::ALL_COLORS) === false) {
+                $this->_errors[] = $this->l('BNPL: Color option format is not correct and was not saved.');
+            } else {
+                Configuration::updateValue(ConfigurationMap::COLOR, $colorOption);
+            }
             Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
-            ConfigurationMap::setClientId(Tools::getValue(ConfigurationMap::CLIENT_ID, ''));
+            $clientID = Tools::getValue(ConfigurationMap::CLIENT_ID, '');
+            if (Validate::isCleanHtml($clientID) === false) {
+                $this->_errors[] = $this->l('REST Client ID format is not correct and was not saved.');
+            } else {
+                ConfigurationMap::setClientId($clientID);
+            }
+            $clientSecret = Tools::getValue(ConfigurationMap::SECRET_ID, '');
+            if (Validate::isCleanHtml($clientSecret) === false) {
+                $this->_errors[] = $this->l('REST Secret ID format is not correct and was not saved.');
+            } else {
+                ConfigurationMap::setSecretId($clientSecret);
+            }
             Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, Tools::getValue(ConfigurationMap::ENABLE_BNPL));
+            if (empty($this->_errors) === false) {
+                return $this->displayWarning(implode('<br />', $this->_errors));
+            }
         }
 
         return $this->loadLangDefault();
@@ -2943,5 +2965,10 @@ class PayPal extends PaymentModule
     protected function getBnplAvailabilityManager()
     {
         return new BnplAvailabilityManager();
+    }
+
+    protected function isShowMessageSecretIdMissing()
+    {
+        return $this->isShowInstallmentSetting() && Configuration::get(ConfigurationMap::ENABLE_BNPL) && empty(ConfigurationMap::getSecretId());
     }
 }
