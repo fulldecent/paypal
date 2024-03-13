@@ -30,6 +30,21 @@ namespace PaypalAddons\classes\API\Model;
 class Webhook extends PayPalModel
 {
     /**
+     * @var string
+     */
+    protected $id;
+
+    /**
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * @var \PaypalAddons\classes\API\Model\WebhookEventType[]
+     */
+    protected $event_types;
+
+    /**
      * The ID of the webhook.
      *
      * @param string $id

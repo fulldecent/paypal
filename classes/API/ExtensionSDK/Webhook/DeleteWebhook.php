@@ -43,6 +43,11 @@ class DeleteWebhook implements HttpRequestInterface, WrapperInterface
      */
     protected $id;
 
+    /**
+     * @var mixed
+     */
+    protected $headers;
+
     public function __construct($id)
     {
         $this->headers['Content-Type'] = 'application/json';

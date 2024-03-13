@@ -74,15 +74,6 @@ class PaypalPppValidationModuleFrontController extends PaypalAbstarctModuleFront
             $cart = Context::getContext()->cart;
             $customer = new Customer($cart->id_customer);
             $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $paypal->id . '&id_order=' . $paypal->currentOrder . '&key=' . $customer->secure_key;
-        } catch (PayPal\Exception\PayPalConnectionException $e) {
-            $decoded_message = json_decode($e->getData());
-            $this->_errors['error_code'] = $e->getCode();
-            $this->_errors['error_msg'] = $decoded_message->message;
-            $this->_errors['msg_long'] = $decoded_message->name . ' - ' . $decoded_message->details[0]->issue;
-        } catch (PayPal\Exception\PayPalInvalidCredentialException $e) {
-            $this->_errors['error_msg'] = $e->errorMessage();
-        } catch (PayPal\Exception\PayPalMissingCredentialException $e) {
-            $this->_errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file.', pathinfo(__FILE__)['filename']);
         } catch (Exception $e) {
             $this->_errors['error_code'] = $e->getCode();
             $this->_errors['error_msg'] = $e->getMessage();

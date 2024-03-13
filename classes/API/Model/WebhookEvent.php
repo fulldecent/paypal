@@ -31,8 +31,43 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class WebhookEvent extends PayPalModel
+class WebhookEvent extends \PaypalAddons\classes\API\Model\PayPalModel
 {
+    /**
+     * @var string
+     */
+    protected $id;
+
+    /**
+     * @var string
+     */
+    protected $create_time;
+
+    /**
+     * @var string
+     */
+    protected $resource_type;
+
+    /**
+     * @var string
+     */
+    protected $event_version;
+
+    /**
+     * @var string
+     */
+    protected $event_type;
+
+    /**
+     * @var string
+     */
+    protected $summary;
+
+    /**
+     * @var \PaypalAddons\classes\API\Model\PayPalModel $resource
+     */
+    protected $resource;
+
     /**
      * The ID of the webhook event notification.
      *

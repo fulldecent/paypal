@@ -34,6 +34,21 @@ if (!defined('_PS_VERSION_')) {
 class WebhookEventType extends PayPalModel
 {
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @var string
+     */
+    protected $description;
+
+    /**
+     * @var string
+     */
+    protected $status;
+
+    /**
      * The unique event name.
      *
      * @param string $name
