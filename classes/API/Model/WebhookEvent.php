@@ -64,7 +64,7 @@ class WebhookEvent extends \PaypalAddons\classes\API\Model\PayPalModel
     protected $summary;
 
     /**
-     * @var \PaypalAddons\classes\API\Model\PayPalModel $resource
+     * @var \PaypalAddons\classes\API\Model\PayPalModel
      */
     protected $resource;
 

@@ -32,10 +32,10 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\Environment\PaypalEnvironment;
 use PaypalAddons\classes\API\ExtensionSDK\AccessTokenRequest;
+use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCreateRequest;
 use PaypalAddons\classes\API\Injector\AuthorizationInjector;
 use PaypalAddons\classes\API\Injector\BnCodeInjector;
 use PaypalAddons\classes\API\Request\HttpRequestInterface;
-use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCreateRequest;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Throwable;
 
