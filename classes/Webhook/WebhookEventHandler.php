@@ -80,7 +80,7 @@ class WebhookEventHandler
             ]);
         $msg = Tools::substr($msg, 0, 999);
 
-        if ($event->resource->status != 'COMPLETED') {
+        if ($event->getResource()->status != 'COMPLETED') {
             ProcessLoggerHandler::logInfo(
                 $msg,
                 empty($event->getResource()->id) ? '' : $event->getResource()->id,
