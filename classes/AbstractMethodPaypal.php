@@ -604,7 +604,6 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     {
         $key = [];
         $products = $cart->getProducts();
-        $cartRules = $cart->getCartRules();
 
         if (empty($products) === false) {
             foreach ($products as $product) {
@@ -616,12 +615,6 @@ abstract class AbstractMethodPaypal extends AbstractMethod
                         $product['quantity'],
                     ]
                 );
-            }
-        }
-
-        if (false === empty($cartRules)) {
-            foreach ($cartRules as $cartRule) {
-                $key[] = isset($cartRule['id_cart_rule']) ? $cartRule['id_cart_rule'] : '';
             }
         }
 
