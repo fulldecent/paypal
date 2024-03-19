@@ -15,5 +15,10 @@ parameters:
   ignoreErrors:
   		- '#Call to an undefined static method Product::getIdProductAttributesByIdAttributes\(\)#'
 
+  excludePaths:
+      - ../../classes/API/Model/Webhook.php
+      - ../../classes/API/Model/WebhookEvent.php
+      - ../../classes/API/Model/WebhookEventType.php
+
   reportUnmatchedIgnoredErrors: false
   level: 1
