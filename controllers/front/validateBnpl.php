@@ -193,7 +193,7 @@ class PayPalValidateBnplModuleFrontController extends ModuleFrontController
 
     protected function validateOrderID($order)
     {
-        if (false === empty($order['orderID'])) {
+        if (empty($order['orderID'])) {
             return false;
         }
 

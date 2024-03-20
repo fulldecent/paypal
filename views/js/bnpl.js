@@ -99,16 +99,10 @@ BNPL.prototype.captureOrder = function(data) {
     url.searchParams.append('ajax', '1');
     url.searchParams.append('action', 'CaptureOrder');
     form.append('order', JSON.stringify(data));
-    console.log(data);
 
     return fetch(url, {method: 'POST', body: form})
         .then(function(response) {
             return response.json();
-        })
-        .then(function(response) {
-            if (response.success) {
-                return response;
-            }
         });
 }
 
