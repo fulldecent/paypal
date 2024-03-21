@@ -1,5 +1,5 @@
 {*
-* 2007-2022 PrestaShop
+* 2007-2024 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,8 +17,8 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2022 PayPal
- *  @author 2007-2022 PrestaShop SA <contact@prestashop.com>
+*  @author 2007-2024 PayPal
+ *  @author 2007-2024 PrestaShop SA <contact@prestashop.com>
  *  @author 2014-2022 202 ecommerce <tech@202-ecommerce.com>
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
