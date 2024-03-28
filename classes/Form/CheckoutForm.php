@@ -399,7 +399,13 @@ class CheckoutForm implements FormInterface
             ];
 
             if ((int) Configuration::get(PaypalConfigurations::SOFORT_ENABLED)) {
-                // TODO: add notification message for client about removing the Sofort payment option
+                $fields[PaypalConfigurations::SOFORT_ENABLED] = [
+                    'name' => PaypalConfigurations::SOFORT_ENABLED,
+                    'type' => 'variable-set',
+                    'set' => [
+                        'message' => $this->module->l('Klarna, the owner of Sofort (a pay by bank payment solution), has made the strategic decision to entirely switch off Sofort.', 'CheckoutForm'),
+                    ],
+                ];
             }
         }
 

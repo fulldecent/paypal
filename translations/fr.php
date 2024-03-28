@@ -593,6 +593,7 @@ $_MODULE['<{paypal}prestashop>checkoutform_1981089a58ccc371526094328e8f3b0a'] = 
 $_MODULE['<{paypal}prestashop>checkoutform_6ee1cc1d3eaf785b045b990369403ecb'] = 'Accepter les paiements par carte de crédit ou de débit';
 $_MODULE['<{paypal}prestashop>checkoutform_6ff063fbc860a79759a7369ac32cee22'] = 'Checkout ';
 $_MODULE['<{paypal}prestashop>checkoutform_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
+$_MODULE['<{paypal}prestashop>checkoutform_0df1f242abe64bf87f320ea5ff6b13f9'] = 'Klarna, propriétaire de Sofort (une solution de paiement par virement), a pris la décision stratégique de désactiver complètement Sofort.';
 $_MODULE['<{paypal}prestashop>forminstallment_235e8d1a54ecddcf1d3ff533331ed416'] = 'Page produit';
 $_MODULE['<{paypal}prestashop>forminstallment_d53f3fd73815da5fd604769249c6968c'] = 'Paiement par étapes dans la caisse';
 $_MODULE['<{paypal}prestashop>forminstallment_468a21d1076328f1b4cd946b72e2d5cd'] = 'Panier';
