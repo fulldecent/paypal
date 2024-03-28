@@ -35,6 +35,7 @@ use PaypalAddons\classes\API\ExtensionSDK\AccessTokenRequest;
 use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCreateRequest;
 use PaypalAddons\classes\API\Injector\AuthorizationInjector;
 use PaypalAddons\classes\API\Injector\BnCodeInjector;
+use PaypalAddons\classes\API\Injector\UserAgentInjector;
 use PaypalAddons\classes\API\Request\HttpRequestInterface;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Throwable;
@@ -51,6 +52,7 @@ class PaypalClient extends HttpClient
 
         $this->addInjector(new AuthorizationInjector($this, $method));
         $this->addInjector(new BnCodeInjector($method));
+        $this->addInjector(new UserAgentInjector());
     }
 
     public static function get(AbstractMethodPaypal $method)
