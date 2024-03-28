@@ -273,10 +273,6 @@ class PaypalOrderGetRequest extends RequestAbstract
 
     protected function getPaymentMethod($exec)
     {
-        if (false === empty($exec->result->payment_source->sofort)) {
-            return 'sofort';
-        }
-
         if (false === empty($exec->result->payment_source->giropay)) {
             return 'giropay';
         }

@@ -45,11 +45,6 @@ class ApmFunctionality
         return Tools::strtolower($isoCountryDefault) == 'de';
     }
 
-    public function isSofortEnabled()
-    {
-        return (int) Configuration::get(PaypalConfigurations::SOFORT_ENABLED);
-    }
-
     public function isGiropayEnabled()
     {
         return (int) Configuration::get(PaypalConfigurations::GIROPAY_ENABLED);

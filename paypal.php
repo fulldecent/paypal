@@ -3013,14 +3013,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     'logo' => Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/giropay.svg'),
                 ];
             }
-
-            if ($this->initApmFunctionality()->isSofortEnabled()) {
-                $map[] = [
-                    'method' => APM::SOFORT,
-                    'label' => $this->l('Sofort'),
-                    'logo' => Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/sofort.svg'),
-                ];
-            }
         }
 
         return $map;

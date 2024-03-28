@@ -201,7 +201,6 @@ class ApmCollection
     {
         return [
             APM::GIROPAY,
-            APM::SOFORT,
         ];
     }
 }
