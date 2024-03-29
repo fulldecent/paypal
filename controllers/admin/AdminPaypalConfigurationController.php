@@ -77,7 +77,7 @@ class AdminPaypalConfigurationController extends \PaypalAddons\classes\AdminPayP
     protected function initForms()
     {
         $isoCountryDefault = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
-        $this->forms['checkoutForm'] = new CheckoutForm();
+        $this->forms['checkoutForm'] = new CheckoutForm((int) Tools::getValue('with_factory'));
         $this->forms['trackingForm'] = new TrackingParametersForm();
 
         if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {

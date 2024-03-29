@@ -56,14 +56,17 @@ class CheckoutForm implements FormInterface
     protected $vaultingFunctionality;
 
     protected $venmoFunctionality;
+    /** @var bool */
+    protected $advancedMode;
 
-    public function __construct()
+    public function __construct($advancedMode = false)
     {
         $this->module = Module::getInstanceByName('paypal');
         $countryDefault = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Context::getContext()->language->id);
         $this->acdcFunctionality = new AcdcFunctionality();
         $this->vaultingFunctionality = new VaultingFunctionality();
         $this->venmoFunctionality = new VenmoFunctionality();
+        $this->advancedMode = $advancedMode;
 
         switch ($countryDefault->iso_code) {
             case 'DE':
@@ -252,6 +255,7 @@ class CheckoutForm implements FormInterface
                     ],
                 ],
                 'value' => (int) Configuration::get(PaypalConfigurations::ACDC_OPTION),
+                'disabled' => (int) Configuration::get(PaypalConfigurations::ACDC_OPTION) && !$this->advancedMode,
             ];
         }
 
