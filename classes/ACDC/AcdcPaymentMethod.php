@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\ACDC;
 
 use Configuration;
 use Context;
+use PayPal;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 
@@ -128,7 +129,6 @@ class AcdcPaymentMethod
 
     protected function isCardFields()
     {
-        //TODO: implement
-        return true;
+        return (int) Configuration::get(PayPal::USE_CARD_FIELDS);
     }
 }
