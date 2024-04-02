@@ -149,6 +149,12 @@ ACDC.prototype.initCardFields = function() {
     return;
   }
 
+  if (this.isMoveButtonAtEnd) {
+    let paypalButtonsContainer = this.getPaypalButtonsContainer();
+    paypalButtonsContainer.append(this.buttonForm);
+    this.buttonForm.style.display = 'none';
+  }
+
   const numberField = cardFields.NumberField({
     placeholder: '4111 1111 1111 1111'
   });
@@ -160,7 +166,6 @@ ACDC.prototype.initCardFields = function() {
   const cvvField = cardFields.CVVField({
     placeholder: '123'
   });
-  cvvField.addClass('cvv');
 
   numberField.render(document.getElementById('card-number'));
   expireField.render(document.getElementById('expiration-date'));
