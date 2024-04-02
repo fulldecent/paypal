@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\API\Model;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Webhook extends PayPalModel
 {
     /**
