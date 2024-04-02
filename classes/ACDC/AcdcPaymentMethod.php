@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\ACDC;
 
 use Configuration;
 use Context;
+use PayPal;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 
@@ -57,9 +58,19 @@ class AcdcPaymentMethod
 
     public function render()
     {
-        $this->context->smarty->assign($this->getTplVars());
-        //todo: to implement
-        return $this->context->smarty->fetch('module:paypal/views/templates/acdc/payment-option.tpl');
+        $tmp = $this->context->smarty->createTemplate($this->getTemplatePath());
+        $tmp->assign($this->getTplVars());
+
+        return $tmp->fetch();
+    }
+
+    protected function getTemplatePath()
+    {
+        if ($this->isCardFields()) {
+            return 'module:paypal/views/templates/acdc/payment-option-card-fields.tpl';
+        } else {
+            return 'module:paypal/views/templates/acdc/payment-option.tpl';
+        }
     }
 
     protected function getTplVars()
@@ -68,6 +79,7 @@ class AcdcPaymentMethod
             'psPaypalDir' => _PS_MODULE_DIR_ . 'paypal',
             'JSvars' => [
                 PaypalConfigurations::MOVE_BUTTON_AT_END => (int) Configuration::get(PaypalConfigurations::MOVE_BUTTON_AT_END),
+                'isCardFields' => $this->isCardFields(),
             ],
             'JSscripts' => $this->getScripts(),
         ];
@@ -79,7 +91,11 @@ class AcdcPaymentMethod
     {
         $scripts = [];
 
-        $srcLib = $this->method->getUrlJsSdkLib(['components' => 'buttons,hosted-fields,marks']);
+        if ($this->isCardFields()) {
+            $srcLib = $this->method->getUrlJsSdkLib(['components' => 'card-fields,marks']);
+        } else {
+            $srcLib = $this->method->getUrlJsSdkLib(['components' => 'hosted-fields,marks']);
+        }
 
         $scripts['tot-paypal-acdc-sdk'] = [
             'src' => $srcLib,
@@ -109,5 +125,10 @@ class AcdcPaymentMethod
         }
 
         return '';
+    }
+
+    protected function isCardFields()
+    {
+        return (int) Configuration::get(PayPal::USE_CARD_FIELDS);
     }
 }

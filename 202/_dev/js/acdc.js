@@ -38,6 +38,8 @@ const ACDC = function(conf) {
   this.isMoveButtonAtEnd = conf['isMoveButtonAtEnd'] === undefined ? null : conf['isMoveButtonAtEnd'];
 
   this.buttonForm = conf['buttonForm'] === undefined ? null : conf['buttonForm'];
+
+  this.isCardFields = conf['isCardFields'] === undefined ? false : conf['isCardFields'];
 };
 
 ACDC.prototype.initButton = function() {
@@ -106,6 +108,95 @@ ACDC.prototype.getPaypalButtonsContainer = function() {
   document.querySelector('#payment-confirmation').after(container);
 
   return container;
+};
+
+ACDC.prototype.initFields = function() {
+  if (this.isCardFields) {
+    this.initCardFields();
+  } else {
+    this.initHostedFields();
+  }
+};
+
+ACDC.prototype.initCardFields = function() {
+  Tools.disableTillConsenting(
+    this.buttonForm,
+    document.getElementById('conditions_to_approve[terms-and-conditions]')
+  );
+
+  const cardFields = totPaypalAcdcSdk.CardFields({
+    createOrder: () => {
+      return this.getIdOrder();
+    },
+    onApprove: (data) => {
+      this.buttonForm.removeAttribute('disabled');
+      return this.sendData({orderID: data.orderID});
+    },
+    style: {
+      '.valid': {
+        'color': 'green'
+      },
+      '.invalid': {
+        'color': 'red'
+      },
+      'input': {
+        'padding': '5px 10px'
+      }
+    }
+  });
+
+  if (cardFields.isEligible() === false) {
+    return;
+  }
+
+  const numberField = cardFields.NumberField({
+    placeholder: '4111 1111 1111 1111'
+  });
+
+  const expireField = cardFields.ExpiryField({
+    placeholder: 'MM/YY'
+  });
+
+  const cvvField = cardFields.CVVField({
+    placeholder: '123'
+  });
+  cvvField.addClass('cvv');
+
+  numberField.render(document.getElementById('card-number'));
+  expireField.render(document.getElementById('expiration-date'));
+  cvvField.render(document.getElementById('cvv'));
+
+  this.buttonForm.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    cardFields.getState()
+      .then((data) => {
+        if (data.isFormValid) {
+          this.buttonForm.setAttribute('disabled', true);
+          return cardFields.submit();
+        }
+
+        for (let nameField in data.fields) {
+          if (data.fields[nameField]['isEmpty']) {
+            let message = '';
+
+            switch (nameField) {
+              case 'cardCvvField':
+                message = this.messages['CVV_IS_EMPTY'] !== undefined ? this.messages['CVV_IS_EMPTY'] : '';
+                break;
+              case 'cardNumberField':
+                message = this.messages['NUMBER_IS_EMPTY'] !== undefined ? this.messages['NUMBER_IS_EMPTY'] : '';
+                break;
+              case 'cardExpiryField':
+                message = this.messages['DATE_IS_EMPTY'] !== undefined ? this.messages['DATE_IS_EMPTY'] : '';
+                break;
+            }
+            this.setError(message);
+          }
+        }
+      });
+  });
 };
 
 ACDC.prototype.initHostedFields = function() {
