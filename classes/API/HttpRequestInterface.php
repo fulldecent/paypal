@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\API\Request;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface HttpRequestInterface
 {
     /** @return string*/

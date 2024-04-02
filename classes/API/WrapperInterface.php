@@ -27,6 +27,10 @@
 
 namespace PaypalAddons\classes\API;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface WrapperInterface
 {
     public function wrap($object);
