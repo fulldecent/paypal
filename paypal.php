@@ -116,6 +116,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     const SCA_BYPASSED = 'B';
 
+    const SCA_STATE_SUCCESS = 1;
+
+    const SCA_STATE_UNKNOWN = 2;
+
+    const SCA_STATE_FAILED = 3;
+
+    const SCA_STATE_NOT_PASSED = 4;
+
     const ACCESS_TOKEN = 'PAYPAL_ACCESS_TOKEN';
 
     const USE_CARD_FIELDS = 'PAYPAL_USE_CARD_FIELDS';
@@ -1616,6 +1624,22 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $message = (isset($orderState->name[$order->id_lang]) ? $orderState->name[$order->id_lang] : current($orderState->name));
         } else {
             $message = $this->l('Order creation is successful');
+        }
+
+        if (isset($transaction['scaState'])) {
+            switch ((int) $transaction['scaState']) {
+                case self::SCA_STATE_SUCCESS:
+                    $message .= ' ' . $this->l('(3DS : Success)');
+                    break;
+                case self::SCA_STATE_NOT_PASSED:
+                    $message .= ' ' . $this->l('(3DS : Not passed)');
+                    break;
+                case self::SCA_STATE_FAILED:
+                    $message .= ' ' . $this->l('(3DS : Failed)');
+                    break;
+                default:
+                    $message .= ' ' . $this->l('(3DS : Unknown)');
+            }
         }
 
         ProcessLoggerHandler::openLogger();

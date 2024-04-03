@@ -42,6 +42,21 @@ class ResponseCaptureAuthorize extends Response
     /** @var string */
     protected $dateTransaction;
 
+    /** @var int */
+    protected $scaState;
+
+    public function getScaState()
+    {
+        return (int) $this->scaState;
+    }
+
+    public function setScaState($scaState)
+    {
+        $this->scaState = (int) $scaState;
+
+        return $this;
+    }
+
     /**
      * @return string
      */
