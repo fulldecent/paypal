@@ -1,6 +1,6 @@
 <?php
-/**
- * 2007-2023 PayPal
+/*
+ * 2007-2024 PayPal
  *
  * NOTICE OF LICENSE
  *
@@ -18,62 +18,67 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2023 PayPal
+ *  @author 2007-2024 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 
-namespace PaypalAddons\classes\API\Request\V_1;
-
-use PayPal\Auth\OAuthTokenCredential;
-use PayPal\Rest\ApiContext;
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Request\RequestInteface;
-use PaypalAddons\services\FormatterPaypal;
+namespace PaypalAddons\classes\API\Token;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-abstract class RequestAbstract implements RequestInteface
+use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\TokenInterface;
+
+class BasicToken implements TokenInterface
 {
     /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var FormatterPaypal */
-    protected $formatter;
-
     public function __construct(AbstractMethodPaypal $method)
     {
         $this->method = $method;
-        $this->formatter = new FormatterPaypal();
+    }
+
+    /** @return bool*/
+    public function isEligible()
+    {
+        if (empty($this->getClientId()) || empty($this->getClientSecret())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /** @return string*/
+    public function getToken()
+    {
+        return base64_encode(implode(':', [$this->getClientId(), $this->getClientSecret()]));
     }
 
     /**
-     * @return ApiContext
+     * @param mixed $data
+     *
+     * @return bool
      */
-    public function getApiContext($mode_order = null)
+    public function update($data)
     {
-        if ($mode_order === null) {
-            $mode_order = $this->method->isSandbox();
-        }
+        return true;
+    }
 
-        $apiContext = new ApiContext(
-            new OAuthTokenCredential(
-                $this->method->getClientId($mode_order),
-                $this->method->getSecret($mode_order)
-            )
-        );
+    /** @return string*/
+    protected function getClientId()
+    {
+        return $this->method->getClientId();
+    }
 
-        $apiContext->setConfig(
-            [
-                'mode' => $mode_order ? 'sandbox' : 'live',
-                'log.LogEnabled' => false,
-                'cache.enabled' => true,
-            ]
-        );
-
-        return $apiContext;
+    /** @return string*/
+    protected function getClientSecret()
+    {
+        return $this->method->getSecret();
     }
 }

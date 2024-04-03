@@ -1,6 +1,6 @@
 <?php
-/**
- * 2007-2023 PayPal
+/*
+ * 2007-2024 PayPal
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,11 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2023 PayPal
+ *  @author 2007-2024 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 
 namespace PaypalAddons\classes;
@@ -37,8 +38,10 @@ use MethodMB;
 use Module;
 use PayPal;
 use PaypalAddons\classes\API\Model\VaultInfo;
+use PaypalAddons\classes\API\Model\WebhookPatch;
 use PaypalAddons\classes\API\PaypalApiManagerInterface;
 use PaypalAddons\classes\API\PaypalVaultApiManagerInterface;
+use PaypalAddons\classes\API\PaypalWebhookApiManagerInterface;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\API\Response\ResponseGenerateIdToken;
@@ -46,6 +49,8 @@ use PaypalAddons\classes\API\Response\ResponseOrderCapture;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalAddons\classes\API\Response\ResponseVaultPaymentToken;
+use PaypalAddons\classes\API\Response\ResponseWebhookEventDetail;
+use PaypalAddons\classes\API\Response\ResponseWebhookEventList;
 use PaypalAddons\classes\Constants\Vaulting;
 use PaypalAddons\classes\PUI\SignupLink;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
@@ -600,7 +605,6 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     {
         $key = [];
         $products = $cart->getProducts();
-        $cartRules = $cart->getCartRules();
 
         if (empty($products) === false) {
             foreach ($products as $product) {
@@ -612,12 +616,6 @@ abstract class AbstractMethodPaypal extends AbstractMethod
                         $product['quantity'],
                     ]
                 );
-            }
-        }
-
-        if (false === empty($cartRules)) {
-            foreach ($cartRules as $cartRule) {
-                $key[] = isset($cartRule['id_cart_rule']) ? $cartRule['id_cart_rule'] : '';
             }
         }
 
@@ -828,6 +826,60 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
 
         return null;
+    }
+
+    public function getWebhookEventList($params = [])
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->getWebhookEventList($params)->execute();
+        }
+
+        return (new ResponseWebhookEventList())->setSuccess(false);
+    }
+
+    public function getWebhookEventDetail($id)
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->getWebhookEventDetail($id)->execute();
+        }
+
+        return (new ResponseWebhookEventDetail())->setSuccess(false);
+    }
+
+    public function getWebhookList()
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->getWebhookList()->execute();
+        }
+
+        return (new Response())->setSuccess(false);
+    }
+
+    public function createWebhook($webhook = null)
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->createWebhook($webhook)->execute();
+        }
+
+        return (new Response())->setSuccess(false);
+    }
+
+    public function patchWebhook(WebhookPatch $patch)
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->patchWebhook($patch)->execute();
+        }
+
+        return (new Response())->setSuccess(false);
+    }
+
+    public function deleteWebhook($id)
+    {
+        if ($this->paypalApiManager instanceof PaypalWebhookApiManagerInterface) {
+            return $this->paypalApiManager->deleteWebhook($id)->execute();
+        }
+
+        return (new Response())->setSuccess(false);
     }
 
     /** @return  string*/

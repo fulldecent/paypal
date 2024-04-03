@@ -1,6 +1,6 @@
 <?php
 /*
- * 2007-2023 PayPal
+ * 2007-2024 PayPal
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2023 PayPal
+ *  @author 2007-2024 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
@@ -27,28 +27,77 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK;
 
-use PayPalHttp\HttpRequest;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
+use PaypalAddons\classes\API\HttpResponse;
+use PaypalAddons\classes\API\Request\HttpRequestInterface;
+use PaypalAddons\classes\API\WrapperInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class VaultPaymentTokens extends HttpRequest
+class VaultPaymentTokens implements HttpRequestInterface, WrapperInterface
 {
+    protected $headers = [];
+    /**
+     * @var string
+     */
+    protected $tokenId;
+
     public function __construct($tokenId)
     {
-        parent::__construct(
-            '/v3/vault/payment-tokens',
-            'POST'
-        );
         $this->headers['Content-Type'] = 'application/json';
-        $this->body = [
+        $this->tokenId = (string) $tokenId;
+    }
+
+    public function getPath()
+    {
+        return '/v3/vault/payment-tokens';
+    }
+
+    /** @return array*/
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        if (is_array($headers)) {
+            $this->headers = $headers;
+        }
+
+        return $this;
+    }
+
+    public function getBody()
+    {
+        return json_encode([
             'payment_source' => [
                 'token' => [
-                    'id' => (string) $tokenId,
+                    'id' => (string) $this->tokenId,
                     'type' => 'SETUP_TOKEN',
                 ],
             ],
-        ];
+        ]);
+    }
+
+    public function getMethod()
+    {
+        return 'POST';
+    }
+
+    public function wrap($object)
+    {
+        if ($object instanceof HttpResponse) {
+            return new HttpAdoptedResponse($object);
+        }
+
+        return $object;
     }
 }
