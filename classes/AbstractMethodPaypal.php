@@ -291,6 +291,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             if (!empty($authResult->liability_shift)) {
                 if ($authResult->liability_shift === PayPal::SCA_LIABILITY_SHIFT_POSSIBLE) {
                     $isSuccessSCA = true;
+                    $response->setScaState(PayPal::SCA_STATE_SUCCESS);
                 }
                 if ($authResult->liability_shift === PayPal::SCA_LIABILITY_SHIFT_NO) {
                     if (!empty($authResult->three_d_secure->enrollment_status)) {
@@ -302,6 +303,10 @@ abstract class AbstractMethodPaypal extends AbstractMethod
                                 PayPal::SCA_BYPASSED,
                             ]
                         );
+
+                        if ($isSuccessSCA) {
+                            $response->setScaState(PayPal::SCA_STATE_NOT_PASSED);
+                        }
                     }
                 }
             }
@@ -310,9 +315,12 @@ abstract class AbstractMethodPaypal extends AbstractMethod
                 $error = new Error();
                 $error->setMessage('3DS verification is failed');
                 $response->setError($error)->setSuccess(false);
+                $response->setScaState(PayPal::SCA_STATE_FAILED);
 
                 return $response;
             }
+        } else {
+            $response->setScaState(PayPal::SCA_STATE_UNKNOWN);
         }
 
         if ($this instanceof MethodMB || $getOrderResponse->getStatus() !== 'COMPLETED') {
@@ -357,6 +365,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'transaction_id' => $data->getTransactionId(),
             'capture' => $data->isCapture(),
             'intent' => $this->getIntent(),
+            'scaState' => $data->getScaState(),
         ];
 
         $this->transaction_detail = $transaction_detail;

@@ -68,6 +68,9 @@ class ResponseOrderCapture extends Response
     /** @var VaultInfo|null */
     protected $vaultInfo;
 
+    /** @var int */
+    protected $scaState;
+
     /**
      * @return string
      */
@@ -259,6 +262,18 @@ class ResponseOrderCapture extends Response
     public function setVaultInfo(VaultInfo $vaultInfo)
     {
         $this->vaultInfo = $vaultInfo;
+
+        return $this;
+    }
+
+    public function getScaState()
+    {
+        return (int) $this->scaState;
+    }
+
+    public function setScaState($scaState)
+    {
+        $this->scaState = (int) $scaState;
 
         return $this;
     }

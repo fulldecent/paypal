@@ -28,6 +28,7 @@
 namespace PaypalAddons\classes\API\Request;
 
 use Exception;
+use PayPal;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\Order\OrdersCaptureRequest;
@@ -78,6 +79,7 @@ class PaypalOrderCaptureRequest extends RequestAbstract
                     ->setPaymentMethod($this->getPaymentMethod())
                     ->setPaymentTool($this->getPaymentTool())
                     ->setMethod($this->getMethodTransaction())
+                    ->setScaState($this->getScaState($exec))
                     ->setDateTransaction($this->getDateTransaction($exec));
 
                 $vaultInfo = $this->getVaultInfo($exec);
@@ -197,5 +199,41 @@ class PaypalOrderCaptureRequest extends RequestAbstract
         }
 
         return null;
+    }
+
+    protected function getScaState($response)
+    {
+        if (empty($response->result->payment_source->card->authentication_result)) {
+            return PayPal::SCA_STATE_UNKNOWN;
+        }
+
+        $authResult = $response->result->payment_source->card->authentication_result;
+
+        if (empty($authResult->liability_shift)) {
+            return PayPal::SCA_STATE_FAILED;
+        }
+
+        if ($authResult->liability_shift === PayPal::SCA_LIABILITY_SHIFT_POSSIBLE) {
+            return PayPal::SCA_STATE_SUCCESS;
+        }
+
+        if ($authResult->liability_shift === PayPal::SCA_LIABILITY_SHIFT_NO) {
+            if (!empty($authResult->three_d_secure->enrollment_status)) {
+                $isScaNotPassed = in_array(
+                    $authResult->three_d_secure->enrollment_status,
+                    [
+                        PayPal::SCA_BANK_NOT_READY,
+                        PayPal::SCA_UNAVAILABLE,
+                        PayPal::SCA_BYPASSED,
+                    ]
+                );
+
+                if ($isScaNotPassed) {
+                    return PayPal::SCA_STATE_NOT_PASSED;
+                }
+            }
+        }
+
+        return PayPal::SCA_STATE_FAILED;
     }
 }
