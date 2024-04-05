@@ -1,6 +1,6 @@
 <?php
-/**
- * 2007-2023 PayPal
+/*
+ * 2007-2024 PayPal
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,11 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2023 PayPal
+ *  @author 2007-2024 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -114,6 +115,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
     const SCA_UNAVAILABLE = 'U';
 
     const SCA_BYPASSED = 'B';
+
+    const ACCESS_TOKEN = 'PAYPAL_ACCESS_TOKEN';
 
     public static $dev = true;
     public $express_checkout;
@@ -713,6 +716,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (Module::isEnabled('braintreeofficial') && (int) Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
             return [];
         }
+        if (!$this->context->customer->isLogged() && !$this->context->customer->is_guest) {
+            return [];
+        }
 
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $payments_options = [];
@@ -756,8 +762,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
             case 'MB':
                 if (in_array($this->context->currency->iso_code, $this->currencyMB)) {
-                    $methodEC = AbstractMethodPaypal::load('EC');
-                    if ($methodEC->isConfigured()) {
+                    if (Configuration::get(PaypalConfigurations::MB_EC_ENABLED)) {
                         $paymentOptionsEc = $this->renderEcPaymentOptions($params);
                         $payments_options = array_merge($payments_options, $paymentOptionsEc);
                     }
@@ -1478,13 +1483,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
-        if ($this->paypal_method == 'MB') {
-            $methodType = 'EC';
-        } else {
-            $methodType = $this->paypal_method;
-        }
-
-        $method = AbstractMethodPaypal::load($methodType);
+        $method = AbstractMethodPaypal::load();
 
         if ($method->isConfigured() == false) {
             return '';

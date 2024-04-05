@@ -1,6 +1,6 @@
 <?php
 /*
- * 2007-2023 PayPal
+ * 2007-2024 PayPal
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2023 PayPal
+ *  @author 2007-2024 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
@@ -29,15 +29,15 @@ namespace PaypalAddons\classes\API\Request;
 
 use Exception;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Client\HttpClient;
 use PaypalAddons\classes\API\ExtensionSDK\GetVaultPaymentToken;
+use PaypalAddons\classes\API\HttpAdoptedResponse;
 use PaypalAddons\classes\API\Model\PaymentSourceInfo;
 use PaypalAddons\classes\API\Model\VaultInfo;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseVaultPaymentToken;
 use PaypalAddons\classes\Constants\Vaulting;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
-use PayPalHttp\HttpResponse;
+use PaypalAddons\classes\PaypalException;
 use Throwable;
 
 if (!defined('_PS_VERSION_')) {
@@ -49,7 +49,7 @@ class PaypalGetVaultPaymentTokenRequest extends RequestAbstract
     /** @var string */
     protected $vaultId;
 
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $vaultId)
+    public function __construct(HttpClient $client, AbstractMethodPaypal $method, $vaultId)
     {
         parent::__construct($client, $method);
 
@@ -63,6 +63,11 @@ class PaypalGetVaultPaymentTokenRequest extends RequestAbstract
 
         try {
             $exec = $this->client->execute($request);
+
+            if ($exec instanceof HttpAdoptedResponse) {
+                $exec = $exec->getAdoptedResponse();
+            }
+
             $response->setData($exec);
 
             if ($exec->statusCode >= 200 && $exec->statusCode < 300) {
@@ -80,7 +85,7 @@ class PaypalGetVaultPaymentTokenRequest extends RequestAbstract
                 $response->setSuccess(false)
                     ->setError($error);
             }
-        } catch (HttpException $e) {
+        } catch (PaypalException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage(), true);
 
@@ -112,7 +117,7 @@ class PaypalGetVaultPaymentTokenRequest extends RequestAbstract
     /**
      * @return VaultInfo
      */
-    protected function getVaultInfo(HttpResponse $response)
+    protected function getVaultInfo($response)
     {
         $vaultInfo = new VaultInfo();
 
@@ -126,7 +131,7 @@ class PaypalGetVaultPaymentTokenRequest extends RequestAbstract
         return $vaultInfo;
     }
 
-    protected function getPaymentSourceInfo(HttpResponse $response)
+    protected function getPaymentSourceInfo($response)
     {
         $info = new PaymentSourceInfo();
 

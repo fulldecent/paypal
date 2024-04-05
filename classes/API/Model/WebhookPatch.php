@@ -1,6 +1,6 @@
 <?php
-/**
- * 2007-2023 PayPal
+/*
+ * 2007-2024 PayPal
  *
  * NOTICE OF LICENSE
  *
@@ -18,25 +18,48 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2023 PayPal
+ *  @author 2007-2024 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
+ *
  */
 
-namespace PaypalAddons\classes\API\Request\V_1;
+namespace PaypalAddons\classes\API\Model;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-abstract class RequestAbstractMB extends RequestAbstract
+class WebhookPatch
 {
-    public function getApiContext($mode_order = null)
-    {
-        $apiContext = parent::getApiContext($mode_order);
-        $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', $this->method->getPaypalPartnerId());
+    protected $patches = [];
 
-        return $apiContext;
+    protected $id;
+
+    public function __construct($id)
+    {
+        $this->id = (string) $id;
+    }
+
+    public function addPatch($op, $path, $value)
+    {
+        $this->patches[] = [
+            'op' => (string) $op,
+            'path' => (string) $path,
+            'value' => $value,
+        ];
+
+        return $this;
+    }
+
+    public function getPatches()
+    {
+        return $this->patches;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 }
