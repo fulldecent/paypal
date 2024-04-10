@@ -132,6 +132,10 @@ ACDC.prototype.initCardFields = function() {
       this.buttonForm.removeAttribute('disabled');
       return this.sendData({orderID: data.orderID});
     },
+    onError: (error) => {
+      this.buttonForm.removeAttribute('disabled');
+      this.setError(this.messages['VALIDATION_ERR'] !== undefined ? this.messages['VALIDATION_ERR'] : 'Validation error');
+    },
     style: {
       '.valid': {
         'color': 'green'
