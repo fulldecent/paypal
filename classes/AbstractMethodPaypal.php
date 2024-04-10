@@ -283,6 +283,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         /** @var ResponseOrderGet $getOrderResponse */
         $getOrderResponse = $this->paypalApiManager->getOrderGetRequest($this->getPaymentId())->execute();
         $response = new ResponseOrderCapture();
+        $scaState = null;
         // Make sure that the order is eligible for capture when the buyer was passed by security customer authentication
         if (!empty($getOrderResponse->getData()->result->payment_source->card->authentication_result)) {
             $authResult = $getOrderResponse->getData()->result->payment_source->card->authentication_result;
@@ -291,6 +292,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             if (!empty($authResult->liability_shift)) {
                 if ($authResult->liability_shift === PayPal::SCA_LIABILITY_SHIFT_POSSIBLE) {
                     $isSuccessSCA = true;
+                    $scaState = PayPal::SCA_STATE_SUCCESS;
                     $response->setScaState(PayPal::SCA_STATE_SUCCESS);
                 }
                 if ($authResult->liability_shift === PayPal::SCA_LIABILITY_SHIFT_NO) {
@@ -305,6 +307,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
                         );
 
                         if ($isSuccessSCA) {
+                            $scaState = PayPal::SCA_STATE_NOT_PASSED;
                             $response->setScaState(PayPal::SCA_STATE_NOT_PASSED);
                         }
                     }
@@ -320,15 +323,20 @@ abstract class AbstractMethodPaypal extends AbstractMethod
                 return $response;
             }
         } else {
+            $scaState = PayPal::SCA_STATE_UNKNOWN;
             $response->setScaState(PayPal::SCA_STATE_UNKNOWN);
         }
 
         if ($this instanceof MethodMB || $getOrderResponse->getStatus() !== 'COMPLETED') {
             if ($this->getIntent() == 'CAPTURE') {
-                return $this->paypalApiManager->getOrderCaptureRequest($this->getPaymentId())->execute();
+                $response = $this->paypalApiManager->getOrderCaptureRequest($this->getPaymentId())->execute();
             } else {
-                return $this->paypalApiManager->getOrderAuthorizeRequest($this->getPaymentId())->execute();
+                $response = $this->paypalApiManager->getOrderAuthorizeRequest($this->getPaymentId())->execute();
             }
+
+            $response->setScaState($scaState);
+
+            return $response;
         }
 
         $response->setSuccess(true)
