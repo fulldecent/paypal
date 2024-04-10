@@ -30,7 +30,7 @@ export const Tools = {
   getAlert(message, typeAlert) {
     const alert = document.createElement('div');
     let messageNode = document.createElement('div');
-    messageNode.innerHTML = message;
+    messageNode.innerText = message;
     alert.className = `alert alert-${typeAlert}`;
     alert.appendChild(messageNode);
     return alert;
