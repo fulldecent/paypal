@@ -1613,6 +1613,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         $adminEmployee = new Employee(_PS_ADMIN_PROFILE_);
         $order = new Order($this->currentOrder);
+        $adminLang = new Language($adminEmployee->id_lang);
         $orderState = new OrderState($order->current_state, $adminEmployee->id_lang);
 
         if (is_string($orderState->name)) {
@@ -1626,16 +1627,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (isset($transaction['scaState'])) {
             switch ((int) $transaction['scaState']) {
                 case self::SCA_STATE_SUCCESS:
-                    $message .= ' ' . $this->l('(3DS : Success)');
+                    $message .= ' ' . $this->l('(3DS : Success)', false, $adminLang->locale);
                     break;
                 case self::SCA_STATE_NOT_PASSED:
-                    $message .= ' ' . $this->l('(3DS : Not passed)');
+                    $message .= ' ' . $this->l('(3DS : Not passed)', false, $adminLang->locale);
                     break;
                 case self::SCA_STATE_FAILED:
-                    $message .= ' ' . $this->l('(3DS : Failed)');
+                    $message .= ' ' . $this->l('(3DS : Failed)', false, $adminLang->locale);
                     break;
                 default:
-                    $message .= ' ' . $this->l('(3DS : Unknown)');
+                    $message .= ' ' . $this->l('(3DS : Unknown)', false, $adminLang->locale);
             }
         }
 
