@@ -93,6 +93,8 @@ class CreateWebhook
                 return (new Response())
                     ->setSuccess(true)
                     ->setData($webhook);
+            } else {
+                $method->deleteWebhook($webhook->getId());
             }
         }
 
