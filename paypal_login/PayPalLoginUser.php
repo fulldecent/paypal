@@ -24,7 +24,7 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 if (!defined('_PS_VERSION_')) {
-    exit(header('HTTP/1.0 404 Not Found'));
+    exit;
 }
 
 /**

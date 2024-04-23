@@ -23,6 +23,10 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 global $_MODULE;
 $_MODULE = [];
 $_MODULE['<{paypal}prestashop>paypal_abstract_ad69e733ebae8d264bccaa38d68830e8'] = 'Paypal';

@@ -29,7 +29,7 @@
     {if $isoCountryDefault == 'fr'}
         <div installment-disclaimer class="pp__flex pp__flex-align-center pp__mb-5 pp__pb-4">
             <div class="pp__pr-4">
-                <img style="width: 135px" src="{$moduleDir|addslashes}/views/img/paypal.png">
+                <img style="width: 135px" src="{$moduleDir|escape:'htmlall':'UTF-8'}/views/img/paypal.png">
             </div>
             <div class="pp__pl-5 bootstrap">
                 <div class="h4">
@@ -53,7 +53,7 @@
     {if $isoCountryDefault == 'gb'}
         <div installment-disclaimer class="pp__flex pp__flex-align-center pp__mb-5 pp__pb-4">
             <div class="pp__pr-4">
-                <img style="width: 135px" src="{$moduleDir|addslashes}/views/img/paypal.png">
+                <img style="width: 135px" src="{$moduleDir|escape:'htmlall':'UTF-8'}/views/img/paypal.png">
             </div>
             <div class="pp__pl-5 bootstrap">
                 <div class="h4">

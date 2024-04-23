@@ -26,6 +26,10 @@
 require_once dirname(__FILE__) . '/../../config/config.inc.php';
 require_once dirname(__FILE__) . '/../../init.php';
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 include_once dirname(__FILE__) . '/paypal.php';
 include_once dirname(__FILE__) . '/backward_compatibility/backward.php';
 

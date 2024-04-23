@@ -26,6 +26,10 @@
 include_once dirname(__FILE__) . '/../../../config/config.inc.php';
 include_once _PS_ROOT_DIR_ . '/init.php';
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 include_once _PS_MODULE_DIR_ . 'paypal/express_checkout/process.php';
 include_once _PS_MODULE_DIR_ . 'paypal/express_checkout/submit.php';
 include_once _PS_MODULE_DIR_ . 'paypal/paypal_login/PayPalLoginUser.php';

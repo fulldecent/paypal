@@ -23,6 +23,10 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 global $_MODULE;
 $_MODULE = [];
 $_MODULE['<{paypal}prestashop>ipn_8a34d4a5b0c3928059f6f92ead9e8aa6'] = 'Die Preise bei PayPal und PrestaShop sind nicht identisch.';

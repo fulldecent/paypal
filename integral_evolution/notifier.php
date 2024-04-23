@@ -26,6 +26,10 @@
 include_once dirname(__FILE__) . '/../../../config/config.inc.php';
 include_once _PS_MODULE_DIR_ . 'paypal/paypal.php';
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /*
  * Instant payment notification class.
  * (wait for PayPal payment confirmation, then validate order)

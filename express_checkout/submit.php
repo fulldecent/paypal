@@ -26,6 +26,10 @@
 include_once dirname(__FILE__) . '/../../../config/config.inc.php';
 include_once _PS_ROOT_DIR_ . '/init.php';
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 if (version_compare(_PS_VERSION_, '1.5', '<')) {
     require_once _PS_ROOT_DIR_ . '/controllers/OrderConfirmationController.php';
 }
