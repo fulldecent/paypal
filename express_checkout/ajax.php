@@ -25,6 +25,11 @@
  */
 include_once dirname(__FILE__) . '/../../../config/config.inc.php';
 include_once _PS_ROOT_DIR_ . '/init.php';
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 include_once dirname(__FILE__) . '/../paypal.php';
 
 // Ajax query

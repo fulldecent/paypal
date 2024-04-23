@@ -23,6 +23,9 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 require_once __DIR__ . '/../../classes/Services/Token.php';
 require_once __DIR__ . '/../../classes/Transaction.php';

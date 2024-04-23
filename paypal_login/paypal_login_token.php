@@ -27,6 +27,10 @@ header('Content-Type: text/html; charset=utf-8');
 include_once dirname(__FILE__) . '/../../../config/config.inc.php';
 include_once _PS_ROOT_DIR_ . '/init.php';
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 include_once _PS_MODULE_DIR_ . 'paypal/paypal.php';
 include_once _PS_MODULE_DIR_ . 'paypal/paypal_login/paypal_login.php';
 include_once _PS_MODULE_DIR_ . 'paypal/paypal_login/PayPalLoginUser.php';

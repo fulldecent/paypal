@@ -26,6 +26,10 @@
 include_once dirname(__FILE__) . '/../../../config/config.inc.php';
 include_once _PS_ROOT_DIR_ . '/init.php';
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 if ($id_cart = Tools::getValue('id_cart')) {
     $id_order = Db::getInstance()->getValue('
 		SELECT id_order

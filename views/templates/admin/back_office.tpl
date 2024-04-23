@@ -123,7 +123,7 @@
 		{/if}
 		{* PayPal configuration page header *}
 		<div class="box half left">
-			<img src="{$moduleDir|addslashes}/views/img/logos/PP_Horizontal_rgb_2016.png" alt="" style="margin-bottom: -5px; max-height: 50px;" />
+			<img src="{$moduleDir|escape:'htmlall':'UTF-8'}/views/img/logos/PP_Horizontal_rgb_2016.png" alt="" style="margin-bottom: -5px; max-height: 50px;" />
 			<p id="paypal-slogan"><span class="dark">{l s='Leader in' mod='paypal'}</span> <span class="light">{l s='online payments' mod='paypal'}</span></p>
 			<p>{l s='Easy, secure, fast payments for your buyers.' mod='paypal'}</p>
 		</div>
@@ -450,7 +450,7 @@
 			<div data-tls-check-section>
 				<h3 class="inline">{l s='Test TLS & curl' mod='paypal'}</h3>
 				<br /><br />
-				<input type="hidden" id="security_token" value="{$smarty.get.token}" >
+				<input type="hidden" id="security_token" value="{$smarty.get.token|escape:'htmlall':'UTF-8'}" >
 				<span style="cursor: pointer;display: inline-block;" id="test_ssl_submit"><b>{l s='Test' mod='paypal'}</b></span>
 				<div style="margin-top: 10px;" id="test_ssl_result"></div>
 			</div>
@@ -481,5 +481,5 @@
 {/if}
 <script>
 	var tlscurltest_url = '{$tls_link_ajax|addslashes}';
-	var activeNavTab = '{$activeNavTab}';
+	var activeNavTab = '{$activeNavTab|escape:'htmlall':'UTF-8'}';
 </script>

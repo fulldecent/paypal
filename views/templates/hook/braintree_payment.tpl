@@ -48,7 +48,7 @@
 					</div>
 
 					<input type="hidden" name="deviceData" id="deviceData"/>
-					<input type="hidden" name="client_token" value="{$braintreeToken}">
+					<input type="hidden" name="client_token" value="{$braintreeToken|escape:'htmlall':'UTF-8'}">
 					<input type="hidden" name="liabilityShifted" id="liabilityShifted"/>
 					<input type="hidden" name="liabilityShiftPossible" id="liabilityShiftPossible"/>
 					<input type="hidden" name="payment_method_nonce" id="payment_method_nonce"/>
@@ -70,7 +70,7 @@
  	{/if}
 {literal}
 	<script>
-		var authorization = '{/literal}{$braintreeToken}{literal}';
+		var authorization = '{/literal}{$braintreeToken|escape:'htmlall':'UTF-8'}{literal}';
 		var form = document.querySelector('#braintree-form');
 
 		braintree.client.create({

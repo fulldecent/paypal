@@ -32,7 +32,7 @@
 {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
     {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
       <script>
-          var script = document.querySelector('script[data-key="{$keyScript}"]');
+          var script = document.querySelector('script[data-key="{$keyScript|escape:'htmlall':'UTF-8'}"]');
 
           if (null == script) {
               var newScript = document.createElement('script');
@@ -40,7 +40,7 @@
                 newScript.setAttribute('{$attrName}', '{$attrVal nofilter}');
               {/foreach}
 
-              newScript.setAttribute('data-key', '{$keyScript}');
+              newScript.setAttribute('data-key', '{$keyScript|escape:'htmlall':'UTF-8'}');
               document.body.appendChild(newScript);
           }
       </script>
