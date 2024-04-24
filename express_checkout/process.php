@@ -96,10 +96,12 @@ class PaypalExpressCheckout extends Paypal
 
         // Store back the PayPal data if present under the cookie
         if (isset($this->context->cookie->{self::$cookie_name})) {
-            $paypal = unserialize($this->context->cookie->{self::$cookie_name});
+            $paypal = json_decode($this->context->cookie->{self::$cookie_name}, true);
 
             foreach ($this->cookie_key as $key) {
-                $this->{$key} = $paypal[$key];
+                if (isset($paypal[$key])) {
+                    $this->{$key} = $paypal[$key];
+                }
             }
         }
 
@@ -462,7 +464,7 @@ class PaypalExpressCheckout extends Paypal
             $tab[$key] = $this->{$key};
         }
 
-        $this->context->cookie->{self::$cookie_name} = serialize($tab);
+        $this->context->cookie->{self::$cookie_name} = json_encode($tab);
     }
 
     public function displayPaypalInContextCheckout()
@@ -502,7 +504,7 @@ class PaypalExpressCheckout extends Paypal
             $key[] = $id_product . $id_product_attribute . $quantity . _COOKIE_KEY_;
         }
 
-        return md5(serialize($key));
+        return md5(json_encode($key));
     }
 
     public function isProductsListStillRight()

@@ -41,7 +41,7 @@ class PayPalNotifier extends PayPal
         $cart = new Cart((int) $custom['id_cart']);
 
         $cart_details = $cart->getSummaryDetails(null, true);
-        $cart_hash = sha1(serialize($cart->nbProducts()));
+        $cart_hash = sha1(json_encode($cart->nbProducts()));
 
         $this->context->cart = $cart;
         $address = new Address((int) $cart->id_address_invoice);
