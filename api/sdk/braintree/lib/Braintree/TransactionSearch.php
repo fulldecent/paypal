@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TransactionSearch
 {
     public static function amount()

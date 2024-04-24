@@ -28,6 +28,10 @@ namespace Braintree\Exception;
 
 use Braintree\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Raised when a suspected forged query string is present
  * Raised from methods that confirm transparent redirect requests

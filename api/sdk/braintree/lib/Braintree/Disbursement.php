@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class Disbursement extends Base
 {
     private $_merchantAccount;

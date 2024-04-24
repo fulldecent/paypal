@@ -30,6 +30,9 @@ use DateTime;
 use DateTimeZone;
 use InvalidArgumentException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Braintree Transparent Redirect Gateway module
  * Static class providing methods to build Transparent Redirect urls

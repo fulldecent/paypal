@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class PaymentInstrumentType
 {
     const PAYPAL_ACCOUNT = 'paypal_account';

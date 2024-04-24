@@ -28,6 +28,10 @@ namespace Braintree\MerchantAccount;
 
 use Braintree\Instance;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class AddressDetails extends Instance
 {
     protected $_attributes = [];

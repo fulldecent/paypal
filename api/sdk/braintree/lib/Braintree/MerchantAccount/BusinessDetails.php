@@ -28,6 +28,10 @@ namespace Braintree\MerchantAccount;
 
 use Braintree\Base;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class BusinessDetails extends Base
 {
     protected function _initialize($businessAttribs)

@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class MerchantGateway
 {
     private $_gateway;

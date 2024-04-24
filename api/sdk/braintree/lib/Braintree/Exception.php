@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * super class for all Braintree exceptions
  *

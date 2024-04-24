@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Braintree Transparent Redirect module
  * Static class providing methods to build Transparent Redirect urls.

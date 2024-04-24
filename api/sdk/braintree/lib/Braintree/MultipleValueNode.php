@@ -28,6 +28,10 @@ namespace Braintree;
 
 use InvalidArgumentException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class MultipleValueNode
 {
     public function __construct($name, $allowedValues = [])

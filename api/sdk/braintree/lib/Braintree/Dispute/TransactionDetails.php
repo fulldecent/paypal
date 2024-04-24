@@ -28,6 +28,10 @@ namespace Braintree\Dispute;
 
 use Braintree\Instance;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Transaction details for a dispute
  *

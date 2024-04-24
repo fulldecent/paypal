@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class Merchant extends Base
 {
     protected function _initialize($attribs)

@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class WebhookNotification extends Base
 {
     const SUBSCRIPTION_CANCELED = 'subscription_canceled';

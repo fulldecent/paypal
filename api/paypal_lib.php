@@ -27,6 +27,10 @@ include_once _PS_MODULE_DIR_ . 'paypal/api/paypal_connect.php';
 
 define('PAYPAL_API_VERSION', '106.0');
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class PaypalLib
 {
     private $enable_log = false;

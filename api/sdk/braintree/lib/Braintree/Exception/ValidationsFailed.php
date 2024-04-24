@@ -28,6 +28,10 @@ namespace Braintree\Exception;
 
 use Braintree\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Raised from non-validating methods when gateway validations fail.
  *

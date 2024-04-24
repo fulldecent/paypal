@@ -33,6 +33,9 @@ use DOMDocument;
 use DOMElement;
 use DOMText;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Braintree XML Parser
  *

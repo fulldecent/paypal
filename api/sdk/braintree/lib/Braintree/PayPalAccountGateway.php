@@ -28,6 +28,9 @@ namespace Braintree;
 
 use InvalidArgumentException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Braintree PayPalAccountGateway module
  *

@@ -26,6 +26,9 @@
 
 namespace Braintree\Test;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Credit card information used for testing purposes
  *

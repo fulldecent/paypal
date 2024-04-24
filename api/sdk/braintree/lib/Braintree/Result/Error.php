@@ -33,6 +33,10 @@ use Braintree\Subscription;
 use Braintree\Transaction;
 use Braintree\Util;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Braintree Error Result
  *

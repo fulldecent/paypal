@@ -28,6 +28,9 @@ namespace Braintree\Exception;
 
 use Braintree\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Raised when a client library must be upgraded.
  *

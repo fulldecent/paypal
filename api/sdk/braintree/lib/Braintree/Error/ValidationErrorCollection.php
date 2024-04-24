@@ -28,6 +28,10 @@ namespace Braintree\Error;
 
 use Braintree\Collection;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * collection of errors enumerating all validation errors for a given request
  *

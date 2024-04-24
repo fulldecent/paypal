@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Digest encryption module
  * Digest creates an HMAC-SHA1 hash for encrypting messages

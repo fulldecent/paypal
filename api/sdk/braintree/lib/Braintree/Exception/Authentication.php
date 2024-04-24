@@ -28,6 +28,10 @@ namespace Braintree\Exception;
 
 use Braintree\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Raised when authentication fails.
  * This may be caused by an incorrect Configuration

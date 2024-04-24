@@ -25,6 +25,10 @@
  */
 require_once 'autoload.php';
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 if (version_compare(PHP_VERSION, '5.4.0', '<')) {
     throw new Braintree_Exception('PHP version >= 5.4.0 required');
 }

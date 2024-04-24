@@ -28,6 +28,10 @@ namespace Braintree;
 
 use Iterator;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Braintree ResourceCollection
  * ResourceCollection is a container object for result data

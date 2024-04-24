@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class EqualityNode extends IsNode
 {
     public function isNot($value)

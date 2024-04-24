@@ -26,6 +26,9 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 class ClientToken
 {
     const DEFAULT_VERSION = 2;
