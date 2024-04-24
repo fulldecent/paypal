@@ -25,6 +25,10 @@
  */
 require_once _PS_MODULE_DIR_ . 'paypal/api/ApiPaypalPlus.php';
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 define('URL_PPP_CREATE_TOKEN', '/v1/oauth2/token');
 define('URL_PPP_CREATE_PAYMENT', '/v1/payments/payment');
 define('URL_PPP_LOOK_UP', '/v1/payments/payment/');

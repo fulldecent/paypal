@@ -26,6 +26,10 @@
 
 namespace Braintree\Error;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Validation Error codes and messages
  *

@@ -28,6 +28,9 @@ namespace Braintree\Exception;
 
 use Braintree\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Raised when an error occurs that the client library is not built to handle.
  * This shouldn't happen.

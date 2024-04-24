@@ -29,6 +29,9 @@ namespace Braintree\Result;
 use Braintree\RiskData;
 use Braintree\Util;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Braintree Credit Card Verification Result
  *

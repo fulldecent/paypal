@@ -28,6 +28,9 @@ namespace Braintree\Subscription;
 
 use Braintree\Instance;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Status details from a subscription
  * Creates an instance of StatusDetails, as part of a subscription response

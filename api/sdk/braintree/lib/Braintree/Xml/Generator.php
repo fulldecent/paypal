@@ -31,6 +31,9 @@ use DateTime;
 use DateTimeZone;
 use XMLWriter;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * PHP version 5
  *

@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Partner Merchant information that is generated when a partner is connected
  * to or disconnected from a user.

@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class CreditCardVerification extends Result\CreditCardVerification
 {
     public static function factory($attributes)

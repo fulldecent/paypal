@@ -351,7 +351,7 @@ class PayPal extends PaymentModule
 
             $isECS = false;
             if (isset($this->context->cookie->express_checkout)) {
-                $cookie_ECS = unserialize($this->context->cookie->express_checkout);
+                $cookie_ECS = json_decode($this->context->cookie->express_checkout, true);
                 if (isset($cookie_ECS['token']) && isset($cookie_ECS['payer_id'])) {
                     $isECS = true;
                 }
@@ -1171,7 +1171,7 @@ class PayPal extends PaymentModule
                 'currency' => new Currency((int) $cart->id_currency),
                 'customer' => $this->context->customer,
                 'business_account' => Configuration::get('PAYPAL_BUSINESS_ACCOUNT'),
-                'custom' => Tools::jsonEncode(['id_cart' => $cart->id, 'hash' => sha1(serialize($cart->nbProducts()))]),
+                'custom' => Tools::jsonEncode(['id_cart' => $cart->id, 'hash' => sha1(json_encode($cart->nbProducts()))]),
                 'gift_price' => (float) $this->getGiftWrappingPrice(),
                 'billing_address' => $billing_address,
                 'delivery_address' => $delivery_address,
@@ -2656,7 +2656,7 @@ class PayPal extends PaymentModule
         $shop_url = PayPal::getShopDomainSsl(true, true);
 
         // Check if user went through the payment preparation detail and completed it
-        $detail = unserialize($this->context->cookie->express_checkout);
+        $detail = json_decode($this->context->cookie->express_checkout, true);
 
         if (!empty($detail['payer_id']) && !empty($detail['token'])) {
             $values = ['get_confirmation' => true];

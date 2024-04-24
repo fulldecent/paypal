@@ -148,7 +148,7 @@ class PayPalIPN extends PayPal
         $mc_gross = Tools::ps_round($mc_gross_not_rounded, $this->decimals);
 
         $cart_details = Context::getContext()->cart->getSummaryDetails(null, true);
-        $cart_hash = sha1(serialize(Context::getContext()->cart->nbProducts()));
+        $cart_hash = sha1(json_encode(Context::getContext()->cart->nbProducts()));
         $custom = Tools::jsonDecode(Tools::getValue('custom'), true);
 
         $shipping = $cart_details['total_shipping_tax_exc'];

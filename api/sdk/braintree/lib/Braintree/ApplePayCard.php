@@ -26,6 +26,9 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Braintree ApplePayCard module
  * Creates and manages Braintree Apple Pay cards

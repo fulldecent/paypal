@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Braintree HTTP Client
  * processes Http requests using curl

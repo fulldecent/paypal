@@ -26,6 +26,9 @@
 
 namespace Braintree\Test;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Transaction amounts used for testing purposes
  *

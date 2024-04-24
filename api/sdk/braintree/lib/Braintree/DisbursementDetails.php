@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Disbursement details from a transaction
  * Creates an instance of DisbursementDetails as returned from a transaction

@@ -28,6 +28,9 @@ namespace Braintree\Transaction;
 
 use Braintree\Instance;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Europe bank account details from a transaction
  * Creates an instance of europe bank account details as returned from a transaction

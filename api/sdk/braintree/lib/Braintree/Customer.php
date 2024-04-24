@@ -26,6 +26,9 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Braintree Customer module
  * Creates and manages Customers

@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class FacilitatorDetails extends Base
 {
     public static function factory($attributes)

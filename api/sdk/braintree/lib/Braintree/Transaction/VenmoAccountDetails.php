@@ -28,6 +28,9 @@ namespace Braintree\Transaction;
 
 use Braintree\Instance;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Venmo account details from a transaction
  *

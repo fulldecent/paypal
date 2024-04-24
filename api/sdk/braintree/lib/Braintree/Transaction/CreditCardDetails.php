@@ -28,6 +28,9 @@ namespace Braintree\Transaction;
 
 use Braintree\Instance;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * CreditCard details from a transaction
  * creates an instance of CreditCardDetails

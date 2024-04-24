@@ -28,6 +28,10 @@ namespace Braintree\Error;
 
 use Braintree\Util;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Error handler
  * Handles validation errors

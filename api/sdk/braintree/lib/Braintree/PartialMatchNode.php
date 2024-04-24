@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class PartialMatchNode extends EqualityNode
 {
     public function startsWith($value)

@@ -28,6 +28,9 @@ namespace Braintree\Transaction;
 
 use Braintree\Instance;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Customer details from a transaction
  * Creates an instance of customer details as returned from a transaction

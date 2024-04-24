@@ -28,6 +28,9 @@ namespace Braintree\Transaction;
 
 use Braintree\Instance;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Coinbase details from a transaction
  *

@@ -26,6 +26,9 @@
 
 namespace Braintree\Test;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * VenmoSdk payment method codes used for testing purposes
  *

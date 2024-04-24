@@ -32,6 +32,9 @@ use Countable;
 use IteratorAggregate;
 use OutOfRangeException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Braintree Generic collection
  *

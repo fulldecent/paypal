@@ -26,6 +26,9 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 /**
  * Braintree AndroidPayCard module
  * Creates and manages Braintree Android Pay cards

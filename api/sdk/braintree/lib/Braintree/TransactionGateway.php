@@ -28,6 +28,10 @@ namespace Braintree;
 
 use InvalidArgumentException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Braintree TransactionGateway processor
  * Creates and manages transactions

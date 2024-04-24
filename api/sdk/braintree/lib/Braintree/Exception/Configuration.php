@@ -28,6 +28,10 @@ namespace Braintree\Exception;
 
 use Braintree\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Raised when the Braintree library is not completely configured.
  *

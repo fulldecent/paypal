@@ -26,6 +26,10 @@
 
 namespace Braintree;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Braintree EuropeBankAccount module
  * Creates and manages Braintree Europe Bank Accounts
