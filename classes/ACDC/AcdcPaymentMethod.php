@@ -101,8 +101,11 @@ class AcdcPaymentMethod
             'src' => $srcLib,
             'data-namespace' => 'totPaypalAcdcSdk',
             'data-partner-attribution-id' => $this->getPartnerId(),
-            'data-client-token' => $this->getClientToken(),
         ];
+
+        if (!$this->isCardFields()) {
+            $scripts['tot-paypal-acdc-sdk']['data-client-token'] = $this->getClientToken();
+        }
 
         $scripts['acdc'] = [
             'src' => __PS_BASE_URI__ . 'modules/paypal/views/js/acdc.js',
