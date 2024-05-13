@@ -553,9 +553,10 @@ class OrderCreateBody implements BuilderInterface
                     }
                 }
             }
+
             return [];
         }
 
-       return [];
+        return [];
     }
 }
