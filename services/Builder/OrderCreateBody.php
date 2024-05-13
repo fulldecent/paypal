@@ -31,6 +31,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Address;
 use Configuration;
 use Context;
 use Customer;
@@ -525,6 +526,9 @@ class OrderCreateBody implements BuilderInterface
                                 'method' => $method,
                             ],
                         ],
+                        'billing_address' => $this->getAddress(
+                            new Address($this->context->cart->id_address_invoice)
+                        ),
                     ],
                 ];
             }
