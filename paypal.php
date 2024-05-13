@@ -128,6 +128,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     const USE_CARD_FIELDS = 'PAYPAL_USE_CARD_FIELDS';
 
+    const SCA_WHEN_REQUIRED = 'SCA_WHEN_REQUIRED';
+
+    const SCA_ALWAYS = 'SCA_ALWAYS';
+
     public static $dev = true;
     public $express_checkout;
     public $message;

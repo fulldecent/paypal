@@ -158,6 +158,10 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             PaypalContext::getContext()->set('savePaypalAccount', true);
         }
 
+        if (isset($request->sca_verification)) {
+            PaypalContext::getContext()->set('scaVerification', $request->sca_verification);
+        }
+
         if (empty($request->apmMethod)) {
             $this->method->init();
         } else {

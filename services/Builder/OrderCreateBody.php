@@ -514,33 +514,44 @@ class OrderCreateBody implements BuilderInterface
 
     protected function getPaymentSource()
     {
-        if (false === PaypalContext::getContext()->get('savePaypalAccount', false)) {
-            return [];
-        }
+        if (PaypalContext::getContext()->get('scaVerification', false)) {
+            $method = PaypalContext::getContext()->get('scaVerification');
 
-        if (false === $this->vaultingFunctionality->isAvailable()) {
-            return [];
-        }
-
-        if (false === $this->vaultingFunctionality->isEnabled()) {
-            return [];
-        }
-
-        if (false === $this->vaultingFunctionality->isCapabilityAvailable(false)) {
-            return [];
-        }
-
-        return [
-            'paypal' => [
-                'attributes' => [
-                    'vault' => [
-                        'permit_multiple_payment_tokens' => false,
-                        'store_in_vault' => Vaulting::STORE_IN_VAULT_ON_SUCCESS,
-                        'usage_type' => Vaulting::USAGE_TYPE_MERCHANT,
-                        'customer_type' => Vaulting::CUSTOMER_TYPE_CONSUMER,
+            if (in_array($method, [PayPal::SCA_WHEN_REQUIRED, PayPal::SCA_ALWAYS])) {
+                return [
+                    'card' => [
+                        'attributes' => [
+                            'verification' => [
+                                'method' => $method,
+                            ],
+                        ],
                     ],
-                ],
-            ],
-        ];
+                ];
+            }
+        }
+
+        if (PaypalContext::getContext()->get('savePaypalAccount', false)) {
+            if ($this->vaultingFunctionality->isAvailable()) {
+                if ($this->vaultingFunctionality->isEnabled()) {
+                    if ($this->vaultingFunctionality->isCapabilityAvailable(false)) {
+                        return [
+                            'paypal' => [
+                                'attributes' => [
+                                    'vault' => [
+                                        'permit_multiple_payment_tokens' => false,
+                                        'store_in_vault' => Vaulting::STORE_IN_VAULT_ON_SUCCESS,
+                                        'usage_type' => Vaulting::USAGE_TYPE_MERCHANT,
+                                        'customer_type' => Vaulting::CUSTOMER_TYPE_CONSUMER,
+                                    ],
+                                ],
+                            ],
+                        ];
+                    }
+                }
+            }
+            return [];
+        }
+
+       return [];
     }
 }

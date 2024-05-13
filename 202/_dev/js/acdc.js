@@ -71,7 +71,7 @@ ACDC.prototype.getIdOrder = function() {
     headers: {
       'content-type': 'application/json;charset=utf-8'
     },
-    body: JSON.stringify({page: 'cart', addAddress: 1})
+    body: JSON.stringify({page: 'cart', addAddress: 1, sca_verification: (this.isCardFields ? 'SCA_WHEN_REQUIRED' : '')}),
   }).then(function(res) {
     return res.json();
   }).then(function(data) {
